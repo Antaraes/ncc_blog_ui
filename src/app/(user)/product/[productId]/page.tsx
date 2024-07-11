@@ -50,37 +50,50 @@ const Page: FC<PageProps> = ({}) => {
   }, [isLoading, data]);
 
   const truncateContent = (content: string) => {
-    const tempDivElement = window.document.createElement('div');
-    tempDivElement.innerHTML = content;
+    // Helper function to extract text content without tags
+    const extractTextContent = (html: string) => {
+      return html.replace(/<[^>]+>/g, ''); // Remove all HTML tags
+    };
 
-    let truncatedText = '';
-    let startIndex = 0;
+    // Helper function to find the index of a heading or strong tag
+    const findTagIndex = (html: string, tagName: string, startIndex = 0) => {
+      const regex = new RegExp(`<${tagName}[^>]*>(.*?)</${tagName}>`, 'gi');
+      const match = regex.exec(html.slice(startIndex));
+      return match ? startIndex + match.index : -1;
+    };
 
     // Find the first occurrence of h1, h2, h3, h4, or strong tags
-    const firstHeading = tempDivElement.querySelector('h1, h2, h3, h4, strong');
+    const headingTags = ['h1', 'h2', 'h3', 'h4', 'strong'];
+    let firstHeadingIndex = -1;
+    let firstHeadingTag = '';
 
-    if (firstHeading) {
-      startIndex = content.indexOf(firstHeading.textContent || '');
-      truncatedText = content.slice(0, startIndex);
+    for (const tag of headingTags) {
+      const index = findTagIndex(content, tag);
+      if (
+        index !== -1 &&
+        (firstHeadingIndex === -1 || index < firstHeadingIndex)
+      ) {
+        firstHeadingIndex = index;
+        firstHeadingTag = tag;
+      }
+    }
+
+    if (firstHeadingIndex !== -1) {
+      let truncatedText = content.slice(0, firstHeadingIndex);
 
       // Find the second occurrence after the first one
-      const secondHeading = tempDivElement.querySelector(
-        'h1, h2, h3, h4, strong'
+      const secondHeadingIndex = findTagIndex(
+        content,
+        firstHeadingTag,
+        firstHeadingIndex + 1
       );
-
-      if (secondHeading) {
-        const secondIndex = content.indexOf(
-          secondHeading.textContent || '',
-          startIndex + 1
-        );
-        truncatedText = content.slice(0, secondIndex);
-      } else {
-        truncatedText = content;
+      if (secondHeadingIndex !== -1) {
+        truncatedText = content.slice(0, secondHeadingIndex);
       }
 
-      setTruncatedContent(truncatedText);
+      return truncatedText;
     } else {
-      setTruncatedContent(content);
+      return content;
     }
   };
 
