@@ -50,7 +50,7 @@ const Page: FC<PageProps> = ({}) => {
   }, [isLoading, data]);
 
   const truncateContent = (content: string) => {
-    const tempDivElement = document.createElement('div');
+    const tempDivElement = window.document.createElement('div');
     tempDivElement.innerHTML = content;
 
     let truncatedText = '';
@@ -103,7 +103,7 @@ const Page: FC<PageProps> = ({}) => {
   };
   useEffect(() => {
     if (!isLoading && data) {
-      const tempDivElement = document.createElement('div');
+      const tempDivElement = window.document.createElement('div');
       tempDivElement.innerHTML = data.data.blog.content;
 
       const headings = tempDivElement.querySelectorAll('h1, h2, h3, h4,strong');

@@ -34,9 +34,9 @@ const Navbar: FC<NavbarProps> = () => {
 
   useEffect(() => {
     if (isSearchOpen) {
-      document.body.style.overflow = 'hidden';
+      window.document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = '';
+      window.document.body.style.overflow = '';
     }
 
     const handleClickOutside = (event: MouseEvent) => {
@@ -48,9 +48,9 @@ const Navbar: FC<NavbarProps> = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    window.document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      window.document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isSearchOpen]);
   useEffect(() => {
