@@ -1,0 +1,48 @@
+import API from './interceptor';
+
+export const getByMe = () => API.get('/me');
+
+// Auth
+export const login = (data: LoginFormValues) =>
+  API.post('/auth/admin/sign-in', data);
+
+//Member
+export const memberList = () => API.get('/admin/list');
+export const getMember = () => API.get('/admin/list');
+export const addMember = (data: any) => API.post('/auth/admin/create', data);
+export const memberDetail = (id: any) => API.get(`/admin/${id}`);
+
+//role
+export const getRoles = () => API.get('/admin/role');
+
+//Category
+export const addCategory = (data: any) => API.post('/category/add', data);
+export const addSubcategory = (data: any) =>
+  API.post('/category/sub-category', data);
+export const getAllCategories = () => API.get('/category');
+export const getSubCategories = () => API.get('/category/sub-category');
+export const getMainCategories = () => API.get('/category/parent');
+export const getBlogsbyCategory = (data: any) => API.get(`/category/${data}`);
+
+//Products
+export const getAllProducts = () => API.get('/products');
+export const getProductsByRankandView = () =>
+  API.get('/blog?q=view&page=1&limit=10');
+export const getDetailProduct = (id: any) => API.get(`/blog/${id}`);
+export const addNewProduct = (data: any) => API.post('/blog/add', data);
+export const removeProduct = (id: any) => API.delete(`/blog/${id}`);
+export const updateProduct = (id: any, data: any) =>
+  API.put(`/products/${id}`, data);
+export const deleteImageProduct = (id: any) =>
+  API.delete(`/product_images/${id}`);
+
+export const getListofProducts = (subCategoryId: any) =>
+  API.get(`/frontend/products?sub_categoryid=${subCategoryId}&sort_by=asc`);
+export const getListofAllProducts = () =>
+  API.get(`/frontend/products?sort_by=asc`);
+export const getDetailUserProduct = (id: any) =>
+  API.get(`/frontend/products/${id}`);
+//Categories
+
+export const addNewCategory = (data: any) => API.post('/categories', data);
+export const removeCategory = (id: any) => API.delete(`/categories/${id}`);
