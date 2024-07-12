@@ -160,7 +160,7 @@ const ProductCardCarousel: FC<pageProps> = () => {
   return (
     <div className="relative h-full my-10   overflow-hidden">
       <Swiper
-        slidesPerView={isMobile ? 2.5 : 6}
+        slidesPerView={isMobile ? 2.5 : 6.5}
         spaceBetween={30}
         loop={true}
         // centeredSlides={true}
@@ -181,7 +181,7 @@ const ProductCardCarousel: FC<pageProps> = () => {
       </Swiper>
 
       <Swiper
-        slidesPerView={isMobile ? 1.5 : 4}
+        slidesPerView={isMobile ? 1.5 : 3.5}
         spaceBetween={isMobile ? 5 : 30}
         // centeredSlides={true}
 

@@ -9,8 +9,8 @@ const MediaCard = ({ data }: { data: any }) => {
   const { main_media, title, content, _id } = data;
 
   const isVideo = main_media.endsWith('.mp4');
-  const truncatedText = truncateText(content, 50);
-  const truncatedTitle = truncateText(title, 10);
+  const truncatedText = truncateText(content, 10);
+  const truncatedTitle = truncateText(title, 2);
   const route = useRouter();
 
   return (
@@ -31,7 +31,7 @@ const MediaCard = ({ data }: { data: any }) => {
       {isVideo ? (
         <video autoPlay muted loop preload="none">
           <source
-            src={`${process.env.MediaURL}${main_media}`}
+            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
             type="video/mp4"
           />
         </video>

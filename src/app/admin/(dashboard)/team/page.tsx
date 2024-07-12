@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { FC } from 'react';
-import MemberList from './MemberList';
+
 import Link from 'next/link';
 
 interface pageProps {}

@@ -11,7 +11,6 @@ import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
-import ReCAPTCHA from 'react-google-recaptcha';
 
 export default function Home() {
   const { data, isLoading } = useFetch('head-blogs', getProductsByRankandView);
@@ -20,37 +19,25 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [recaptchaToken, setRecaptchaToken] = useState('');
   const ReactQuill = useMemo(
     () => dynamic(() => import('react-quill'), { ssr: false }),
     []
   );
 
-  const handleRecaptchaChange = (token: string | null) => {
-    setRecaptchaToken(token || '');
-  };
-
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     setSuccess('');
 
-    if (!recaptchaToken) {
-      setError('Please complete the reCAPTCHA verification.');
-      setLoading(false);
-      return;
-    }
-
     try {
-      await addFeedback({ email, content, recaptchaToken });
+      await addFeedback({ email, content });
       setSuccess('Feedback submitted successfully!');
       toast.success('Feedback submitted successfully!');
       setEmail('');
       setContent('');
-    } catch (error: any) {
+    } catch (error) {
       setError('An error occurred while submitting feedback.');
-      toast.error(error.message);
     } finally {
       setLoading(false);
     }
@@ -79,7 +66,7 @@ export default function Home() {
   );
 
   return (
-    <main className="flex min-h-screen h-full flex-col items-center justify-between w-[90%] mx-auto">
+    <main className="flex min-h-screen h-full flex-col gap-10 items-center justify-between w-[90%] mx-auto">
       {slicedData.length > 0 && (
         <div className="w-full gap-2 grid grid-cols-12 grid-rows-2">
           {mediaCards}
@@ -88,8 +75,8 @@ export default function Home() {
       <div className="w-full">
         <ProductCardCarousel />
       </div>
-      <div className="flex justify-between w-full border-b-2 my-10 border-t-2">
-        <div className="w-1/2 my-3">
+      <div className="flex justify-between w-full  border-t-2">
+        <div className="w-1/2 my-3 mr-10">
           <p className="font-bold text-3xl">Lets Talk</p>
           <p className="text-muted-foreground">
             Have some big idea or brand to develop and need help? Then reach out
@@ -112,7 +99,7 @@ export default function Home() {
             Facebook
           </a>
         </div>
-        <div className="w-1/2 my-3">
+        <div className="w-1/2 my-3 ">
           <form onSubmit={handleSubmit}>
             <Label className="font-bold" htmlFor="email">
               Email
@@ -134,20 +121,17 @@ export default function Home() {
               theme="snow"
               value={content}
               onChange={setContent}
-              className="h-[100px] my-5"
+              className="h-[100px]"
               placeholder="Enter Content.."
             />
             <br />
-            <ReCAPTCHA
-              sitekey="6LfChQ4qAAAAAENzPonrygCzNj6gqdPdiDSrOYuU" // Replace with your reCAPTCHA site key
-              onChange={handleRecaptchaChange}
-            />
             <Button type="submit" className="btn btn-primary mt-10">
               Submit
             </Button>
           </form>
           {loading && <Spinner />}
           {error && <p className="text-red-500">{error}</p>}
+          {success && <p className="text-green-500">{success}</p>}
         </div>
       </div>
     </main>
