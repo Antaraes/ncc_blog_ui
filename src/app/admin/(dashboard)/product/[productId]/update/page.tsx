@@ -29,12 +29,10 @@ import {
 import { UpdateProductService } from '@/services/product/UpdateProduct.service';
 import { useParams } from 'next/navigation';
 
-interface PageProps {
-  productId: string; // Pass the product ID to the component
-}
+interface PageProps {}
 
 const ProductPage: FC<PageProps> = () => {
-  const { productId } = useParams();
+  const { productId } = useParams<{ productId: string }>();
   const [isModalOpen, setModalOpen] = useState(false);
   const {
     register,
@@ -48,7 +46,7 @@ const ProductPage: FC<PageProps> = () => {
     isSuccess,
     control,
     loadProductData,
-  } = UpdateProductService(productId); // Pass product ID to the service
+  } = UpdateProductService(productId);
   const [tableOfContents, setTableOfContents] = useState<
     { id: string; text: string }[]
   >([]);
@@ -74,7 +72,7 @@ const ProductPage: FC<PageProps> = () => {
 
       setTableOfContents(tocItems);
     }
-  }, [getValues('content')]);
+  }, []);
 
   const handleImageUpload = (files: FileList) => {
     const imageUrls = Array.from(files).map((file) => {
