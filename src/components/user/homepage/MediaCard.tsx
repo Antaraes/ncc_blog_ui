@@ -1,4 +1,3 @@
-'use client';
 import Spinner from '@/components/common/Spinner';
 import { truncateText } from '@/lib/utils';
 import Image from 'next/image';
@@ -29,12 +28,17 @@ const MediaCard = ({ data }: { data: any }) => {
         ></div>
       </div>
       {isVideo ? (
-        <video autoPlay muted loop preload="none">
-          <source
-            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
-            type="video/mp4"
-          />
-        </video>
+        <video
+          autoPlay
+          loop
+          muted
+          className="w-full h-full object-cover"
+          // src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
+          // src={
+          //   'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+          // }
+          src="https://dev-allaboutme.s3.ap-southeast-1.amazonaws.com/Sequence+01.mp4"
+        ></video>
       ) : (
         <Image
           alt="Card background"

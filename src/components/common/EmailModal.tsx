@@ -30,14 +30,17 @@ const EmailModal = ({
         </DialogHeader>
         <div>
           <p>
-            <strong>Email:</strong> {email}
+            <strong>Email:</strong>{' '}
+            <a href={`mailto:${email}`} className=" underline">
+              {email}
+            </a>
           </p>
           <p>
             <strong>Content:</strong>
           </p>
           <div
             dangerouslySetInnerHTML={{ __html: content }}
-            className="whitespace-pre-wrap"
+            className="whitespace-pre-wrap max-h-[400px] overflow-y-scroll"
           ></div>
         </div>
       </DialogContent>

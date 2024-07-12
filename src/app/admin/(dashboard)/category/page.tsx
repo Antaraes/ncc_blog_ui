@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DataTable } from './data-table';
 import { columns } from './column';
@@ -16,8 +16,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
-import { format } from 'date-fns';
+
 import { useRmoveMutation } from '@/hooks/useRemoveMutation';
+import EditableRowModal from '@/components/common/EditableRowModal';
 
 interface pageProps {}
 
@@ -26,29 +27,38 @@ const Page: FC<pageProps> = ({}) => {
     'main_categories',
     getMainCategories
   );
-  const { handleMutation: mainHandleMutation, isLoading: mainIsLoading } =
-    useRmoveMutation({
-      apiFunction: removeCategory,
 
-      queryKey: ['main_categories'],
-    });
-  const handleMainDelete = (categroyId: string) => {
-    mainHandleMutation(categroyId);
-    mainRefetch();
-  };
-  const { handleMutation: SubHandleMutation, isLoading: SubIsLoading } =
-    useRmoveMutation({
-      apiFunction: removeCategory,
-      queryKey: ['sub_categories'],
-    });
-  const handleSubDelete = (categroyId: string) => {
-    SubHandleMutation(categroyId);
-    subRefetch();
-  };
   const { data: sub_categories, refetch: subRefetch } = useFetch(
     'sub_categories',
     getSubCategories
   );
+
+  const [editCategory, setEditCategory] = useState<any>(null);
+
+  const { handleMutation: mainHandleMutation } = useRmoveMutation({
+    apiFunction: removeCategory,
+    queryKey: ['main_categories'],
+  });
+
+  const { handleMutation: subHandleMutation } = useRmoveMutation({
+    apiFunction: removeCategory,
+    queryKey: ['sub_categories'],
+  });
+
+  const handleMainDelete = (categoryId: string) => {
+    mainHandleMutation(categoryId);
+    mainRefetch();
+  };
+
+  const handleSubDelete = (categoryId: string) => {
+    subHandleMutation(categoryId);
+    subRefetch();
+  };
+
+  const handleEdit = (category: any) => {
+    setEditCategory(category);
+  };
+
   return (
     <>
       <div className="w-full">
@@ -56,14 +66,14 @@ const Page: FC<pageProps> = ({}) => {
           <div className="flex justify-between">
             <TabsList>
               <TabsTrigger value="main_category" className="text-2xl font-bold">
-                Main Categroy
+                Main Category
               </TabsTrigger>
               <TabsTrigger value="sub_category" className="text-2xl font-bold">
                 Sub Category
               </TabsTrigger>
             </TabsList>
             <Button>
-              <Link href={'category/create'}>Add Categroy</Link>
+              <Link href={'category/create'}>Add Category</Link>
             </Button>
           </div>
           <TabsContent value="main_category">
@@ -75,10 +85,7 @@ const Page: FC<pageProps> = ({}) => {
                   header: 'Sub Categories',
                   cell: (info) => {
                     const subcategory = info.getValue() as any;
-                    if (subcategory?.length > 0) {
-                      return <p>{subcategory.length}</p>;
-                    }
-                    return <p>0</p>;
+                    return <p>{subcategory ? subcategory.length : 0}</p>;
                   },
                 },
                 {
@@ -95,9 +102,12 @@ const Page: FC<pageProps> = ({}) => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem>Edit</DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleEdit(category)}
+                          >
+                            Edit
+                          </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-red-500"
                             onClick={() => handleMainDelete(category._id)}
@@ -117,7 +127,6 @@ const Page: FC<pageProps> = ({}) => {
             <DataTable
               columns={[
                 ...columns,
-
                 {
                   id: 'actions',
                   cell: (info) => {
@@ -132,9 +141,12 @@ const Page: FC<pageProps> = ({}) => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem>Edit</DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleEdit(category)}
+                          >
+                            Edit
+                          </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-red-500"
                             onClick={() => handleSubDelete(category._id)}
@@ -152,6 +164,19 @@ const Page: FC<pageProps> = ({}) => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Editable Row Modal */}
+      {editCategory && (
+        <EditableRowModal
+          isOpen={!!editCategory}
+          onClose={() => setEditCategory(null)}
+          category={editCategory}
+          onSave={() => {
+            mainRefetch();
+            subRefetch();
+          }}
+        />
+      )}
     </>
   );
 };

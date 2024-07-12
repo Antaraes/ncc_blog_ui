@@ -15,6 +15,7 @@ export interface AddBlogFormValues {
   message_link?: string;
   rank?: string;
   category_id: string;
+
   medias?: FileList;
   main_media_index?: number;
 }
@@ -38,6 +39,7 @@ export const AddProductService = () => {
     handleSubmit,
     control,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm<AddBlogFormValues>({
     resolver: zodResolver(schema),
@@ -98,6 +100,7 @@ export const AddProductService = () => {
     subCategories,
     onSubmit,
     register,
+    getValues,
     handleSubmit,
     errors,
     setValue,

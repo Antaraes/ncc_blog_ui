@@ -43,6 +43,7 @@
     "react-hook-form": "^7.52.1",
     "react-hot-toast": "^2.4.1",
     "react-hotkeys": "^2.0.0",
+    "react-modal-sheet": "^3.1.0",
     "react-quill": "^2.0.0",
     "react-redux": "^9.1.2",
     "swiper": "^11.1.4",

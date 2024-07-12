@@ -130,8 +130,6 @@ export default function Home() {
             </Button>
           </form>
           {loading && <Spinner />}
-          {error && <p className="text-red-500">{error}</p>}
-          {success && <p className="text-green-500">{success}</p>}
         </div>
       </div>
     </main>

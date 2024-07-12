@@ -16,6 +16,7 @@ import {
 import { MoreHorizontal } from 'lucide-react';
 import { useRmoveMutation } from '@/hooks/useRemoveMutation';
 import { removeProduct } from '@/api';
+import { useRouter } from 'next/navigation';
 
 interface pageProps {}
 
@@ -24,6 +25,7 @@ const Page: FC<pageProps> = ({}) => {
     apiFunction: removeProduct,
     queryKey: ['all-products'],
   });
+  const route = useRouter();
   const handleDelete = (productId: string) => {
     handleMutation(productId);
   };
@@ -57,7 +59,13 @@ const Page: FC<pageProps> = ({}) => {
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          route.push(`product/${product._id}/update`)
+                        }
+                      >
+                        Edit
+                      </DropdownMenuItem>
                       <DropdownMenuItem
                         className="text-red-500"
                         onClick={() => handleDelete(product._id)}

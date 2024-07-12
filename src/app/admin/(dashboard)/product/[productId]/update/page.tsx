@@ -1,9 +1,9 @@
 'use client';
-import { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { AddProductService } from '@/services/product/AddProduct.service';
+
 import {
   CircleX,
   CopyCheck,
@@ -13,32 +13,28 @@ import {
   Send,
   Trash,
 } from 'lucide-react';
-import { Sheet } from 'react-modal-sheet';
 import { useMediaQuery } from '@react-hook/media-query';
-import { Pagination, Autoplay } from 'swiper/modules';
-import {
-  FormControl,
-  FormDescription,
-  FormItem,
-  FormLabel,
-} from '@/components/ui/form';
+
 import { Switch } from '@/components/ui/switch';
 import 'react-quill/dist/quill.snow.css';
 import Spinner from '@/components/common/Spinner';
 import { Controller } from 'react-hook-form';
-
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { UpdateProductService } from '@/services/product/UpdateProduct.service';
+import { useParams } from 'next/navigation';
 
-interface PageProps {}
+interface PageProps {
+  productId: string; // Pass the product ID to the component
+}
 
-const ProductPage: FC<PageProps> = ({}) => {
+const ProductPage: FC<PageProps> = () => {
+  const { productId } = useParams();
   const [isModalOpen, setModalOpen] = useState(false);
   const {
     register,
@@ -51,10 +47,12 @@ const ProductPage: FC<PageProps> = ({}) => {
     getValues,
     isSuccess,
     control,
-  } = AddProductService();
+    loadProductData,
+  } = UpdateProductService(productId); // Pass product ID to the service
   const [tableOfContents, setTableOfContents] = useState<
     { id: string; text: string }[]
   >([]);
+
   const isMobile = useMediaQuery('(max-width: 1280px)');
   const [mainMediaIndex, setMainMediaIndex] = useState<number>(0);
   const [uploadedImages, setUploadedImages] = useState<any[]>([]);
@@ -62,6 +60,7 @@ const ProductPage: FC<PageProps> = ({}) => {
     () => dynamic(() => import('react-quill'), { ssr: false }),
     []
   );
+
   useEffect(() => {
     if (getValues('content')) {
       const tempDivElement = window.document.createElement('div');
@@ -85,20 +84,20 @@ const ProductPage: FC<PageProps> = ({}) => {
     });
     setUploadedImages([...uploadedImages, ...imageUrls]);
   };
+
   const handleDeleteImage = (index: number) => {
     const updatedImages = [...uploadedImages];
     updatedImages.splice(index, 1); // Remove image at index
     setUploadedImages(updatedImages);
   };
-  // Handle main media index change
+
   const handleMainMediaIndexChange = (index: number) => {
     setMainMediaIndex(index);
     setValue('main_media_index', index);
   };
-
   return (
     <div className="w-full flex flex-col justify-center">
-      <p className="text-4xl border-secondary font-bold">Add New Blog</p>
+      <p className="text-4xl border-secondary font-bold">Update Blog</p>
       <hr className="h-px my-8 border-0 bg-gray-700" />
       <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
         <div className="grid w-full items-center gap-10 grid-cols-2 justify-between">
@@ -113,12 +112,13 @@ const ProductPage: FC<PageProps> = ({}) => {
             <Input
               id="title"
               type="text"
+              defaultValue={loadProductData?.data.blog.title}
               {...register('title', { required: 'Title is required' })}
               placeholder="Enter Title.."
             />
-            {errors.title && (
+            {/* {errors.title && (
               <p className="text-red-500">{errors.title.message}</p>
-            )}
+            )} */}
           </div>
 
           <div>
@@ -129,21 +129,21 @@ const ProductPage: FC<PageProps> = ({}) => {
             <Label className="font-bold" htmlFor="content">
               Content
             </Label>
-
             <Controller
               name="content"
               control={control}
               render={({ field }) => (
                 <ReactQuill
                   theme="snow"
-                  value={field.value}
+                  defaultValue={loadProductData?.data.blog.content}
+                  value={field.value || loadProductData?.data.blog.content}
                   onChange={field.onChange}
                 />
               )}
             />
-            {errors.content && (
+            {/* {errors.content && (
               <p className="text-red-500">{errors.content.message}</p>
-            )}
+            )} */}
           </div>
 
           <div>
@@ -160,9 +160,9 @@ const ProductPage: FC<PageProps> = ({}) => {
               {...register('external_link')}
               placeholder="Enter External Link.."
             />
-            {errors.external_link && (
+            {/* {errors.external_link && (
               <p className="text-red-500">{errors.external_link.message}</p>
-            )}
+            )} */}
           </div>
 
           <div>
@@ -179,9 +179,9 @@ const ProductPage: FC<PageProps> = ({}) => {
               {...register('message_link')}
               placeholder="Enter Message Link.."
             />
-            {errors.message_link && (
+            {/* {errors.message_link && (
               <p className="text-red-500">{errors.message_link.message}</p>
-            )}
+            )} */}
           </div>
 
           <div>
@@ -198,9 +198,9 @@ const ProductPage: FC<PageProps> = ({}) => {
               {...register('rank')}
               placeholder="Enter Rank.."
             />
-            {errors.rank && (
+            {/* {errors.rank && (
               <p className="text-red-500">{errors.rank.message}</p>
-            )}
+            )} */}
           </div>
 
           <div>
@@ -211,25 +211,21 @@ const ProductPage: FC<PageProps> = ({}) => {
             <Label className="font-bold" htmlFor="category_id">
               Category
             </Label>
-            <select
+            {/* <select
               id="category_id"
               className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-              {...register('category_id', {
-                required: 'Category is required',
-              })}
+              {...register('category_id')}
             >
               <option value="">Select Category</option>
-              {subCategories?.data?.map(
-                (category: { name: string; _id: string }) => (
-                  <option key={category._id} value={category._id}>
-                    {category.name}
-                  </option>
-                )
-              )}
-            </select>
-            {errors.category_id && (
-              <p className="text-red-500">{errors.category_id.message}</p>
-            )}
+              {subCategories &&
+                subCategories?.data?.map(
+                  (category: { name: string; _id: string }) => (
+                    <option key={category._id} value={category._id}>
+                      {category.name}
+                    </option>
+                  )
+                )}
+            </select> */}
           </div>
 
           <div>
@@ -240,13 +236,7 @@ const ProductPage: FC<PageProps> = ({}) => {
             <Label className="font-bold" htmlFor="medias">
               Medias
             </Label>
-            <Input
-              id="medias"
-              type="file"
-              {...register('medias')}
-              multiple
-              onChange={(e) => handleImageUpload(e.target.files!)}
-            />
+
             {uploadedImages.length > 0 && (
               <div>
                 <div className="grid grid-cols-3 gap-4 ">
@@ -258,60 +248,61 @@ const ProductPage: FC<PageProps> = ({}) => {
                       {item.urlType.endsWith('.mp4') ? (
                         <video
                           autoPlay
-                          muted
-                          loop
-                          preload="none"
-                          width={200}
-                          height={200}
+                          controls
+                          className="absolute w-full h-full"
                         >
-                          <source src={`${item.url}`} type="video/mp4" />
+                          <source src={item.url} type="video/mp4" />
                         </video>
                       ) : (
                         <Image
-                          alt="Card background"
+                          className="absolute w-full h-full"
+                          src={item.url}
+                          alt={`media-${index}`}
                           width={200}
                           height={200}
-                          className="w-full h-full"
-                          src={`${item.url}`}
                         />
                       )}
-                      {mainMediaIndex === index && (
-                        <div className="image-overlay"></div>
-                      )}
-                      <label className="flex items-center">
-                        <input
-                          type="radio"
-                          className="absolute top-0 left-0  flex items-center justify-center border border-gray-300 rounded-full checked:bg-blue-500 checked:border-transparent focus:outline-none"
-                          name="main_media"
-                          value={index}
-                          checked={mainMediaIndex === index}
-                          onChange={() => handleMainMediaIndexChange(index)}
-                        />
-                      </label>
+
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className="absolute w-6 h-6 right-0 p-0"
+                          >
+                            <CopyCheck className="h-4 w-4" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto">
+                          <div className="flex flex-col items-center space-y-2">
+                            <Label>Main Image</Label>
+                            <Switch
+                              onClick={() => handleMainMediaIndexChange(index)}
+                              checked={mainMediaIndex === index}
+                            />
+                          </div>
+                        </PopoverContent>
+                      </Popover>
                       <Button
-                        type="button"
-                        variant={'link'}
+                        variant="destructive"
+                        className="absolute w-6 h-6 left-0 p-0"
                         onClick={() => handleDeleteImage(index)}
-                        className="absolute top-0 right-0  flex items-center justify-center "
                       >
-                        <CircleX size={20} className="fill-red-600" />
+                        <Trash className="h-4 w-4" />
                       </Button>
                     </div>
                   ))}
                 </div>
               </div>
             )}
-            {errors.medias && (
-              <p className="text-red-500">{errors.medias.message}</p>
-            )}
           </div>
         </div>
-        <div className="py-10 flex items-center justify-end">
-          <Button disabled={isLoading} type="submit" className="px-10">
-            {isLoading && <Spinner />}
-            Submit
-          </Button>
-        </div>
+
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? <Spinner /> : 'Submit'}
+        </Button>
+        {isSuccess && (
+          <p className="text-green-500 mt-2">Product updated successfully!</p>
+        )}
       </form>
     </div>
   );

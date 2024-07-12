@@ -17,6 +17,8 @@ export const getRoles = () => API.get('/admin/role');
 
 //Category
 export const addCategory = (data: any) => API.post('/category/add', data);
+export const updateCategory = (data: any, id: any) =>
+  API.patch(`/category/${id}`, data);
 export const addSubcategory = (data: any) =>
   API.post('/category/sub-category', data);
 export const getAllCategories = () => API.get('/category');
