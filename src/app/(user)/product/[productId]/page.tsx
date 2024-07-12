@@ -140,7 +140,7 @@ const Page: FC<PageProps> = ({}) => {
   return (
     <div className="w-full h-full text-black">
       <Image
-        src={`http://localhost:8000/${data.data.blog.main_media}`}
+        src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${data.data.blog.main_media}`}
         width={800}
         alt="main media"
         height={300}
@@ -252,7 +252,7 @@ const Page: FC<PageProps> = ({}) => {
                   className="z-0 w-full h-full object-cover rounded-xl"
                   width={500}
                   height={300}
-                  src={`http://localhost:8000/${item}`}
+                  src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${item}`}
                 />
               </div>
             </SwiperSlide>

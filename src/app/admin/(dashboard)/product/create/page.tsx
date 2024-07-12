@@ -16,6 +16,7 @@ import 'react-quill/dist/quill.snow.css';
 import Spinner from '@/components/common/Spinner';
 import { Controller } from 'react-hook-form';
 import ReactQuill from 'react-quill';
+import Image from 'next/image';
 
 interface PageProps {}
 
@@ -33,12 +34,14 @@ const ProductPage: FC<PageProps> = ({}) => {
   } = AddProductService();
 
   const [mainMediaIndex, setMainMediaIndex] = useState<number>(0);
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<any[]>([]);
 
   const handleImageUpload = (files: FileList) => {
-    const imageUrls = Array.from(files).map((file) =>
-      URL.createObjectURL(file)
-    );
+    const imageUrls = Array.from(files).map((file) => {
+      let url = URL.createObjectURL(file);
+      let urlType = file.name;
+      return { url, urlType };
+    });
     setUploadedImages(imageUrls);
   };
 
@@ -201,14 +204,29 @@ const ProductPage: FC<PageProps> = ({}) => {
             />
             {uploadedImages.length > 0 && (
               <div>
-                <div className="flex gap-4">
-                  {uploadedImages.map((imageUrl, index) => (
+                <div className="grid grid-co gap-4">
+                  {uploadedImages.map((item, index) => (
                     <div key={index} className="flex flex-col items-center">
-                      <img
-                        src={imageUrl}
-                        alt={`Uploaded ${index}`}
-                        className="w-24 h-24 object-cover"
-                      />
+                      {item.urlType.endsWith('.mp4') ? (
+                        <video
+                          autoPlay
+                          muted
+                          loop
+                          preload="none"
+                          width={200}
+                          height={200}
+                        >
+                          <source src={`${item.url}`} type="video/mp4" />
+                        </video>
+                      ) : (
+                        <Image
+                          alt="Card background"
+                          width={100}
+                          height={100}
+                          className="z-0  object-cover"
+                          src={`${item.url}`}
+                        />
+                      )}
                       <label>
                         <input
                           type="radio"

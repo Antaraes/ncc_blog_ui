@@ -1,18 +1,27 @@
 'use client';
 import Spinner from '@/components/common/Spinner';
 import { truncateText } from '@/lib/utils';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React, { Suspense } from 'react';
 
 const MediaCard = ({ data }: { data: any }) => {
-  const { main_media, title, content } = data;
+  const { main_media, title, content, _id } = data;
 
   const isVideo = main_media.endsWith('.mp4');
-  const truncatedText = truncateText(content, 50); // Adjust the length as needed
+  const truncatedText = truncateText(content, 50);
+  const truncatedTitle = truncateText(title, 10); // Adjust the length as needed
+  const route = useRouter();
 
   return (
     <>
-      <div className="absolute z-10 bottom-1 left-2 flex-col items-start text-white">
-        <p className="text-tiny text-white/60 uppercase font-bold">{title}</p>
+      <div
+        onClick={() => route.push(`product/${_id}`)}
+        className="absolute z-10 bottom-1 left-2 flex-col items-start cursor-pointer text-white"
+      >
+        <p className="text-tiny text-white/60 uppercase font-bold">
+          {truncatedTitle}
+        </p>
 
         <div
           dangerouslySetInnerHTML={{ __html: truncatedText }}
@@ -22,15 +31,17 @@ const MediaCard = ({ data }: { data: any }) => {
       {isVideo ? (
         <video autoPlay muted loop preload="none">
           <source
-            src={`http://localhost:8000/${main_media}`}
+            src={`${process.env.MediaURL}${main_media}`}
             type="video/mp4"
           />
         </video>
       ) : (
-        <img
+        <Image
           alt="Card background"
+          width={400}
+          height={300}
           className="z-0 w-full h-full object-cover"
-          src={`path-to-your-media-directory/${main_media}`}
+          src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
         />
       )}
     </>
