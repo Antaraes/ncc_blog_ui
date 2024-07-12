@@ -15,7 +15,7 @@ const page: FC<pageProps> = ({}) => {
           <Link href={'team/create'}>Add New Member</Link>
         </Button>
       </div>
-      <MemberList />
+      {/* <MemberList /> */}
     </>
   );
 };
