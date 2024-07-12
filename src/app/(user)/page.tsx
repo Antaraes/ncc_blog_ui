@@ -30,7 +30,7 @@ export default function Home() {
     setRecaptchaToken(token || '');
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setLoading(true);
     setError('');
