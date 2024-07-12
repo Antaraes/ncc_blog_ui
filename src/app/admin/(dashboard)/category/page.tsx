@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DataTable } from './data-table';
 import { columns } from './column';
 import useFetch from '@/hooks/useFetch';
-import { getMainCategories, getSubCategories } from '@/api';
+import { getMainCategories, getSubCategories, removeCategory } from '@/api';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,15 +17,38 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
 import { format } from 'date-fns';
+import { useRmoveMutation } from '@/hooks/useRemoveMutation';
 
 interface pageProps {}
 
 const Page: FC<pageProps> = ({}) => {
-  const { data: main_categories } = useFetch(
+  const { data: main_categories, refetch: mainRefetch } = useFetch(
     'main_categories',
     getMainCategories
   );
-  const { data: sub_categories } = useFetch('sub_categories', getSubCategories);
+  const { handleMutation: mainHandleMutation, isLoading: mainIsLoading } =
+    useRmoveMutation({
+      apiFunction: removeCategory,
+
+      queryKey: ['main_categories'],
+    });
+  const handleMainDelete = (categroyId: string) => {
+    mainHandleMutation(categroyId);
+    mainRefetch();
+  };
+  const { handleMutation: SubHandleMutation, isLoading: SubIsLoading } =
+    useRmoveMutation({
+      apiFunction: removeCategory,
+      queryKey: ['sub_categories'],
+    });
+  const handleSubDelete = (categroyId: string) => {
+    SubHandleMutation(categroyId);
+    subRefetch();
+  };
+  const { data: sub_categories, refetch: subRefetch } = useFetch(
+    'sub_categories',
+    getSubCategories
+  );
   return (
     <>
       <div className="w-full">
@@ -75,7 +98,10 @@ const Page: FC<pageProps> = ({}) => {
 
                           <DropdownMenuSeparator />
                           <DropdownMenuItem>Edit</DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-500">
+                          <DropdownMenuItem
+                            className="text-red-500"
+                            onClick={() => handleMainDelete(category._id)}
+                          >
                             Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -109,7 +135,10 @@ const Page: FC<pageProps> = ({}) => {
 
                           <DropdownMenuSeparator />
                           <DropdownMenuItem>Edit</DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-500">
+                          <DropdownMenuItem
+                            className="text-red-500"
+                            onClick={() => handleSubDelete(category._id)}
+                          >
                             Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>

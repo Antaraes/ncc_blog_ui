@@ -59,7 +59,7 @@ export function DataTable<TData, TValue>({
 
   const { data, isLoading } = useFetch('subCategories', getSubCategories);
   const { data: blogs, refetch } = useFetch('all-products', () =>
-    getBlogsbyCategory(selectedCategory)
+    getBlogsbyCategory(selectedCategory || subCategories[0]?._id)
   );
 
   useEffect(() => {
@@ -71,9 +71,6 @@ export function DataTable<TData, TValue>({
 
   useEffect(() => {
     if (selectedCategory) {
-      // API.get(`/category/${selectedCategory}`).then((response) => {
-      //   setTableData(response.data.data.blogs || []);
-      // });
       refetch();
       setTableData(blogs?.data.blogs || []);
     }
@@ -101,6 +98,7 @@ export function DataTable<TData, TValue>({
     setSearchValue(value);
     table.setGlobalFilter(value);
   };
+
   if (isLoading) {
     return (
       <div className="flex w-full justify-center items-center h-screen">
@@ -158,7 +156,7 @@ export function DataTable<TData, TValue>({
           </DropdownMenu>
         </div>
       </div>
-      <div className="rounded-md border max-h-[400px]  overflow-y-scroll">
+      <div className="rounded-md border max-h-[400px] overflow-y-scroll">
         <Table className="">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

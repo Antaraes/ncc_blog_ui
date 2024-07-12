@@ -5,7 +5,7 @@ import { HeartIcon, MenuIcon, SearchIcon } from 'lucide-react';
 import Headroom from 'react-headroom';
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
-import { SheetTrigger, SheetContent, Sheet } from '@/components/ui/sheet'; // Import Sheet components here
+import { SheetTrigger, SheetContent, Sheet } from '@/components/ui/sheet';
 import NavigationDropDown from '@/components/user/NavigationDropDown';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence, delay } from 'framer-motion';

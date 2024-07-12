@@ -51,19 +51,6 @@ const Menus = [
   },
 
   {
-    title: 'Product Stock ',
-    src: 'product_stock',
-    icon: <Database />,
-    link: '/admin/product-stock',
-    hr: true,
-  },
-  {
-    title: 'Calendar ',
-    src: 'calander',
-    icon: <Calendar />,
-    link: '/admin/calendar',
-  },
-  {
     title: 'Customer Feedback ',
     src: 'customer',
     icon: <User />,

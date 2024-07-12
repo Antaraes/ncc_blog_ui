@@ -10,7 +10,7 @@ const MediaCard = ({ data }: { data: any }) => {
 
   const isVideo = main_media.endsWith('.mp4');
   const truncatedText = truncateText(content, 50);
-  const truncatedTitle = truncateText(title, 10); // Adjust the length as needed
+  const truncatedTitle = truncateText(title, 10);
   const route = useRouter();
 
   return (

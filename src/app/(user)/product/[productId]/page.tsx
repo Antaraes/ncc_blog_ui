@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/popover';
 import 'swiper/css/pagination';
 import { useMediaQuery } from '@react-hook/media-query';
+import { truncateText } from '@/lib/utils';
 
 interface PageProps {}
 
@@ -55,14 +56,12 @@ const Page: FC<PageProps> = ({}) => {
       return html.replace(/<[^>]+>/g, ''); // Remove all HTML tags
     };
 
-    // Helper function to find the index of a heading or strong tag
     const findTagIndex = (html: string, tagName: string, startIndex = 0) => {
       const regex = new RegExp(`<${tagName}[^>]*>(.*?)</${tagName}>`, 'gi');
       const match = regex.exec(html.slice(startIndex));
       return match ? startIndex + match.index : -1;
     };
 
-    // Find the first occurrence of h1, h2, h3, h4, or strong tags
     const headingTags = ['h1', 'h2', 'h3', 'h4', 'strong'];
     let firstHeadingIndex = -1;
     let firstHeadingTag = '';
@@ -136,6 +135,7 @@ const Page: FC<PageProps> = ({}) => {
       </div>
     );
   }
+  const truncatedContents = truncateText(data.data.blog.content, 100);
 
   return (
     <div className="w-full h-full text-black">
@@ -155,7 +155,7 @@ const Page: FC<PageProps> = ({}) => {
             dangerouslySetInnerHTML={{
               __html: showFullContent
                 ? data.data.blog.content
-                : truncatedContent,
+                : truncatedContents,
             }}
             className="text-lg"
           ></div>

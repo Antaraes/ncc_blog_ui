@@ -7,12 +7,9 @@ import { Label } from '@/components/ui/label';
 import MediaCard from '@/components/user/homepage/MediaCard';
 import ProductCardCarousel from '@/components/user/homepage/ProductCardCarousel';
 import useFetch from '@/hooks/useFetch';
-import Image from 'next/image';
-
-import 'react-quill/dist/quill.snow.css';
 import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css';
 import { Button } from '@/components/ui/button';
-import toast from 'react-hot-toast';
 
 export default function Home() {
   const { data, isLoading } = useFetch('head-blogs', getProductsByRankandView);
@@ -34,16 +31,17 @@ export default function Home() {
 
     try {
       await addFeedback({ email, content });
-      toast.success('Feedback submitted successfully');
+      setSuccess('Feedback submitted successfully!');
       setEmail('');
       setContent('');
-    } catch (error: any) {
+    } catch (error) {
       setError('An error occurred while submitting feedback.');
-      toast.error(error.message);
     } finally {
       setLoading(false);
     }
   };
+
+  const slicedData = data?.data.slice(0, 6) || [];
 
   if (isLoading) {
     return (
@@ -53,25 +51,25 @@ export default function Home() {
     );
   }
 
+  const mediaCards = Array.from(
+    { length: Math.max(4, slicedData.length) },
+    (_, index) => (
+      <div
+        key={index}
+        className={`col-span-12 sm:col-span-4 h-[300px] relative overflow-hidden rounded-lg`}
+      >
+        {slicedData[index] && <MediaCard data={slicedData[index]} />}
+      </div>
+    )
+  );
+
   return (
     <main className="flex min-h-screen h-full flex-col items-center justify-between w-[90%] mx-auto">
-      <div className="w-full gap-2 grid grid-cols-12 grid-rows-2">
-        <div className="col-span-12 sm:col-span-6 h-[300px] relative overflow-hidden rounded-lg">
-          <MediaCard data={data.data[0]} />
+      {slicedData.length > 0 && (
+        <div className="w-full gap-2 grid grid-cols-12 grid-rows-2">
+          {mediaCards}
         </div>
-        <div className="col-span-12 sm:col-span-6 h-[300px] relative overflow-hidden rounded-lg">
-          <MediaCard data={data.data[1]} />
-        </div>
-        <div className="col-span-12 sm:col-span-4 h-[300px] relative overflow-hidden rounded-lg">
-          <MediaCard data={data.data[2]} />
-        </div>
-        <div className="col-span-12 sm:col-span-4 h-[300px] relative overflow-hidden rounded-lg">
-          <MediaCard data={data.data[3]} />
-        </div>
-        <div className="col-span-12 sm:col-span-4 h-[300px] relative overflow-hidden rounded-lg">
-          <MediaCard data={data.data[4]} />
-        </div>
-      </div>
+      )}
       <div className="w-full">
         <ProductCardCarousel />
       </div>

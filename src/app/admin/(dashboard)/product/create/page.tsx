@@ -209,7 +209,7 @@ const ProductPage: FC<PageProps> = ({}) => {
             />
             {uploadedImages.length > 0 && (
               <div>
-                <div className="grid grid-co gap-4">
+                <div className="grid grid-cols-4 gap-4">
                   {uploadedImages.map((item, index) => (
                     <div key={index} className="flex flex-col items-center">
                       {item.urlType.endsWith('.mp4') ? (
