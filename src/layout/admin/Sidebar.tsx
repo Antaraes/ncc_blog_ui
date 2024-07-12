@@ -54,7 +54,7 @@ const Menus = [
     title: 'Customer Feedback ',
     src: 'customer',
     icon: <User />,
-    link: '/admin/customer',
+    link: '/admin/feedback',
   },
 
   {

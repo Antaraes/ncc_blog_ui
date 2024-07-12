@@ -42,7 +42,7 @@ const Layout: FC<layoutProps> = ({ children }) => {
         <Navbar toggleSidebar={toggleSidebar} sidebarOpen={isSidebarOpen} />
         <div className="p-5">{children}</div>
       </div>
-      <Toaster />
+      <Toaster position="top-right" reverseOrder={false} />
     </div>
   );
 };

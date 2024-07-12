@@ -49,3 +49,5 @@ export const addNewCategory = (data: any) => API.post('/categories', data);
 
 //Feedback
 export const addFeedback = (data: any) => API.post('/feedback/add', data);
+export const getFeedback = () => API.get('/feedback');
+export const deleteFeedback = (id: any) => API.delete(`/feedback/${id}`);

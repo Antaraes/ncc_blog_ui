@@ -10,6 +10,8 @@ import useFetch from '@/hooks/useFetch';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 import { Button } from '@/components/ui/button';
+import toast from 'react-hot-toast';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 export default function Home() {
   const { data, isLoading } = useFetch('head-blogs', getProductsByRankandView);
@@ -18,10 +20,15 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [recaptchaToken, setRecaptchaToken] = useState('');
   const ReactQuill = useMemo(
     () => dynamic(() => import('react-quill'), { ssr: false }),
     []
   );
+
+  const handleRecaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token || '');
+  };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -29,13 +36,21 @@ export default function Home() {
     setError('');
     setSuccess('');
 
+    if (!recaptchaToken) {
+      setError('Please complete the reCAPTCHA verification.');
+      setLoading(false);
+      return;
+    }
+
     try {
-      await addFeedback({ email, content });
+      await addFeedback({ email, content, recaptchaToken });
       setSuccess('Feedback submitted successfully!');
+      toast.success('Feedback submitted successfully!');
       setEmail('');
       setContent('');
-    } catch (error) {
+    } catch (error: any) {
       setError('An error occurred while submitting feedback.');
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }
@@ -119,17 +134,20 @@ export default function Home() {
               theme="snow"
               value={content}
               onChange={setContent}
-              className="h-[100px]"
+              className="h-[100px] my-5"
               placeholder="Enter Content.."
             />
             <br />
+            <ReCAPTCHA
+              sitekey="6LfChQ4qAAAAAENzPonrygCzNj6gqdPdiDSrOYuU" // Replace with your reCAPTCHA site key
+              onChange={handleRecaptchaChange}
+            />
             <Button type="submit" className="btn btn-primary mt-10">
               Submit
             </Button>
           </form>
           {loading && <Spinner />}
           {error && <p className="text-red-500">{error}</p>}
-          {success && <p className="text-green-500">{success}</p>}
         </div>
       </div>
     </main>

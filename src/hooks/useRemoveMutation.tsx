@@ -14,7 +14,7 @@ export const useRmoveMutation = ({
   const mutation = useMutation({
     mutationFn: (id: string) => apiFunction(id),
     onSuccess: () => {
-      queryClient.refetchQueries({ queryKey: [queryKey] });
+      queryClient.invalidateQueries({ queryKey: [queryKey] });
     },
   });
 

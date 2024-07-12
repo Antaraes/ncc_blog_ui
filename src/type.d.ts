@@ -3,6 +3,7 @@ interface LoginFormValues {
   password: string;
 }
 type Category = {
+  content: any;
   id: number;
   name: string;
 };
