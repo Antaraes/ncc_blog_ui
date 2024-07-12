@@ -1,5 +1,5 @@
 'use client';
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,8 +15,9 @@ import { Switch } from '@/components/ui/switch';
 import 'react-quill/dist/quill.snow.css';
 import Spinner from '@/components/common/Spinner';
 import { Controller } from 'react-hook-form';
-import ReactQuill from 'react-quill';
+
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 
 interface PageProps {}
 
@@ -35,6 +36,10 @@ const ProductPage: FC<PageProps> = ({}) => {
 
   const [mainMediaIndex, setMainMediaIndex] = useState<number>(0);
   const [uploadedImages, setUploadedImages] = useState<any[]>([]);
+  const ReactQuill = useMemo(
+    () => dynamic(() => import('react-quill'), { ssr: false }),
+    []
+  );
 
   const handleImageUpload = (files: FileList) => {
     const imageUrls = Array.from(files).map((file) => {

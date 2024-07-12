@@ -1,5 +1,6 @@
 'use client';
-import { getProductsByRankandView } from '@/api';
+import { useMemo, useState } from 'react';
+import { getProductsByRankandView, addFeedback } from '@/api';
 import Spinner from '@/components/common/Spinner';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -7,11 +8,43 @@ import MediaCard from '@/components/user/homepage/MediaCard';
 import ProductCardCarousel from '@/components/user/homepage/ProductCardCarousel';
 import useFetch from '@/hooks/useFetch';
 import Image from 'next/image';
-import ReactQuill from 'react-quill';
+
 import 'react-quill/dist/quill.snow.css';
+import dynamic from 'next/dynamic';
+import { Button } from '@/components/ui/button';
+import toast from 'react-hot-toast';
 
 export default function Home() {
   const { data, isLoading } = useFetch('head-blogs', getProductsByRankandView);
+  const [email, setEmail] = useState('');
+  const [content, setContent] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const ReactQuill = useMemo(
+    () => dynamic(() => import('react-quill'), { ssr: false }),
+    []
+  );
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      await addFeedback({ email, content });
+      toast.success('Feedback submitted successfully');
+      setEmail('');
+      setContent('');
+    } catch (error: any) {
+      setError('An error occurred while submitting feedback.');
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex w-full justify-center items-center h-screen">
@@ -19,11 +52,10 @@ export default function Home() {
       </div>
     );
   }
-  console.log(process.env.API_URL);
 
   return (
-    <main className="flex min-h-screen h-full flex-col items-center  justify-between w-[90%] mx-auto ">
-      <div className="w-full gap-2 grid grid-cols-12 grid-rows-2 ">
+    <main className="flex min-h-screen h-full flex-col items-center justify-between w-[90%] mx-auto">
+      <div className="w-full gap-2 grid grid-cols-12 grid-rows-2">
         <div className="col-span-12 sm:col-span-6 h-[300px] relative overflow-hidden rounded-lg">
           <MediaCard data={data.data[0]} />
         </div>
@@ -45,10 +77,10 @@ export default function Home() {
       </div>
       <div className="flex justify-between w-full">
         <div className="w-1/2">
-          <p className="font-bold text-3xl"> Lets Talk</p>
+          <p className="font-bold text-3xl">Lets Talk</p>
           <p className="text-muted-foreground">
             Have some big idea or brand to develop and need help? Then reach out
-            wed love to hear about your project and provide help
+            wed love to hear about your project and provide help.
           </p>
           <br />
           <p className="font-bold text-3xl">Email</p>
@@ -57,39 +89,49 @@ export default function Home() {
           </a>
           <br />
           <p className="font-bold text-3xl">Social</p>
-          <a href="mailto:blog@email.com" className="text-base block">
-            instagram
+          <a href="https://instagram.com" className="text-base block">
+            Instagram
           </a>
-          <a href="mailto:blog@email.com" className="text-base block">
+          <a href="https://twitter.com" className="text-base block">
             Twitter
           </a>
-          <a href="mailto:blog@email.com" className="text-base block">
+          <a href="https://facebook.com" className="text-base block">
             Facebook
           </a>
         </div>
         <div className="w-1/2">
-          <form action="">
-            <Label className="font-bold" htmlFor="title">
+          <form onSubmit={handleSubmit}>
+            <Label className="font-bold" htmlFor="email">
               Email
             </Label>
             <Input
-              id="title"
-              type="text"
-              // {...register('title', { required: 'Title is required' })}
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter Email.."
+              required
             />
             <br />
-            <Label className="font-bold" htmlFor="title">
+            <Label className="font-bold" htmlFor="content">
               Content
             </Label>
             <ReactQuill
-              id="title"
+              id="content"
               theme="snow"
+              value={content}
+              onChange={setContent}
               className="h-[100px]"
-              // {...register('title', { required: 'Title is required' })}
               placeholder="Enter Content.."
             />
+            <br />
+            <Button type="submit" className="btn btn-primary mt-10">
+              Submit
+            </Button>
           </form>
+          {loading && <Spinner />}
+          {error && <p className="text-red-500">{error}</p>}
+          {success && <p className="text-green-500">{success}</p>}
         </div>
       </div>
     </main>

@@ -23,6 +23,7 @@ export const getAllCategories = () => API.get('/category');
 export const getSubCategories = () => API.get('/category/sub-category');
 export const getMainCategories = () => API.get('/category/parent');
 export const getBlogsbyCategory = (data: any) => API.get(`/category/${data}`);
+export const removeCategory = (id: any) => API.delete(`/category/${id}`);
 
 //Products
 export const getAllProducts = () => API.get('/products');
@@ -45,4 +46,6 @@ export const getDetailUserProduct = (id: any) =>
 //Categories
 
 export const addNewCategory = (data: any) => API.post('/categories', data);
-export const removeCategory = (id: any) => API.delete(`/categories/${id}`);
+
+//Feedback
+export const addFeedback = (data: any) => API.post('/feedback/add', data);
