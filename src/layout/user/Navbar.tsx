@@ -9,6 +9,8 @@ import { SheetTrigger, SheetContent, Sheet } from '@/components/ui/sheet';
 import NavigationDropDown from '@/components/user/NavigationDropDown';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence, delay } from 'framer-motion';
+import { useWishlistContext } from '@/context/wishlistContext';
+import { isAuthenticated } from '@/lib';
 
 interface NavbarProps {}
 
@@ -17,9 +19,10 @@ const Navbar: FC<NavbarProps> = () => {
   const [isLoginModal, setIsLoginModal] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [wishlistCount, setWishlistCount] = useState(0);
+
   const [wishlists, setWishlists] = useState([]);
-  const navMenu = [
+  const { wishlistCount } = useWishlistContext();
+  const navMenu: any = [
     {
       name: 'Home',
       href: '/',
@@ -28,7 +31,17 @@ const Navbar: FC<NavbarProps> = () => {
       name: 'Contact Us',
       href: '/contactus',
     },
+    isAuthenticated() && {
+      name: 'Dashboard',
+      href: '/admin',
+    },
   ];
+  useEffect(() => {
+    // Retrieve wishlist count from localStorage
+    const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+
+    setWishlists(wishlist);
+  }, []);
 
   const headerRef = useRef<HTMLDivElement>(null);
 
@@ -53,12 +66,6 @@ const Navbar: FC<NavbarProps> = () => {
       window.document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isSearchOpen]);
-  useEffect(() => {
-    // Retrieve wishlist count from localStorage
-    const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-    setWishlistCount(wishlist.length);
-    setWishlists(wishlist);
-  }, []);
 
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
@@ -71,7 +78,7 @@ const Navbar: FC<NavbarProps> = () => {
 
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Handle search submission logic here
+
     console.log('Search submitted:', searchQuery);
   };
 
@@ -93,7 +100,7 @@ const Navbar: FC<NavbarProps> = () => {
         className={`lg:block hidden w-full h-${isSearchOpen ? '[400px]' : '20'} ${isSearchOpen ? 'items-start' : 'items-center'} shrink-0  bg-white border-b-2 drop-shadow-sm  px-10 lg:justify-around z-30`}
       >
         <div
-          className={`flex justify-between lg:justify-around ${!isSearchOpen && 'h-full'} mt-3 w-full`}
+          className={`flex justify-between lg:justify-around ${!isSearchOpen ? 'h-full' : 'mt-3'} w-full`}
         >
           <div className="hidden lg:flex gap-6 items-center">
             <Link href={'/'}>
@@ -104,7 +111,7 @@ const Navbar: FC<NavbarProps> = () => {
                 height={20}
               />
             </Link>
-            {navMenu.map((item, index) => (
+            {navMenu.map((item: any, index: number) => (
               <Link
                 key={index}
                 className={`relative text-black before:bg-black/90 after:bg-black/90 hover:text-black/90 inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-base font-medium transition-all ease-in-out before:transition-[width] before:ease-in-out before:duration-500 before:absolute before:origin-center before:h-[2px] before:w-0 hover:before:w-[50%] before:bottom-0 before:left-[50%] after:transition-[width] after:ease-in-out after:duration-700 after:absolute after:origin-center after:h-[2px] after:w-0 hover:after:w-[50%] after:bottom-0 after:right-[50%]`}
@@ -113,6 +120,7 @@ const Navbar: FC<NavbarProps> = () => {
                 {item.name}
               </Link>
             ))}
+            <NavigationDropDown />
           </div>
 
           <div className="lg:flex hidden items-center gap-4">
@@ -183,7 +191,7 @@ const Navbar: FC<NavbarProps> = () => {
 
           <SheetContent side="right" className="bg-white">
             <div className="grid gap-2 py-6">
-              {navMenu.map((item, index) => (
+              {navMenu.map((item: any, index: number) => (
                 <Link
                   key={index}
                   className="flex w-full items-center py-2 text-lg font-semibold"

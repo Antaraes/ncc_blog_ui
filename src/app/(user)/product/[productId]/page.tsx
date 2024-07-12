@@ -18,6 +18,7 @@ import {
 import 'swiper/css/pagination';
 import { useMediaQuery } from '@react-hook/media-query';
 import { truncateText } from '@/lib/utils';
+import { useWishlistContext } from '@/context/wishlistContext';
 
 interface PageProps {}
 
@@ -30,7 +31,7 @@ const Page: FC<PageProps> = ({}) => {
 
   const [showFullContent, setShowFullContent] = useState(false);
   const [truncatedContent, setTruncatedContent] = useState<string>('');
-
+  const { setWishlistCount } = useWishlistContext();
   const [tableOfContents, setTableOfContents] = useState<
     { id: string; text: string }[]
   >([]);
@@ -103,15 +104,22 @@ const Page: FC<PageProps> = ({}) => {
     const currentUrl = window.location.href;
     let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
 
-    if (wishlist.includes(currentUrl)) {
-      wishlist = wishlist.filter((item: any) => item.url !== currentUrl);
+    const existingIndex = wishlist.findIndex(
+      (item: any) => item.url === currentUrl
+    );
+
+    if (existingIndex !== -1) {
+      wishlist = wishlist.filter(
+        (item: any, index: number) => index !== existingIndex
+      );
       localStorage.setItem('wishlist', JSON.stringify(wishlist));
     } else {
       wishlist.push({ url: currentUrl, title: data.data.blog.title });
       localStorage.setItem('wishlist', JSON.stringify(wishlist));
     }
 
-    setSavePost(wishlist.includes(currentUrl));
+    setSavePost(wishlist.some((item: any) => item.url === currentUrl));
+    setWishlistCount(wishlist.length);
   };
   useEffect(() => {
     if (!isLoading && data) {

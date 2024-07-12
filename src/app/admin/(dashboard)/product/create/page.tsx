@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { AddProductService } from '@/services/product/AddProduct.service';
-import { Trash } from 'lucide-react';
+import { CircleX, Cross, Trash } from 'lucide-react';
 import {
   FormControl,
   FormDescription,
@@ -47,9 +47,13 @@ const ProductPage: FC<PageProps> = ({}) => {
       let urlType = file.name;
       return { url, urlType };
     });
-    setUploadedImages(imageUrls);
+    setUploadedImages([...uploadedImages, ...imageUrls]);
   };
-
+  const handleDeleteImage = (index: number) => {
+    const updatedImages = [...uploadedImages];
+    updatedImages.splice(index, 1); // Remove image at index
+    setUploadedImages(updatedImages);
+  };
   // Handle main media index change
   const handleMainMediaIndexChange = (index: number) => {
     setMainMediaIndex(index);
@@ -209,9 +213,12 @@ const ProductPage: FC<PageProps> = ({}) => {
             />
             {uploadedImages.length > 0 && (
               <div>
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-3 gap-4 ">
                   {uploadedImages.map((item, index) => (
-                    <div key={index} className="flex flex-col items-center">
+                    <div
+                      key={index}
+                      className="flex flex-col relative items-center w-[200px] h-[200px]"
+                    >
                       {item.urlType.endsWith('.mp4') ? (
                         <video
                           autoPlay
@@ -226,22 +233,33 @@ const ProductPage: FC<PageProps> = ({}) => {
                       ) : (
                         <Image
                           alt="Card background"
-                          width={100}
-                          height={100}
-                          className="z-0  object-cover"
+                          width={200}
+                          height={200}
+                          className="w-full h-full"
                           src={`${item.url}`}
                         />
                       )}
-                      <label>
+                      {mainMediaIndex === index && (
+                        <div className="image-overlay"></div>
+                      )}
+                      <label className="flex items-center">
                         <input
                           type="radio"
+                          className="absolute top-0 left-0  flex items-center justify-center border border-gray-300 rounded-full checked:bg-blue-500 checked:border-transparent focus:outline-none"
                           name="main_media"
                           value={index}
                           checked={mainMediaIndex === index}
                           onChange={() => handleMainMediaIndexChange(index)}
                         />
-                        Main
                       </label>
+                      <Button
+                        type="button"
+                        variant={'link'}
+                        onClick={() => handleDeleteImage(index)}
+                        className="absolute top-0 right-0  flex items-center justify-center "
+                      >
+                        <CircleX size={20} className="fill-red-600" />
+                      </Button>
                     </div>
                   ))}
                 </div>
