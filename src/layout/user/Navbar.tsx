@@ -184,7 +184,7 @@ const Navbar: FC<NavbarProps> = () => {
           )}
         </AnimatePresence>
       </header>
-      <div className="flex justify-between w-full">
+      <div className="flex justify-between w-full py-5 bg-white">
         <Sheet>
           <SheetTrigger asChild>
             <button className="lg:hidden" color="white">
@@ -193,8 +193,8 @@ const Navbar: FC<NavbarProps> = () => {
             </button>
           </SheetTrigger>
 
-          <SheetContent side="right" className="bg-white">
-            <div className="grid gap-2 py-6">
+          <SheetContent side="right" className="bg-white ">
+            <div className="grid gap-2 py-10">
               {navMenu.map((item: any, index: number) => (
                 <Link
                   key={index}
@@ -204,11 +204,19 @@ const Navbar: FC<NavbarProps> = () => {
                   {item.name}
                 </Link>
               ))}
+              {isAuthenticated() && (
+                <Link
+                  className={`flex w-full items-center py-2 text-lg font-semibold`}
+                  href={'/admin'}
+                >
+                  Dashboard
+                </Link>
+              )}
               <NavigationDropDown />
             </div>
           </SheetContent>
         </Sheet>
-        <div className="md:hidden items-center gap-4">
+        <div className="md:hidden items-center flex gap-4">
           <SearchIcon className={`cursor-pointer `} onClick={toggleSearch} />
 
           <HeartIcon />

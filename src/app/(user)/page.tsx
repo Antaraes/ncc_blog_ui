@@ -75,8 +75,8 @@ export default function Home() {
       <div className="w-full">
         <ProductCardCarousel />
       </div>
-      <div className="flex justify-between w-full  border-t-2">
-        <div className="w-1/2 my-3 mr-10">
+      <div className="flex  justify-between w-full  border-t-2">
+        <div className="w-1/2 hidden md:block  my-3 mr-10">
           <p className="font-bold text-3xl">Lets Talk</p>
           <p className="text-muted-foreground">
             Have some big idea or brand to develop and need help? Then reach out
@@ -99,7 +99,7 @@ export default function Home() {
             Facebook
           </a>
         </div>
-        <div className="w-1/2 my-3 ">
+        <div className="md:w-1/2 w-full my-3 ">
           <form onSubmit={handleSubmit}>
             <Label className="font-bold" htmlFor="email">
               Email
