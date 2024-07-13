@@ -30,8 +30,7 @@ export const LoginService = () => {
       navigate.push('/admin');
     },
     onError: (error: any) => {
-      console.error('Login failed!', error);
-      toast.error(error);
+      toast.error(error.message);
     },
   });
 

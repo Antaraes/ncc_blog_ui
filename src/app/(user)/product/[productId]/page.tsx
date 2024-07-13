@@ -142,17 +142,35 @@ const Page: FC<PageProps> = ({}) => {
     );
   }
   const truncatedContents = truncateText(data.data.blog.content, 100);
+  const isVideo =
+    data.data.blog.main_media && data.data.blog.main_media.endsWith('.mp4');
 
   return (
     <div className="w-full h-full text-black">
-      <Image
-        src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${data.data.blog.main_media}`}
-        width={800}
-        alt="main media"
-        height={300}
-        className="object-cover w-full h-[400px]"
-      />
-      <div className="grid md:grid-rows-3 md:grid-flow-col gap-4 px-4 py-4 leading-10 border-b-2 border-black/80 my-10">
+      {isVideo ? (
+        <video
+          autoPlay
+          loop
+          muted
+          className="w-full h-full object-cover"
+          // src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
+          src={
+            'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+          }
+        ></video>
+      ) : (
+        <Image
+          src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${data.data.blog.main_media}`}
+          width={800}
+          alt="main media"
+          height={300}
+          className="object-cover w-full h-[400px]"
+        />
+      )}
+      <div
+        className="grid md:grid-rows-3 
+      md:grid-flow-col gap-4 px-4 py-4 leading-10 border-b-2 border-black/80 my-10"
+      >
         <div className="p-4 w-full col-span-12 md:row-span-3 md:border-r-2 border-black">
           <div className="flex justify-between w-full items-center">
             <p className="font-medium text-xl md:text-2xl w-full ">
@@ -213,17 +231,6 @@ const Page: FC<PageProps> = ({}) => {
             }}
             className="md:text-lg text-base"
           ></div>
-          {/* <div className="flex items-center justify-center backdrop-blur-xl">
-            {!showFullContent && (
-              <Button
-                className="mt-4 border text-center text-black  border-black bg-white"
-                variant={'secondary'}
-                onClick={toggleContent}
-              >
-                Read More
-              </Button>
-            )}
-          </div> */}
         </div>
 
         <div className="p-4 w-full rounded-xl md:row-span-2 md:col-span-5 hidden md:block">
@@ -245,7 +252,7 @@ const Page: FC<PageProps> = ({}) => {
       </div>
       <div className="flex items-center justify-center w-[90%] mx-auto">
         <Swiper
-          slidesPerView={isMobile ? 1.5 : 3}
+          slidesPerView={isMobile ? 1.5 : 2.5}
           spaceBetween={isMobile ? 5 : 30}
           // centeredSlides={true}
 

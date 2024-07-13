@@ -13,7 +13,7 @@ export const columns: ColumnDef<any>[] = [
     cell: (info) => {
       const text = info.getValue()!.toString();
       const id = info.row.original._id as any;
-      const truncatedText = truncateText(text, 10); // Adjust the length as needed
+      const truncatedText = truncateText(text, 10);
       return (
         <Link
           target="__blank"

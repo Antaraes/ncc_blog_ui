@@ -40,6 +40,7 @@ interface PageProps {}
 
 const ProductPage: FC<PageProps> = ({}) => {
   const [isModalOpen, setModalOpen] = useState(false);
+  const [filesList, setFiles] = useState<any[]>();
   const {
     register,
     subCategories,
@@ -51,7 +52,7 @@ const ProductPage: FC<PageProps> = ({}) => {
     getValues,
     isSuccess,
     control,
-  } = AddProductService();
+  } = AddProductService(filesList!);
   const [tableOfContents, setTableOfContents] = useState<
     { id: string; text: string }[]
   >([]);
@@ -77,32 +78,42 @@ const ProductPage: FC<PageProps> = ({}) => {
     }
   }, [getValues('content')]);
 
-  const handleImageUpload = (files: FileList) => {
-    const imageUrls = Array.from(files).map((file) => {
+  const handleImageUpload = (newFiles: FileList) => {
+    const updatedFiles = [
+      ...Array.from(filesList || []),
+      ...Array.from(newFiles),
+    ];
+
+    setFiles(updatedFiles);
+
+    const imageUrls = updatedFiles.map((file) => {
       let url = URL.createObjectURL(file);
       let urlType = file.name;
       return { url, urlType };
     });
-    setUploadedImages([...uploadedImages, ...imageUrls]);
+    setValue('main_media_index', mainMediaIndex);
+
+    setUploadedImages(imageUrls);
   };
+
   const handleDeleteImage = (index: number) => {
     const updatedImages = [...uploadedImages];
-    updatedImages.splice(index, 1); // Remove image at index
+    updatedImages.splice(index, 1);
     setUploadedImages(updatedImages);
   };
-  // Handle main media index change
+
   const handleMainMediaIndexChange = (index: number) => {
     setMainMediaIndex(index);
     setValue('main_media_index', index);
   };
-
+  console.log(uploadedImages);
   return (
     <div className="w-full flex flex-col justify-center">
       <p className="text-4xl border-secondary font-bold">Add New Blog</p>
       <hr className="h-px my-8 border-0 bg-gray-700" />
       <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
-        <div className="grid w-full items-center gap-10 grid-cols-2 justify-between">
-          <div>
+        <div className="grid w-full items-center gap-10  md:grid-cols-2 justify-between">
+          <div className="hidden lg:block ">
             <h4 className="text-2xl font-bold">Title</h4>
             <p className="text-foreground">Enter the blog title</p>
           </div>
@@ -121,7 +132,7 @@ const ProductPage: FC<PageProps> = ({}) => {
             )}
           </div>
 
-          <div>
+          <div className="hidden lg:block ">
             <h4 className="text-2xl font-bold">Content</h4>
             <p className="text-foreground">Enter the blog content</p>
           </div>
@@ -137,6 +148,7 @@ const ProductPage: FC<PageProps> = ({}) => {
                 <ReactQuill
                   theme="snow"
                   value={field.value}
+                  className="max-h-[500px] overflow-y-scroll "
                   onChange={field.onChange}
                 />
               )}
@@ -146,7 +158,7 @@ const ProductPage: FC<PageProps> = ({}) => {
             )}
           </div>
 
-          <div>
+          <div className="hidden lg:block ">
             <h4 className="text-2xl font-bold">External Link</h4>
             <p className="text-foreground">Enter an external link (optional)</p>
           </div>
@@ -165,7 +177,7 @@ const ProductPage: FC<PageProps> = ({}) => {
             )}
           </div>
 
-          <div>
+          <div className="hidden lg:block ">
             <h4 className="text-2xl font-bold">Message Link</h4>
             <p className="text-foreground">Enter a message link (optional)</p>
           </div>
@@ -184,7 +196,7 @@ const ProductPage: FC<PageProps> = ({}) => {
             )}
           </div>
 
-          <div>
+          <div className="hidden lg:block ">
             <h4 className="text-2xl font-bold">Rank</h4>
             <p className="text-foreground">Enter the blog rank (optional)</p>
           </div>
@@ -203,7 +215,7 @@ const ProductPage: FC<PageProps> = ({}) => {
             )}
           </div>
 
-          <div>
+          <div className="hidden lg:block ">
             <h4 className="text-2xl font-bold">Category </h4>
             <p className="text-foreground">Enter the category</p>
           </div>
@@ -232,7 +244,7 @@ const ProductPage: FC<PageProps> = ({}) => {
             )}
           </div>
 
-          <div>
+          <div className="hidden lg:block ">
             <h4 className="text-2xl font-bold">Medias</h4>
             <p className="text-foreground">Upload blog images</p>
           </div>
@@ -253,7 +265,7 @@ const ProductPage: FC<PageProps> = ({}) => {
                   {uploadedImages.map((item, index) => (
                     <div
                       key={index}
-                      className="flex flex-col relative items-center w-[200px] h-[200px]"
+                      className="flex flex-col relative items-center md:w-[200px] md:h-[200px] w-[100px] h-[100px]"
                     >
                       {item.urlType.endsWith('.mp4') ? (
                         <video
@@ -306,7 +318,7 @@ const ProductPage: FC<PageProps> = ({}) => {
             )}
           </div>
         </div>
-        <div className="py-10 flex items-center justify-end">
+        <div className="py-10 flex items-center md:justify-end">
           <Button disabled={isLoading} type="submit" className="px-10">
             {isLoading && <Spinner />}
             Submit

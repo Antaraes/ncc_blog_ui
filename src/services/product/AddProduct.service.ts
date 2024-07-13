@@ -33,7 +33,7 @@ const schema = z.object({
   main_media_index: z.number(),
 });
 
-export const AddProductService = () => {
+export const AddProductService = (files: any[]) => {
   const {
     register,
     handleSubmit,
@@ -54,9 +54,9 @@ export const AddProductService = () => {
       toast.success('Blog added successfully');
       navigate.push('/admin/product');
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error('Blog creation failed!', error);
-      toast.error('Blog creation failed');
+      toast.error('Blog creation failed', error.message);
     },
   });
 
@@ -67,6 +67,7 @@ export const AddProductService = () => {
 
   const onSubmit = (data: AddBlogFormValues) => {
     const formData = new FormData();
+    console.log(data.medias, typeof data.medias);
 
     formData.append('title', data.title);
     formData.append('content', data.content);
@@ -82,7 +83,7 @@ export const AddProductService = () => {
     formData.append('category_id', data.category_id);
 
     if (data.medias) {
-      Array.from(data.medias).forEach((media, index) => {
+      files.map((media, index) => {
         formData.append(`medias`, media);
       });
     }

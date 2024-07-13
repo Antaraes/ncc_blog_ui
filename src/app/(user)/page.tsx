@@ -1,5 +1,5 @@
 'use client';
-import { useMemo, useState } from 'react';
+import { Key, useMemo, useState } from 'react';
 import { getProductsByRankandView, addFeedback } from '@/api';
 import Spinner from '@/components/common/Spinner';
 import { Input } from '@/components/ui/input';
@@ -53,22 +53,21 @@ export default function Home() {
     );
   }
 
-  const mediaCards = Array.from(
-    { length: Math.max(4, slicedData.length) },
-    (_, index) => (
-      <div
-        key={index}
-        className={`col-span-12 sm:col-span-4 h-[300px] relative overflow-hidden rounded-lg`}
-      >
-        {slicedData[index] && <MediaCard data={slicedData[index]} />}
-      </div>
-    )
-  );
+  const mediaCards = slicedData.map((_: any, index: number) => (
+    <div
+      key={index}
+      className={`col-span-12 ${slicedData.length > 2 && 'sm:col-span-4'}  h-[300px] relative overflow-hidden rounded-lg`}
+    >
+      {slicedData[index] && <MediaCard data={slicedData[index]} />}
+    </div>
+  ));
 
   return (
     <main className="flex min-h-screen h-full flex-col gap-10 items-center justify-between w-[90%] mx-auto">
       {slicedData.length > 0 && (
-        <div className="w-full gap-2 grid grid-cols-12 grid-rows-2">
+        <div
+          className={`w-full gap-2 grid grid-cols-12 ${slicedData.length > 3 && 'grid-rows-2'}`}
+        >
           {mediaCards}
         </div>
       )}
@@ -112,6 +111,7 @@ export default function Home() {
               placeholder="Enter Email.."
               required
             />
+
             <br />
             <Label className="font-bold" htmlFor="content">
               Content

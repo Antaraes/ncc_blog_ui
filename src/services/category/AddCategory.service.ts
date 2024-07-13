@@ -37,9 +37,8 @@ export const AddCategoryService = () => {
       toast.success('Category added successfully');
       navigate.push('/admin/category');
     },
-    onError: (error) => {
-      console.error('Category creation failed!', error);
-      toast.error('Category creation failed');
+    onError: (error: any) => {
+      toast.error('Category creation failed', error.message);
     },
   });
 
@@ -87,9 +86,9 @@ export const UpdateCategoryService = (
       navigate.push('/admin/category');
       closeModal();
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error('Category creation failed!', error);
-      toast.error('Category creation failed');
+      toast.error('Category creation failed', error.message);
     },
   });
 
