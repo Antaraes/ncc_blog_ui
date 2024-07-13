@@ -34,20 +34,20 @@ const Menus = [
     icon: <AreaChart />,
     link: '/admin',
   },
+  {
+    title: 'Category ',
+    src: 'Calendar',
+    gap: true,
+    icon: <Layout />,
+    link: '/admin/category',
+  },
 
   {
     title: 'Product',
     src: 'User',
-    gap: true,
     link: '/admin/product',
     icon: <Box />,
     subMenus: [],
-  },
-  {
-    title: 'Category ',
-    src: 'Calendar',
-    icon: <Layout />,
-    link: '/admin/category',
   },
 
   {

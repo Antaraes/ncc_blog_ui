@@ -4,6 +4,7 @@ import { ArrowUpDown } from 'lucide-react';
 import Image from 'next/image';
 import { truncateText } from '@/lib/utils';
 import { format } from 'date-fns';
+import Link from 'next/link';
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -11,8 +12,15 @@ export const columns: ColumnDef<any>[] = [
     header: 'Title',
     cell: (info) => {
       const text = info.getValue()!.toString();
-      const truncatedText = truncateText(text, 10); // Adjust the length as needed
-      return <div dangerouslySetInnerHTML={{ __html: truncatedText }}></div>;
+      const id = info.row.original._id as any;
+      const truncatedText = truncateText(text, 10);
+      return (
+        <Link
+          target="__blank"
+          href={`/product/${id}`}
+          dangerouslySetInnerHTML={{ __html: truncatedText }}
+        ></Link>
+      );
     },
   },
 

@@ -184,7 +184,7 @@ const Navbar: FC<NavbarProps> = () => {
           )}
         </AnimatePresence>
       </header>
-      <div className="flex justify-between w-full py-5 bg-white">
+      <div className="flex md:hidden justify-between w-full py-5 bg-white">
         <Sheet>
           <SheetTrigger asChild>
             <button className="lg:hidden" color="white">

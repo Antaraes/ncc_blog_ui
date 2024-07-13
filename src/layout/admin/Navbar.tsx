@@ -84,10 +84,10 @@ const Navbar: FC<NavbarProps> = ({ toggleSidebar, sidebarOpen }) => {
           </form>
         </div>
         <div className="flex items-center gap-4">
-          <Button variant={'secondary'}>
+          <Button>
             <Link href={'/'}>
               <Store className="md:hidden" color="white" />
-              <p className="hidden md:flex">View Webiste</p>
+              <p className="hidden md:flex ">View Webiste</p>
             </Link>
           </Button>
           <DropdownMenu>

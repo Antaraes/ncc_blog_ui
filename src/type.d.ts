@@ -3,7 +3,8 @@ interface LoginFormValues {
   password: string;
 }
 type Category = {
-  content: any;
+  description: any;
   id: number;
   name: string;
+  parent_category_id: string | null;
 };
