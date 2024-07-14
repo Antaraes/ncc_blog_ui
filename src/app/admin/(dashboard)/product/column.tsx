@@ -38,13 +38,23 @@ export const columns: ColumnDef<any>[] = [
     header: 'Main Media',
     cell: (info) => {
       const media = info.getValue() as string;
-      return media ? (
+      const isVideo = media && media.endsWith('.mp4');
+      return isVideo ? (
         <video width="50" height="50" controls>
-          <source src={media} type="video/mp4" />
+          <source
+            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${media}`}
+            type="video/mp4"
+          />
           Your browser does not support the video tag.
         </video>
       ) : (
-        'No media'
+        <Image
+          alt="Card background"
+          width={100}
+          height={100}
+          className="object-contain"
+          src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${media}`}
+        />
       );
     },
   },

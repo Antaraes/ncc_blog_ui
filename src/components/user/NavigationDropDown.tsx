@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import useFetch from '@/hooks/useFetch';
 import { getAllCategories } from '@/api';
+import useMediaQueryProvide from '@/hooks/useMediaQueryProvide';
 
 interface NavigationDropDownProps {}
 
@@ -39,7 +40,7 @@ const NavigationDropDown: FC<NavigationDropDownProps> = () => {
     setActiveMenu(null);
   };
   const { data } = useFetch('all-categories', getAllCategories);
-  const isMobile = useMediaQuery('(max-width: 1280px)');
+  const isMobile = useMediaQueryProvide();
 
   const categories = data?.data;
 

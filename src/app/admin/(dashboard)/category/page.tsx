@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DataTable } from './data-table';
 import { columns } from './column';
@@ -19,12 +19,14 @@ import { MoreHorizontal } from 'lucide-react';
 
 import { useRmoveMutation } from '@/hooks/useRemoveMutation';
 import EditableRowModal from '@/components/common/EditableRowModal';
-import { useMediaQuery } from '@react-hook/media-query';
+import useMediaQueryProvide from '@/hooks/useMediaQueryProvide';
 
 interface pageProps {}
 
 const Page: FC<pageProps> = ({}) => {
-  const isMobile = useMediaQuery('(max-width: 1280px)');
+  const isMobile = useMediaQueryProvide();
+  const [mainCategories, setMainCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
   const { data: main_categories, refetch: mainRefetch } = useFetch(
     'main_categories',
     getMainCategories
@@ -34,8 +36,12 @@ const Page: FC<pageProps> = ({}) => {
     'sub_categories',
     getSubCategories
   );
-
+  useEffect(() => {
+    setMainCategories(main_categories?.data);
+    setSubCategories(sub_categories?.data);
+  }, [main_categories, sub_categories]);
   const [editCategory, setEditCategory] = useState<any>(null);
+  const [currentTab, setCurrentTab] = useState('main_category');
 
   const { handleMutation: mainHandleMutation } = useRmoveMutation({
     apiFunction: removeCategory,
@@ -64,7 +70,11 @@ const Page: FC<pageProps> = ({}) => {
   return (
     <>
       <div className="w-full">
-        <Tabs defaultValue="main_category" className="w-full">
+        <Tabs
+          defaultValue="main_category"
+          className="w-full"
+          onValueChange={setCurrentTab}
+        >
           <div className="flex justify-between">
             <TabsList>
               <TabsTrigger
@@ -81,7 +91,14 @@ const Page: FC<pageProps> = ({}) => {
               </TabsTrigger>
             </TabsList>
             <Button size={isMobile ? 'sm' : 'lg'}>
-              <Link href={'category/create'}>Add Category</Link>
+              <Link
+                href={{
+                  pathname: 'category/create',
+                  query: { type: currentTab },
+                }}
+              >
+                Add Category
+              </Link>
             </Button>
           </div>
           <TabsContent value="main_category" className=" ">
@@ -128,7 +145,7 @@ const Page: FC<pageProps> = ({}) => {
                   },
                 },
               ]}
-              data={main_categories ? main_categories.data : []}
+              data={mainCategories ? mainCategories : []}
             />
           </TabsContent>
           <TabsContent value="sub_category">
@@ -167,7 +184,7 @@ const Page: FC<pageProps> = ({}) => {
                   },
                 },
               ]}
-              data={sub_categories ? sub_categories.data : []}
+              data={subCategories ? subCategories : []}
             />
           </TabsContent>
         </Tabs>

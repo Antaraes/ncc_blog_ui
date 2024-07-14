@@ -27,10 +27,18 @@ const schema = z.object({
   message_link: z.string().optional(),
   rank: z.string().optional(),
   category_id: z.string().min(1, { message: 'Category ID is required' }),
-  medias: z.unknown().transform((value) => {
-    return value as FileList;
-  }),
-  main_media_index: z.number(),
+  medias: z
+    .unknown()
+    .transform((value) => {
+      return value as FileList;
+    })
+    .refine((files) => files.length > 0, {
+      message: 'At least one media file is required',
+    })
+    .refine((files) => files.length <= 5, {
+      message: 'No more than 5 media files are allowed',
+    }),
+  main_media_index: z.number({ required_error: 'require to choose' }),
 });
 
 export const AddProductService = (files: any[]) => {

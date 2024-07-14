@@ -18,9 +18,10 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { Separator } from '@/components/ui/separator';
 import { logout } from '@/lib';
+import { title } from 'process';
 
 interface SidebarProps {
   className?: string;
@@ -40,6 +41,16 @@ const Menus = [
     gap: true,
     icon: <Layout />,
     link: '/admin/category',
+    subMenus: [
+      {
+        title: 'Add Main Category',
+        src: '/admin/category/create?type=main_category',
+      },
+      {
+        title: 'Add Sub Category',
+        src: '/admin/category/create?type=sub_category',
+      },
+    ],
   },
 
   {
@@ -82,6 +93,7 @@ const Menus = [
 
 const Sidebar: FC<SidebarProps> = ({ className, toggleSidebar }) => {
   const location = usePathname();
+  const searchparams = useSearchParams();
   const [openSubMenus, setOpenSubMenus] = useState<boolean[]>(
     Array(Menus.length).fill(false)
   );
@@ -138,18 +150,22 @@ const Sidebar: FC<SidebarProps> = ({ className, toggleSidebar }) => {
                         }`}
                       >
                         {Menu.subMenus.length > 0 &&
-                          Menu.subMenus.map((subMenuItem: any, idx) => (
-                            <Link
-                              href={subMenuItem?.src}
-                              key={`${idx}-${Menu?.title}`}
-                              className={`flex px-5 cursor-pointer text-center text-sm text-gray-200 py-2 hover:text-secondary ${
-                                location === subMenuItem?.src &&
-                                'text-secondary'
-                              }`}
-                            >
-                              {subMenuItem.title}
-                            </Link>
-                          ))}
+                          Menu.subMenus.map((subMenuItem: any, idx) => {
+                            return (
+                              <Link
+                                href={subMenuItem?.src}
+                                key={`${idx}-${Menu?.title}`}
+                                className={`flex px-5 cursor-pointer text-center text-sm text-black py-2 hover:text-blue-500  ${
+                                  searchparams
+                                    .get('type')
+                                    ?.includes(subMenuItem?.src) &&
+                                  'text-blue-500'
+                                }`}
+                              >
+                                {subMenuItem.title}
+                              </Link>
+                            );
+                          })}
                       </ul>
                     )}
                   {Menu.hr && <Separator className="my-2" />}

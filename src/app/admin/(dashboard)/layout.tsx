@@ -1,9 +1,9 @@
 'use client';
 import { useKeyboardShortcut } from '@/hooks/useKeyBoardShortcut';
+import useMediaQueryProvide from '@/hooks/useMediaQueryProvide';
 import Navbar from '@/layout/admin/Navbar';
 import Sidebar from '@/layout/admin/Sidebar';
 import { logout } from '@/lib';
-import { useMediaQuery } from '@react-hook/media-query';
 import { useRouter } from 'next/navigation';
 import { FC, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
@@ -13,7 +13,7 @@ interface layoutProps {
 }
 
 const Layout: FC<layoutProps> = ({ children }) => {
-  const isMobile = useMediaQuery('(max-width: 1280px)');
+  const isMobile = useMediaQueryProvide();
   const [isSidebarOpen, setIsSidebarOpen] = useState(isMobile ? false : true);
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);

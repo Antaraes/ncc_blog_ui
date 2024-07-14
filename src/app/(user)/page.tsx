@@ -11,6 +11,8 @@ import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
+import { register } from 'module';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function Home() {
   const { data, isLoading } = useFetch('head-blogs', getProductsByRankandView);
@@ -53,20 +55,35 @@ export default function Home() {
     );
   }
 
-  const mediaCards = slicedData.map((_: any, index: number) => (
-    <div
-      key={index}
-      className={`col-span-12 ${slicedData.length > 2 && 'sm:col-span-4'}  h-[300px] relative overflow-hidden rounded-lg`}
-    >
-      {slicedData[index] && <MediaCard data={slicedData[index]} />}
-    </div>
-  ));
+  const mediaCards = slicedData.map((_: any, index: number) => {
+    if (slicedData.length > 2) {
+      return (
+        <div
+          key={index}
+          className={`${slicedData.length == 2 && 'col-span-6'} ${slicedData.length > 2 && 'sm:col-span-4'}  h-[300px] relative overflow-hidden rounded-lg`}
+        >
+          {slicedData[index] && <MediaCard data={slicedData[index]} />}
+        </div>
+      );
+    }
+
+    return (
+      <div
+        key={index}
+        className={` col-span-12 h-[300px] relative overflow-hidden rounded-lg`}
+      >
+        {slicedData[index] && (
+          <MediaCard data={slicedData[index]} leastone={true} />
+        )}
+      </div>
+    );
+  });
 
   return (
     <main className="flex min-h-screen h-full flex-col gap-10 items-center justify-between w-[90%] mx-auto">
       {slicedData.length > 0 && (
         <div
-          className={`w-full gap-2 grid grid-cols-12 ${slicedData.length > 3 && 'grid-rows-2'}`}
+          className={`w-full gap-2 my-5 grid grid-cols-12 ${slicedData.length > 3 && 'grid-rows-2'}`}
         >
           {mediaCards}
         </div>
@@ -116,16 +133,15 @@ export default function Home() {
             <Label className="font-bold" htmlFor="content">
               Content
             </Label>
-            <ReactQuill
+            <Textarea
               id="content"
-              theme="snow"
               value={content}
-              onChange={setContent}
+              onChange={(e) => setContent(e.target.value)}
               className="h-[100px]"
               placeholder="Enter Content.."
             />
             <br />
-            <Button type="submit" className="btn btn-primary mt-10">
+            <Button type="submit" className="btn btn-primary mt-5">
               Submit
             </Button>
           </form>

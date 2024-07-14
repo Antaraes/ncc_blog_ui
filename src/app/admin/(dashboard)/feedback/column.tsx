@@ -9,11 +9,11 @@ export const columns: ColumnDef<any>[] = [
     header: 'Email',
     cell: (info) => {
       const email = info.getValue()!.toString();
-      const content = info.row.original.content;
+
       return (
-        <EmailModal email={email} content={content}>
-          <button className="text-blue-500 underline">{email}</button>
-        </EmailModal>
+        <a href={`mailto:${email}`} className=" text-blue-500 underline">
+          {email}
+        </a>
       );
     },
   },

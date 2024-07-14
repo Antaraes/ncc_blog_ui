@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Spinner from '@/components/common/Spinner';
 import { AddCategoryService } from '@/services/category/AddCategory.service';
+import { useParams } from 'next/navigation';
 
 interface pageProps {}
 

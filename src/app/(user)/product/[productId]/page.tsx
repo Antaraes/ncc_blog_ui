@@ -16,9 +16,9 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import 'swiper/css/pagination';
-import { useMediaQuery } from '@react-hook/media-query';
 import { truncateText } from '@/lib/utils';
 import { useWishlistContext } from '@/context/wishlistContext';
+import useMediaQueryProvide from '@/hooks/useMediaQueryProvide';
 
 interface PageProps {}
 
@@ -27,7 +27,7 @@ const Page: FC<PageProps> = ({}) => {
   const { data, isLoading } = useFetch('eachProduct', () =>
     getDetailProduct(productId)
   );
-  const isMobile = useMediaQuery('(max-width: 1280px)');
+  const isMobile = useMediaQueryProvide();
 
   const [showFullContent, setShowFullContent] = useState(false);
   const [truncatedContent, setTruncatedContent] = useState<string>('');
@@ -171,7 +171,7 @@ const Page: FC<PageProps> = ({}) => {
         className="grid md:grid-rows-3 
       md:grid-flow-col gap-4 px-4 py-4 leading-10 border-b-2 border-black/80 my-10"
       >
-        <div className="p-4 w-full col-span-12 md:row-span-3 md:border-r-2 border-black">
+        <div className="p-4 w-full col-span-12 md:row-span-3  border-black">
           <div className="flex justify-between w-full items-center">
             <p className="font-medium text-xl md:text-2xl w-full ">
               {data.data.blog.title}
@@ -234,9 +234,9 @@ const Page: FC<PageProps> = ({}) => {
           ></div>
         </div>
 
-        <div className="p-4 w-full rounded-xl md:row-span-2 md:col-span-5 hidden md:block">
+        {/* <div className="p-4 w-full rounded-xl md:row-span-2 md:col-span-5 hidden md:block">
           <p className="font-medium text-xl">Table Of Contents</p>
-          {/* Render dynamically generated table of contents */}
+          
           <ul className="list-disc ml-4">
             {tableOfContents.map((item) => (
               <li key={item.id}>
@@ -249,7 +249,7 @@ const Page: FC<PageProps> = ({}) => {
               </li>
             ))}
           </ul>
-        </div>
+        </div> */}
       </div>
       <div className="flex items-center justify-center w-[90%] mx-auto">
         <Swiper

@@ -147,19 +147,19 @@ import ProductCard from './ProductCard';
 import useFetch from '@/hooks/useFetch';
 import { getAllCategories, getSubCategories } from '@/api';
 import { Button } from '@/components/ui/button';
-import { useMediaQuery } from '@react-hook/media-query';
+import useMediaQueryProvide from '@/hooks/useMediaQueryProvide';
 interface pageProps {}
 
 const ProductCardCarousel: FC<pageProps> = () => {
-  const { data: categories, isLoading } = useFetch(
-    'all-categories',
-    getAllCategories
-  );
+  // const { data: categories, isLoading } = useFetch(
+  //   'all-categories',
+  //   getAllCategories
+  // );
   const fakeProducts = Array.from({ length: 10 });
-  const isMobile = useMediaQuery('(max-width: 1280px)');
+  const isMobile = useMediaQueryProvide();
   return (
     <div className="relative h-full my-10   overflow-hidden">
-      <Swiper
+      {/* <Swiper
         slidesPerView={isMobile ? 2.5 : 4.5}
         spaceBetween={20}
         loop={true}
@@ -175,7 +175,10 @@ const ProductCardCarousel: FC<pageProps> = () => {
             </Button>
           </SwiperSlide>
         ))}
-      </Swiper>
+      </Swiper> */}
+      <p className="font-extrabold text-2xl my-3">
+        The Lastest, <p className="text-muted-foreground inline">The New</p>{' '}
+      </p>
 
       <Swiper
         slidesPerView={isMobile ? 1.5 : 3.5}

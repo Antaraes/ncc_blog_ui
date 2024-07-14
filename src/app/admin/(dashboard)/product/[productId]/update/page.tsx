@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/popover';
 import { UpdateProductService } from '@/services/product/UpdateProduct.service';
 import { useParams } from 'next/navigation';
+import useMediaQueryProvide from '@/hooks/useMediaQueryProvide';
 
 interface PageProps {}
 
@@ -51,7 +52,7 @@ const ProductPage: FC<PageProps> = () => {
     { id: string; text: string }[]
   >([]);
 
-  const isMobile = useMediaQuery('(max-width: 1280px)');
+  const isMobile = useMediaQueryProvide();
   const [mainMediaIndex, setMainMediaIndex] = useState<number>(0);
   const [uploadedImages, setUploadedImages] = useState<any[]>([]);
   const ReactQuill = useMemo(
