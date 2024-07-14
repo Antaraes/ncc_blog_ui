@@ -76,7 +76,7 @@ const Menus = [
     src: 'logout',
     icon: <LogOutIcon />,
     function: logout,
-    link: '/admin/logout',
+    link: '/admin/login',
   },
 ];
 
@@ -93,7 +93,7 @@ const Sidebar: FC<SidebarProps> = ({ className, toggleSidebar }) => {
       return newOpenSubMenus;
     });
   };
-  console.log(location);
+
   return (
     <div className={cn('pb-12', className)}>
       <div className="shadow-[rgba(0,0,15,0.2)_0px_5px_50px_0px] h-screen fixed top-0 left-0 min-w-[250px] py-6 font-[sans-serif] overflow-auto">

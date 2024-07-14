@@ -38,7 +38,7 @@ const Page: FC<pageProps> = ({}) => {
           <Link href={'product/create'}>Add New Product</Link>
         </Button>
       </div>
-      <div>
+      <div className=" ">
         <DataTable
           columns={[
             ...columns,

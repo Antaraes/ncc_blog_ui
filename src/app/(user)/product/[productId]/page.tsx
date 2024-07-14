@@ -178,6 +178,7 @@ const Page: FC<PageProps> = ({}) => {
             </p>
             <div className="p-4 w-full   flex items-center justify-end md:gap-10 gap-3 ">
               <Button
+                variant={'link'}
                 onClick={handleWishlistClick}
                 className="border border-black bg-white"
               >
@@ -185,11 +186,11 @@ const Page: FC<PageProps> = ({}) => {
                   className={`${savepost ? 'fill-red-500' : 'fill-black'}`}
                 />
               </Button>
-              <Button className="border border-black bg-white">
+              <Button variant={'link'} className="border border-black bg-white">
                 <Eye color="black" />
                 <p className="text-black">{data.data.blog.view}</p>
               </Button>
-              <Button className="border border-black bg-white">
+              <Button variant={'link'} className="border border-black bg-white">
                 <Popover>
                   <PopoverTrigger>
                     <Send color="black" />

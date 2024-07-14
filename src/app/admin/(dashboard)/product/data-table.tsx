@@ -156,9 +156,9 @@ export function DataTable<TData, TValue>({
           </DropdownMenu>
         </div>
       </div>
-      <div className="rounded-md border max-h-[400px] overflow-y-scroll">
-        <Table className="">
-          <TableHeader>
+      <div className="rounded-md border ">
+        <Table className=" max-h-[400px] overflow-scroll">
+          <TableHeader className="max-w-screen-sm md:max-w-full">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {

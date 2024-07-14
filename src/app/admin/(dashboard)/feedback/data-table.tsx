@@ -72,7 +72,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className="h-[400px] w-full">
       <div className="flex items-center justify-between py-4">
-        <p className="text-3xl font-bold">Product</p>
+        <p className="text-3xl font-bold">Feedback</p>
         <Input
           placeholder="Search all columns..."
           value={searchValue}
