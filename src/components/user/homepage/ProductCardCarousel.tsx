@@ -160,8 +160,8 @@ const ProductCardCarousel: FC<pageProps> = () => {
   return (
     <div className="relative h-full my-10   overflow-hidden">
       <Swiper
-        slidesPerView={isMobile ? 2.5 : 6.5}
-        spaceBetween={30}
+        slidesPerView={isMobile ? 2.5 : 4.5}
+        spaceBetween={20}
         loop={true}
         // centeredSlides={true}
 
@@ -170,10 +170,7 @@ const ProductCardCarousel: FC<pageProps> = () => {
       >
         {categories?.data.map((item: any, index: number) => (
           <SwiperSlide key={index}>
-            <Button
-              className="min-w-[150px] w-full rounded-lg"
-              variant={'default'}
-            >
+            <Button className="w-full rounded-lg" variant={'default'}>
               {item.name}
             </Button>
           </SwiperSlide>
