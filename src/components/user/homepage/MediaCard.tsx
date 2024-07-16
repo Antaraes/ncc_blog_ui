@@ -17,7 +17,7 @@ const MediaCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
   return (
     <section
       onClick={() => route.push(`product/${_id}`)}
-      className="cursor-pointer "
+      className="cursor-pointer  "
     >
       {leastone && !isMobile ? (
         <div className="grid grid-cols-2 ">

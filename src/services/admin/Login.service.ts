@@ -22,12 +22,12 @@ export const LoginService = () => {
   // const [isSuccess, setIsSuccess] = useState(true);
   const loginMutation = useMutation({
     mutationFn: async (loginData: LoginFormValues) => login(loginData),
-    onSuccess: (data: any) => {
+    onSuccess: async (data: any) => {
       console.log('Login successful!', data.data.data.access_token);
 
       setCookie('ecommerce_token', data.data.data.access_token);
+      await navigate.push('/admin');
       toast.success('Login successful');
-      navigate.push('/admin');
     },
     onError: (error: any) => {
       toast.error(error.message);

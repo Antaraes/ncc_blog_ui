@@ -60,7 +60,7 @@ export default function Home() {
       return (
         <div
           key={index}
-          className={`${slicedData.length == 2 && 'col-span-6'} ${slicedData.length > 2 && 'sm:col-span-4'}  h-[300px] relative overflow-hidden rounded-lg`}
+          className={` lg:col-span-4 col-span-12  h-[300px] relative overflow-hidden rounded-lg`}
         >
           {slicedData[index] && <MediaCard data={slicedData[index]} />}
         </div>

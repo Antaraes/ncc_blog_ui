@@ -32,9 +32,6 @@ const schema = z.object({
     .transform((value) => {
       return value as FileList;
     })
-    .refine((files) => files.length > 0, {
-      message: 'At least one media file is required',
-    })
     .refine((files) => files.length <= 5, {
       message: 'No more than 5 media files are allowed',
     }),

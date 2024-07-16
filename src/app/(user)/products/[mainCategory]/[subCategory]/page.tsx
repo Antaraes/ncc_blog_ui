@@ -1,9 +1,15 @@
+import { useParams } from 'next/navigation';
 import { FC } from 'react';
 
-interface pageProps {}
+interface PageProps {}
 
-const page: FC<pageProps> = ({}) => {
-  return <div>page</div>;
+const Page: FC<PageProps> = ({}) => {
+  const { mainCategory, subCategory } = useParams();
+  return (
+    <div>
+      {mainCategory}-{subCategory}
+    </div>
+  );
 };
 
-export default page;
+export default Page;

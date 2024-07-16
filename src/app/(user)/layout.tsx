@@ -1,3 +1,4 @@
+import { SearchContextProvider } from '@/context/searchData';
 import { WishlistProvider } from '@/context/wishlistContext';
 import Footer from '@/layout/user/Footer';
 import Navbar from '@/layout/user/Navbar';
@@ -11,11 +12,14 @@ interface layoutProps {
 const layout: FC<layoutProps> = ({ children }) => {
   return (
     <div className="">
-      <WishlistProvider>
-        <Navbar />
-        {children}
-        <Footer />
-      </WishlistProvider>
+      <SearchContextProvider>
+        {' '}
+        <WishlistProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </WishlistProvider>
+      </SearchContextProvider>
     </div>
   );
 };

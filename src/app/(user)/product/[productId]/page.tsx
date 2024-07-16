@@ -149,15 +149,18 @@ const Page: FC<PageProps> = ({}) => {
     <div className="w-full h-full text-black">
       {isVideo ? (
         <video
-          autoPlay
-          loop
-          muted
-          className="w-full h-full object-cover"
-          // src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
-          src={
-            'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
-          }
-        ></video>
+          controls
+          // poster={`${import.meta.env.VITE_STORAGE_URL}/${
+          //   selectedMedia.media_thumbnail_filepath
+          // }`}
+          className="w-[80%] h-[80%] object-contain bg-black"
+        >
+          <source
+            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${data.data.blog.main_media}`}
+            // src="https://dev-allaboutme.s3.ap-southeast-1.amazonaws.com/Sequence+01.mp4"
+          />
+          Your Your browser does not support the video tag.
+        </video>
       ) : (
         <Image
           src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${data.data.blog.main_media}`}

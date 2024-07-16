@@ -27,6 +27,15 @@ export const getMainCategories = () => API.get('/category/parent');
 export const getBlogsbyCategory = (data: any) => API.get(`/category/${data}`);
 export const removeCategory = (id: any) => API.delete(`/category/${id}`);
 
+export const filterbyName = (searchQuery: string) =>
+  API.get(`/blog/search`, {
+    params: {
+      q: searchQuery,
+      page: 1,
+      limit: 20,
+    },
+  });
+
 //Products
 export const getAllProducts = () => API.get('/products');
 export const getProductsByRankandView = () =>

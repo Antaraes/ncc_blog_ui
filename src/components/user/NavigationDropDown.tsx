@@ -74,7 +74,7 @@ const NavigationDropDown: FC<NavigationDropDownProps> = () => {
             animate={{ opacity: 1, x: '0%' }}
             exit={{ opacity: 0, x: '-100%' }}
             transition={{ duration: 0.3 }}
-            className="flex flex-col "
+            className="flex flex-col z-40"
           >
             <div
               className="flex gap-2 rounded-md p-2 cursor-pointer hover:bg-secondary text-sm items-center"
@@ -142,11 +142,11 @@ const NavigationDropDown: FC<NavigationDropDownProps> = () => {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="relative text-black before:bg-black/90 after:bg-black/90 hover:text-black/90 inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-base font-medium transition-all ease-in-out before:transition-[width] before:ease-in-out before:duration-500 before:absolute before:origin-center before:h-[2px] before:w-0 hover:before:w-[50%] before:bottom-0 before:left-[50%] after:transition-[width] after:ease-in-out after:duration-700 after:absolute after:origin-center after:h-[2px] after:w-0 hover:after:w-[50%] after:bottom-0 after:right-[50%] group-hover:">
+            <NavigationMenuTrigger className="relative text-black before:bg-black/90 after:bg-black/90 hover:text-black/90 inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-base font-medium transition-all ease-in-out before:transition-[width] before:ease-in-out before:duration-500 before:absolute before:origin-center before:h-[2px] before:w-0 hover:before:w-[50%] before:bottom-0 before:left-[50%] after:transition-[width] after:ease-in-out after:duration-700 after:absolute after:origin-center after:h-[2px] after:w-0 hover:after:w-[50%] after:bottom-0 after:right-[50%] ">
               Articles
             </NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="grid w-[500px] gap-3 text-black p-4 md:w-[700px] md:grid-cols-4 lg:w-[800px]">
+              <ul className="grid w-[500px] gap-3 text-black p-4 md:w-[700px] md:grid-cols-4 lg:w-[800px] z-50">
                 {formattedCategories.map((category: any) => {
                   return (
                     <ListItem key={category.id} title={category.name}>
