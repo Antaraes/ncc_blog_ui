@@ -1,6 +1,6 @@
 'use client';
 import { Key, useMemo, useState } from 'react';
-import { getProductsByRankandView, addFeedback } from '@/api';
+import { getProductsByRank, addFeedback } from '@/api';
 import Spinner from '@/components/common/Spinner';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,7 +15,7 @@ import { register } from 'module';
 import { Textarea } from '@/components/ui/textarea';
 
 export default function Home() {
-  const { data, isLoading } = useFetch('head-blogs', getProductsByRankandView);
+  const { data, isLoading } = useFetch('head-blogs', getProductsByRank);
   const [email, setEmail] = useState('');
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
@@ -60,30 +60,19 @@ export default function Home() {
       return (
         <div
           key={index}
-          className={` lg:col-span-4 col-span-12  h-[300px] relative overflow-hidden rounded-lg`}
+          className={` lg:col-span-4 col-span-12  relative overflow-hidden rounded-lg`}
         >
           {slicedData[index] && <MediaCard data={slicedData[index]} />}
         </div>
       );
     }
-
-    return (
-      <div
-        key={index}
-        className={` col-span-12 h-[300px] relative overflow-hidden rounded-lg`}
-      >
-        {slicedData[index] && (
-          <MediaCard data={slicedData[index]} leastone={true} />
-        )}
-      </div>
-    );
   });
 
   return (
     <main className="flex min-h-screen h-full flex-col gap-10 items-center justify-between w-[90%] mx-auto">
       {slicedData.length > 0 && (
         <div
-          className={`w-full gap-2 my-5 grid grid-cols-12 ${slicedData.length > 3 && 'grid-rows-2'}`}
+          className={`w-full gap-2 grid grid-cols-12 ${slicedData.length > 3 && 'grid-rows-2'}`}
         >
           {mediaCards}
         </div>

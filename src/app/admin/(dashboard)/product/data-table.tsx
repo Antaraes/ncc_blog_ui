@@ -34,6 +34,7 @@ import useFetch from '@/hooks/useFetch';
 import { getBlogsbyCategory, getSubCategories } from '@/api';
 import API from '@/api/interceptor';
 import Spinner from '@/components/common/Spinner';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface SubCategory {
   _id: string;
@@ -58,7 +59,11 @@ export function DataTable<TData, TValue>({
   const [tableData, setTableData] = useState<TData[]>([]);
 
   const { data, isLoading } = useFetch('subCategories', getSubCategories);
-  const { data: blogs, refetch } = useFetch('all-products', () =>
+  const {
+    data: blogs,
+    isLoading: productLoading,
+    refetch,
+  } = useFetch('all-products', () =>
     getBlogsbyCategory(selectedCategory || subCategories[0]?._id)
   );
 
@@ -177,31 +182,39 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody className="">
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+            {productLoading ? (
+              <div className="flex justify-center w-full">
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
             ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
+              <>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && 'selected'}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-24 text-center"
+                    >
+                      No results.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </>
             )}
           </TableBody>
         </Table>

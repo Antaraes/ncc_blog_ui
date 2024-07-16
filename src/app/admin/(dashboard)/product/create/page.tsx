@@ -389,6 +389,9 @@ const ProductPage: FC<PageProps> = ({}) => {
             {errors.medias && (
               <p className="text-red-500">{errors.medias.message}</p>
             )}
+            {errors.main_media_index && (
+              <p className="text-red-500">{errors.main_media_index.message}</p>
+            )}
           </div>
         </div>
         <div className="py-10 flex items-center md:justify-end">

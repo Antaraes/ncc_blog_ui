@@ -8,6 +8,7 @@ import WishlistIcon from './Wishlist';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
+import { useSearchContext } from '@/context/searchData';
 
 interface MobileNavProps {
   handleSearchSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
@@ -20,6 +21,7 @@ const MobileNav: FC<MobileNavProps> = ({
   handleSearchChange,
   searchQuery,
 }) => {
+  const { data } = useSearchContext();
   const navMenu = [
     { name: 'Home', href: '/' },
     { name: 'Contact Us', href: '/contactus' },
@@ -64,32 +66,75 @@ const MobileNav: FC<MobileNavProps> = ({
           </SheetTrigger>
           <SheetContent side="top" className="bg-white/60 h-[400px]">
             <AnimatePresence>
-              <motion.div className="flex justify-center w-full z-30">
-                <form
-                  onSubmit={handleSearchSubmit}
-                  className="flex items-center bg-transparent p-2 mt-10"
-                >
-                  <Input
-                    autoFocus
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    placeholder="Search..."
-                    className="flex-grow"
-                  />
-                  <Button
-                    type="submit"
-                    size="icon"
-                    variant="link"
-                    className="ml-2 text-black rounded"
+              <motion.div className=" z-30 ">
+                <div className="flex justify-center w-full">
+                  <form
+                    onSubmit={handleSearchSubmit}
+                    className="flex items-center bg-transparent p-2 mt-10"
                   >
-                    <SearchIcon />
-                  </Button>
-                </form>
+                    <Input
+                      autoFocus
+                      value={searchQuery}
+                      onChange={handleSearchChange}
+                      placeholder="Search..."
+                      className="flex-grow"
+                    />
+                    <Button
+                      type="submit"
+                      size="icon"
+                      variant="link"
+                      className="ml-2 text-black rounded"
+                    >
+                      <SearchIcon />
+                    </Button>
+                  </form>
+                </div>
+                <div className="w-[80%] mx-auto">
+                  {data && data.parent_category?.length > 0 && (
+                    <p className="text-muted-foreground font-bold">
+                      Main Categories
+                    </p>
+                  )}
+                  {data &&
+                    data.parent_category?.map((item: any) => (
+                      <Link href={`/products/`} key={item._id} className="">
+                        {item.name}
+                      </Link>
+                    ))}
+                  {data && data.sub_category?.length > 0 && (
+                    <p className="text-muted-foreground font-bold">
+                      Sub Categories
+                    </p>
+                  )}
+                  {data &&
+                    data.sub_category?.map((item: any) => (
+                      <Link href={`/products/`} key={item._id} className="">
+                        {item.name}
+                      </Link>
+                    ))}
+                  {data && data.blogs?.length > 0 && (
+                    <p className="text-muted-foreground font-bold">Blogs</p>
+                  )}
+                  {data &&
+                    data.blogs?.map((blog: any) => (
+                      <p key={blog._id} className="">
+                        {blog.title}
+                      </p>
+                    ))}
+                  {data &&
+                    data.parent_category?.length == 0 &&
+                    data.sub_category?.length == 0 &&
+                    data.blogs?.length == 0 && (
+                      <p className="text-center text-muted-foreground font-bold">
+                        No Result Found
+                      </p>
+                    )}
+                </div>
               </motion.div>
             </AnimatePresence>
           </SheetContent>
         </Sheet>
-        <WishlistIcon />
+        {/* <WishlistIcon /> */}
       </div>
     </div>
   );

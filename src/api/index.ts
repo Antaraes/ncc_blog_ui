@@ -38,8 +38,8 @@ export const filterbyName = (searchQuery: string) =>
 
 //Products
 export const getAllProducts = () => API.get('/products');
-export const getProductsByRankandView = () =>
-  API.get('/blog?q=view&page=1&limit=10');
+export const getProductsByView = () => API.get('/blog?q=view&page=1&limit=10');
+export const getProductsByRank = () => API.get('/blog?q=rank&page=1&limit=10');
 export const getDetailProduct = (id: any) => API.get(`/blog/${id}`);
 export const addNewProduct = (data: any) => API.post('/blog/add', data);
 export const removeProduct = (id: any) => API.delete(`/blog/${id}`);

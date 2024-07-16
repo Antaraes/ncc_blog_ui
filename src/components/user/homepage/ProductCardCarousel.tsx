@@ -145,18 +145,29 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 import ProductCard from './ProductCard';
 import useFetch from '@/hooks/useFetch';
-import { getAllCategories, getSubCategories } from '@/api';
+import { getAllCategories, getProductsByView, getSubCategories } from '@/api';
 import { Button } from '@/components/ui/button';
 import useMediaQueryProvide from '@/hooks/useMediaQueryProvide';
+import { Skeleton } from '@/components/ui/skeleton';
 interface pageProps {}
 
 const ProductCardCarousel: FC<pageProps> = () => {
-  // const { data: categories, isLoading } = useFetch(
-  //   'all-categories',
-  //   getAllCategories
-  // );
+  const { data, isLoading } = useFetch('product', getProductsByView);
+
   const fakeProducts = Array.from({ length: 10 });
   const isMobile = useMediaQueryProvide();
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col space-y-3">
+        <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[250px]" />
+          <Skeleton className="h-4 w-[200px]" />
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="relative h-full my-10   overflow-hidden">
       {/* <Swiper
@@ -176,6 +187,7 @@ const ProductCardCarousel: FC<pageProps> = () => {
           </SwiperSlide>
         ))}
       </Swiper> */}
+
       <p className="font-extrabold text-2xl my-3">
         The Lastest, <p className="text-muted-foreground inline">The New</p>{' '}
       </p>
@@ -188,9 +200,9 @@ const ProductCardCarousel: FC<pageProps> = () => {
         modules={[Pagination]}
         className="mySwiper"
       >
-        {fakeProducts.map((product, index) => (
+        {data?.data?.map((product: any, index: number) => (
           <SwiperSlide key={index}>
-            <ProductCard />
+            <ProductCard product={product} />
           </SwiperSlide>
         ))}
       </Swiper>

@@ -23,14 +23,17 @@ export interface AddBlogFormValues {
 const schema = z.object({
   title: z.string().min(1, { message: 'Title is required' }),
   content: z.string().min(1, { message: 'Content is required' }),
-  external_link: z.string().optional(),
-  message_link: z.string().optional(),
+  external_link: z.string().min(1, { message: 'Link is required' }),
+  message_link: z.string().min(1, { message: 'Link is required' }),
   rank: z.string().optional(),
   category_id: z.string().min(1, { message: 'Category ID is required' }),
   medias: z
     .unknown()
     .transform((value) => {
       return value as FileList;
+    })
+    .refine((files) => files.length < 0, {
+      message: 'At least one file',
     })
     .refine((files) => files.length <= 5, {
       message: 'No more than 5 media files are allowed',
@@ -72,7 +75,7 @@ export const AddProductService = (files: any[]) => {
 
   const onSubmit = (data: AddBlogFormValues) => {
     const formData = new FormData();
-    console.log(data.medias, typeof data.medias);
+    console.log(data, typeof data.medias);
 
     formData.append('title', data.title);
     formData.append('content', data.content);

@@ -63,7 +63,7 @@ const Header: FC<HeaderProps> = ({
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <WishlistIcon />
+          {/* <WishlistIcon /> */}
         </div>
       </div>
       <SearchBar

@@ -80,11 +80,24 @@ const SearchBar: FC<SearchBarProps> = ({
               </form>
             </div>
             <div className="lg:w-[55%] xl:w-[50%] mx-auto">
-              {data && data.categories?.length > 0 && (
-                <p className="text-muted-foreground font-bold">Categories</p>
+              {data && data.parent_category?.length > 0 && (
+                <p className="text-muted-foreground font-bold">
+                  Main Categories
+                </p>
               )}
               {data &&
-                data.categories?.map((item: any) => (
+                data.parent_category?.map((item: any) => (
+                  <Link href={`/products/`} key={item._id} className="">
+                    {item.name}
+                  </Link>
+                ))}
+              {data && data.sub_category?.length > 0 && (
+                <p className="text-muted-foreground font-bold">
+                  Sub Categories
+                </p>
+              )}
+              {data &&
+                data.sub_category?.map((item: any) => (
                   <Link href={`/products/`} key={item._id} className="">
                     {item.name}
                   </Link>
@@ -99,7 +112,8 @@ const SearchBar: FC<SearchBarProps> = ({
                   </p>
                 ))}
               {data &&
-                data.categories?.length == 0 &&
+                data.parent_category?.length == 0 &&
+                data.sub_category?.length == 0 &&
                 data.blogs?.length == 0 && (
                   <p className="text-center text-muted-foreground font-bold">
                     No Result Found
