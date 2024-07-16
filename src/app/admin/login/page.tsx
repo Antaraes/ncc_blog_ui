@@ -1,9 +1,16 @@
 'use client';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { LoginService } from '@/services/admin/Login.service';
+import { ForgotService, LoginService } from '@/services/admin/Login.service';
 import Image from 'next/image';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import Spinner from '@/components/common/Spinner';
 import { Label } from '@/components/ui/label'; // Ensure you have this component
 
@@ -11,9 +18,21 @@ interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
   const { form, onSubmit, isLoading } = LoginService();
+
   const {
     formState: { errors },
   } = form;
+  const {
+    form: forgotForm,
+    onSubmit: forgotOnSubmit,
+    isLoading: forgotLoding,
+    modal,
+    setModal,
+  } = ForgotService();
+  const {
+    formState: { errors: forgotErrors },
+  } = forgotForm;
+
   return (
     <div className="flex justify-between h-screen items-center w-full overflow-y-hidden">
       <div className="w-full flex justify-center">
@@ -48,36 +67,36 @@ const page: FC<pageProps> = ({}) => {
             <Button type="submit" className="w-full">
               {isLoading ? <Spinner sm /> : 'Login'}
             </Button>
-            <p className="text-center">or</p>
-            <div className="flex gap-3">
-              <Button
-                type="button"
-                variant={'outline'}
-                className="flex items-center gap-3"
-              >
-                <Image
-                  src={'/assets/google.png'}
-                  width={20}
-                  height={20}
-                  alt="google"
-                />
-                Sign in with google
-              </Button>
-              <Button
-                type="button"
-                variant={'outline'}
-                className="flex items-center gap-3"
-              >
-                <Image
-                  src={'/assets/apple.png'}
-                  width={20}
-                  height={20}
-                  alt="apple"
-                />
-                Sign in with apple
-              </Button>
-            </div>
           </form>
+          <Dialog open={modal} onOpenChange={setModal}>
+            <DialogTrigger asChild>
+              <span className="cursor-pointer underline">Forgot Password</span>
+            </DialogTrigger>
+            <DialogContent className="w-full">
+              <DialogHeader>
+                <DialogTitle>If you dont remember password</DialogTitle>
+              </DialogHeader>
+              <form
+                onSubmit={forgotForm.handleSubmit(forgotOnSubmit)}
+                className="space-y-8 my-10"
+              >
+                <div>
+                  <Label className="font-bold">Email</Label>
+                  <Input
+                    {...forgotForm.register('email')}
+                    placeholder="example.com"
+                  />
+                </div>
+                <p className="text-sm text-red-600">
+                  {forgotErrors.email && forgotErrors.email.message}
+                </p>
+
+                <Button type="submit" className="w-full">
+                  {forgotLoding ? <Spinner sm /> : 'Submit'}
+                </Button>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
       <div className="w-1/2 md:block hidden h-full">

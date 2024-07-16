@@ -5,9 +5,14 @@ export const getByMe = () => API.get('/me');
 // Auth
 export const login = (data: LoginFormValues) =>
   API.post('/auth/admin/sign-in', data);
+export const forgotpassword = (data: any) =>
+  API.post('/auth/admin/forget-password', data);
 
 //Member
 export const memberList = () => API.get('/admin/list');
+export const getProfile = () => API.get('/admin/profile');
+export const updateProfile = (id: any, data: any) =>
+  API.patch(`/admin/${id}`, data);
 export const getMember = () => API.get('/admin/list');
 export const addMember = (data: any) => API.post('/auth/admin/create', data);
 export const memberDetail = (id: any) => API.get(`/admin/${id}`);

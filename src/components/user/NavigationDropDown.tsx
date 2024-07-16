@@ -146,7 +146,7 @@ const NavigationDropDown: FC<NavigationDropDownProps> = () => {
               Articles
             </NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="grid w-[500px] gap-3 text-black p-4 md:w-[700px] md:grid-cols-4 lg:w-[800px] z-50">
+              <ul className="grid w-[500px] gap-3 text-black p-4   lg:grid-cols-3  z-50">
                 {formattedCategories.map((category: any) => {
                   return (
                     <ListItem key={category.id} title={category.name}>

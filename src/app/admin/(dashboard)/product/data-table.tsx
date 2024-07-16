@@ -32,7 +32,6 @@ import {
 import { useState, useEffect } from 'react';
 import useFetch from '@/hooks/useFetch';
 import { getBlogsbyCategory, getSubCategories } from '@/api';
-import API from '@/api/interceptor';
 import Spinner from '@/components/common/Spinner';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -181,11 +180,19 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody className="">
+          <TableBody>
             {productLoading ? (
-              <div className="flex justify-center w-full">
-                <Skeleton className="h-4 w-[200px]" />
-              </div>
+              <>
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <TableRow key={index}>
+                    {columns.map((column, colIndex) => (
+                      <TableCell key={colIndex}>
+                        <Skeleton className="h-6 w-full bg-black/70" />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </>
             ) : (
               <>
                 {table.getRowModel().rows?.length ? (

@@ -20,17 +20,12 @@ const MediaCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
       className="cursor-pointer group relative  image-box "
     >
       <>
-        {/* <div className="absolute z-10 bottom-1 left-2 flex-col items-start cursor-pointer text-white">
+        <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none  lg:h-80 transition-all ease-in-out ">
+          <div className="absolute hidden group-hover:flex z-10  flex-col   items-center justify-center cursor-pointer text-white bg-black/50 w-full h-full">
             <p className="text-tiny text-white/60 uppercase font-bold">
               {truncatedTitle}
             </p>
-
-            <div
-              dangerouslySetInnerHTML={{ __html: truncatedText }}
-              className="text-white font-medium text-large"
-            ></div>
-          </div> */}
-        <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+          </div>
           {isVideo ? (
             <video
               autoPlay
@@ -47,7 +42,7 @@ const MediaCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
               alt="Card background"
               width={400}
               height={300}
-              className=" h-full w-full object-cover object-center lg:h-full lg:w-full"
+              className=" h-full w-full group-hover:scale-105 object-cover object-center lg:h-full lg:w-full"
               src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
             />
           )}

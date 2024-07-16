@@ -13,6 +13,7 @@ import {
   ReceiptSwissFranc,
   Settings,
   User,
+  User2Icon,
   Users,
   X,
 } from 'lucide-react';
@@ -83,6 +84,12 @@ const Menus = [
     link: '/admin/setting',
   },
   {
+    title: 'Profile',
+    src: 'profiles',
+    icon: <User2Icon />,
+    link: '/admin/profile',
+  },
+  {
     title: 'Logout',
     src: 'logout',
     icon: <LogOutIcon />,
@@ -124,6 +131,7 @@ const Sidebar: FC<SidebarProps> = ({ className, toggleSidebar }) => {
                   <div key={index}>
                     <Link
                       href={Menu.link}
+                      onClick={Menu.function}
                       className={`relative flex rounded-md p-2 cursor-pointer hover:bg-primary hover:text-white text-sm items-center gap-x-4 
     ${Menu.gap ? 'mt-9' : 'mt-2'} ${location === Menu.link ? 'bg-primary text-white before:absolute before:-left-4 before:rounded-md before:top-0 before:bottom-0 before:w-1 before:bg-primary' : 'text-foreground dark:text-white'}`}
                     >
