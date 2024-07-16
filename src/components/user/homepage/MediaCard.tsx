@@ -17,7 +17,7 @@ const MediaCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
   return (
     <section
       onClick={() => route.push(`product/${_id}`)}
-      className="cursor-pointer  image-box "
+      className="cursor-pointer group relative  image-box "
     >
       <>
         {/* <div className="absolute z-10 bottom-1 left-2 flex-col items-start cursor-pointer text-white">
@@ -30,7 +30,7 @@ const MediaCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
               className="text-white font-medium text-large"
             ></div>
           </div> */}
-        <div className="">
+        <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
           {isVideo ? (
             <video
               autoPlay
@@ -47,7 +47,7 @@ const MediaCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
               alt="Card background"
               width={400}
               height={300}
-              className=" img"
+              className=" h-full w-full object-cover object-center lg:h-full lg:w-full"
               src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
             />
           )}

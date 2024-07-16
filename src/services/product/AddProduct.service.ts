@@ -32,7 +32,7 @@ const schema = z.object({
     .transform((value) => {
       return value as FileList;
     })
-    .refine((files) => files.length < 0, {
+    .refine((files) => files.length == 0, {
       message: 'At least one file',
     })
     .refine((files) => files.length <= 5, {

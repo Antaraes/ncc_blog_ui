@@ -11,32 +11,38 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
   const isVideo = main_media && main_media.endsWith('.mp4');
   const truncatedText = truncateText(content, 10);
   return (
-    <div className=" w-full  max-h-[300px] flex-shrink-0 text-black">
-      {isVideo ? (
-        <video
-          autoPlay
-          loop
-          muted
-          className="w-full h-full object-cover"
-          src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
-          // src={
-          //   'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
-          // }
-        ></video>
-      ) : (
-        <Image
-          alt="Card background"
-          width={100}
-          height={100}
-          className=" w-full h-full object-cover"
-          src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
-        />
-      )}
-      <p className=" font-medium text-xl">{title}</p>
-      <div
-        dangerouslySetInnerHTML={{ __html: truncatedText }}
-        className="text-muted-foreground font-medium text-large"
-      ></div>
+    <div className=" group relative">
+      <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200  group-hover:opacity-75 h-40 lg:h-80">
+        {isVideo ? (
+          <video
+            autoPlay
+            loop
+            muted
+            className="w-full h-full object-cover"
+            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
+            // src={
+            //   'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+            // }
+          ></video>
+        ) : (
+          <Image
+            alt="Card background"
+            width={100}
+            height={100}
+            className="h-full w-full object-contain object-center lg:h-full lg:w-full"
+            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
+          />
+        )}
+      </div>
+      <div className="mt-4 flex flex-col justify-between">
+        <div>
+          <p className=" font-medium text-xl">{title}</p>
+        </div>
+        <div
+          dangerouslySetInnerHTML={{ __html: truncatedText }}
+          className="text-muted-foreground font-medium text-large"
+        ></div>
+      </div>
     </div>
   );
 };

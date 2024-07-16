@@ -60,7 +60,7 @@ export default function Home() {
       return (
         <div
           key={index}
-          className={` lg:col-span-4 col-span-12  relative overflow-hidden rounded-lg`}
+          className={` lg:col-span-4 col-span-12  relative overflow-hidden rounded-lg mt-6 `}
         >
           {slicedData[index] && <MediaCard data={slicedData[index]} />}
         </div>
