@@ -142,7 +142,7 @@ import { FC } from 'react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay } from 'swiper/modules';
+import { Pagination, Autoplay, Navigation, Scrollbar } from 'swiper/modules';
 import ProductCard from './ProductCard';
 import useFetch from '@/hooks/useFetch';
 import { getAllCategories, getProductsByView, getSubCategories } from '@/api';
@@ -196,8 +196,10 @@ const ProductCardCarousel: FC<pageProps> = () => {
         slidesPerView={isMobile ? 1.5 : 3.5}
         spaceBetween={isMobile ? 5 : 30}
         // centeredSlides={true}
-
-        modules={[Pagination]}
+        scrollbar={{
+          hide: true,
+        }}
+        modules={[Pagination, Navigation, Scrollbar]}
         className="mySwiper"
       >
         {data?.data?.map((product: any, index: number) => (

@@ -55,15 +55,11 @@ const SearchBar: FC<SearchBarProps> = ({
           <motion.div
             initial={{ height: 0 }}
             animate={{ opacity: 1 }}
-            // animate={{ height: '100px' }}
             exit={{ height: 0 }}
             className=" w-full z-30 absolute"
           >
-            <div className="flex justify-center ">
-              <form
-                onSubmit={handleSearchSubmit}
-                className="flex items-center bg-transparent p-2 mt-10"
-              >
+            <div className="flex justify-center">
+              <form className="flex items-center bg-transparent p-2 mt-10">
                 <Input
                   autoFocus
                   value={searchQuery}
@@ -80,25 +76,23 @@ const SearchBar: FC<SearchBarProps> = ({
               </form>
             </div>
             <div className="lg:w-[55%] xl:w-[50%] mx-auto">
-              {data && data.parent_category?.length > 0 && (
-                <p className="text-muted-foreground font-bold">
-                  Main Categories
-                </p>
-              )}
-              {data &&
-                data.parent_category?.map((item: any) => (
-                  <Link href={`/products/`} key={item._id} className="">
-                    {item.name}
-                  </Link>
-                ))}
               {data && data.sub_category?.length > 0 && (
-                <p className="text-muted-foreground font-bold">
-                  Sub Categories
-                </p>
+                <p className="text-muted-foreground font-bold">Categories</p>
               )}
               {data &&
                 data.sub_category?.map((item: any) => (
-                  <Link href={`/products/`} key={item._id} className="">
+                  <Link
+                    href={{
+                      pathname: `/products/${item.parent_category_id.name}/${item.name}`,
+                      query: {
+                        categoryId: item.parent_category_id._id,
+                        subCategoryId: item._id,
+                      },
+                    }}
+                    key={item._id}
+                    passHref
+                    className="block"
+                  >
                     {item.name}
                   </Link>
                 ))}
@@ -107,12 +101,15 @@ const SearchBar: FC<SearchBarProps> = ({
               )}
               {data &&
                 data.blogs?.map((blog: any) => (
-                  <p key={blog._id} className="">
+                  <Link
+                    key={blog._id}
+                    href={`/product/${blog._id}`}
+                    className="block"
+                  >
                     {blog.title}
-                  </p>
+                  </Link>
                 ))}
               {data &&
-                data.parent_category?.length == 0 &&
                 data.sub_category?.length == 0 &&
                 data.blogs?.length == 0 && (
                   <p className="text-center text-muted-foreground font-bold">
@@ -125,7 +122,7 @@ const SearchBar: FC<SearchBarProps> = ({
       </AnimatePresence>
       {isSearchOpen && (
         <motion.div
-          className="absolute  hidden inset-0 h-screen bg-white/70 backdrop-filter backdrop-blur-lg md:block justify-center items-center"
+          className="absolute hidden inset-0 h-screen bg-white/70 backdrop-filter backdrop-blur-lg lg:block justify-center items-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         ></motion.div>

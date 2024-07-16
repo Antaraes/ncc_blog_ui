@@ -36,14 +36,10 @@ const Header: FC<HeaderProps> = ({
 
   return (
     <header
-      className={`lg:block hidden relative w-full h-${isSearchOpen ? '[400px]' : '20'} ${
-        isSearchOpen ? 'items-start' : 'items-center'
-      } shrink-0 bg-white border-b-2 drop-shadow-sm px-10 lg:justify-around z-30`}
+      className={`lg:flex flex-col hidden relative w-full h-auto min-h-20 shrink-0 bg-white border-b-2 drop-shadow-sm  lg:justify-around  `}
     >
       <div
-        className={`flex justify-between lg:justify-around ${
-          !isSearchOpen ? 'h-full' : 'mt-3'
-        } w-full`}
+        className={`flex justify-between lg:justify-around  h-full w-full absolute `}
       >
         <div className="flex gap-6 items-center">
           {navMenu.map((item, index) => (

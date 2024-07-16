@@ -1,11 +1,12 @@
 'use client';
+import Loading from '@/app/loading';
 import { useKeyboardShortcut } from '@/hooks/useKeyBoardShortcut';
 import useMediaQueryProvide from '@/hooks/useMediaQueryProvide';
 import Navbar from '@/layout/admin/Navbar';
 import Sidebar from '@/layout/admin/Sidebar';
 import { logout } from '@/lib';
 import { useRouter } from 'next/navigation';
-import { FC, useState } from 'react';
+import { FC, Suspense, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 
 interface layoutProps {
@@ -42,7 +43,9 @@ const Layout: FC<layoutProps> = ({ children }) => {
         className={`flex-grow ${isSidebarOpen ? 'sm:ml-64' : 'sm:ml-0'} duration-200  bg-gray-100`}
       >
         <Navbar toggleSidebar={toggleSidebar} sidebarOpen={isSidebarOpen} />
-        <div className="p-5">{children}</div>
+        <div className="p-5">
+          <Suspense fallback={<Loading />}>{children}</Suspense>
+        </div>
       </div>
       <Toaster position="top-right" reverseOrder={false} />
     </div>

@@ -40,8 +40,8 @@ const MediaCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
           ) : (
             <Image
               alt="Card background"
-              width={400}
-              height={300}
+              width={800}
+              height={800}
               className=" h-full w-full group-hover:scale-105 object-cover object-center lg:h-full lg:w-full"
               src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
             />

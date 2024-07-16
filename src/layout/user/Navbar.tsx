@@ -4,8 +4,9 @@ import MobileNav from '@/components/Navbar/MobileNav';
 import { useSearchContext } from '@/context/searchData';
 import { useKeyboardShortcut } from '@/hooks/useKeyBoardShortcut';
 import useSearchQuery from '@/hooks/useSearchQuery';
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import Headroom from 'react-headroom';
+import debounce from 'lodash/debounce';
 
 const Navbar: FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -25,15 +26,26 @@ const Navbar: FC = () => {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
-  };
-  console.log(searchedData?.data.data);
-  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setData(searchedData && searchedData.data.data);
+    debounceSearch(event.target.value);
   };
 
+  const debounceSearch = debounce((query: string) => {
+    refetch();
+  }, 300);
+
+  useEffect(() => {
+    if (searchedData) {
+      setData(searchedData.data.data);
+    }
+  }, [searchedData, setData]);
+
+  const handleSearchSubmit = (event: any) => {
+    // event.preventDefault();
+  };
+
+  // console.log(searchedData?.data.data);
   return (
-    <Headroom style={{ transition: 'all .5s ease-in-out' }}>
+    <Headroom style={{ transition: 'all .5s ease-in-out', zIndex: 999 }}>
       <Header
         isSearchOpen={isSearchOpen}
         toggleSearch={toggleSearch}

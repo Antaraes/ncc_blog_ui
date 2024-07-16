@@ -27,8 +27,8 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
         ) : (
           <Image
             alt="Card background"
-            width={100}
-            height={100}
+            width={320}
+            height={320}
             className="h-full w-full object-contain object-center lg:h-full lg:w-full"
             src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
           />

@@ -90,25 +90,25 @@ const MobileNav: FC<MobileNavProps> = ({
                   </form>
                 </div>
                 <div className="w-[80%] mx-auto">
-                  {data && data.parent_category?.length > 0 && (
-                    <p className="text-muted-foreground font-bold">
-                      Main Categories
-                    </p>
-                  )}
-                  {data &&
-                    data.parent_category?.map((item: any) => (
-                      <Link href={`/products/`} key={item._id} className="">
-                        {item.name}
-                      </Link>
-                    ))}
                   {data && data.sub_category?.length > 0 && (
                     <p className="text-muted-foreground font-bold">
-                      Sub Categories
+                      Categories
                     </p>
                   )}
                   {data &&
                     data.sub_category?.map((item: any) => (
-                      <Link href={`/products/`} key={item._id} className="">
+                      <Link
+                        href={{
+                          pathname: `/products/${item.parent_category_id.name}/${item.name}`,
+                          query: {
+                            categoryId: item.parent_category_id._id,
+                            subCategoryId: item._id,
+                          },
+                        }}
+                        key={item._id}
+                        passHref
+                        className="block"
+                      >
                         {item.name}
                       </Link>
                     ))}
@@ -117,12 +117,15 @@ const MobileNav: FC<MobileNavProps> = ({
                   )}
                   {data &&
                     data.blogs?.map((blog: any) => (
-                      <p key={blog._id} className="">
+                      <Link
+                        key={blog._id}
+                        href={`/product/${blog._id}`}
+                        className="block"
+                      >
                         {blog.title}
-                      </p>
+                      </Link>
                     ))}
                   {data &&
-                    data.parent_category?.length == 0 &&
                     data.sub_category?.length == 0 &&
                     data.blogs?.length == 0 && (
                       <p className="text-center text-muted-foreground font-bold">
