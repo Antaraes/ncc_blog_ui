@@ -70,9 +70,9 @@ const NavigationDropDown: FC<NavigationDropDownProps> = () => {
         </p>
         {activeMenu !== null ? (
           <motion.div
-            initial={{ opacity: 0, x: '-100%' }}
+            initial={{ opacity: 0, x: '100%' }}
             animate={{ opacity: 1, x: '0%' }}
-            exit={{ opacity: 0, x: '-100%' }}
+            exit={{ opacity: 0, x: '100%' }}
             transition={{ duration: 0.3 }}
             className="flex flex-col z-40"
           >
@@ -108,7 +108,7 @@ const NavigationDropDown: FC<NavigationDropDownProps> = () => {
             </ul>
           </motion.div>
         ) : (
-          <ul className="py-2 text-black">
+          <ul className="py-2 text-black overflow-y-scroll max-h-[200px]">
             {formattedCategories.map((category: any, index: number) => (
               <motion.div
                 key={index}
