@@ -170,24 +170,6 @@ const ProductCardCarousel: FC<pageProps> = () => {
   }
   return (
     <div className="relative h-full my-10   overflow-hidden">
-      {/* <Swiper
-        slidesPerView={isMobile ? 2.5 : 4.5}
-        spaceBetween={20}
-        loop={true}
-        // centeredSlides={true}
-
-        modules={[Autoplay, Pagination]}
-        className="mySwiper my-5"
-      >
-        {categories?.data.map((item: any, index: number) => (
-          <SwiperSlide key={index}>
-            <Button className="w-full rounded-lg" variant={'default'}>
-              {item.name}
-            </Button>
-          </SwiperSlide>
-        ))}
-      </Swiper> */}
-
       <p className="font-extrabold text-2xl my-3">
         The Lastest, <p className="text-muted-foreground inline">The New</p>{' '}
       </p>

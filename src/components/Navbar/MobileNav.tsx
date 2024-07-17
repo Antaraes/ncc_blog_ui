@@ -28,7 +28,7 @@ const MobileNav: FC<MobileNavProps> = ({
   ];
 
   return (
-    <div className="flex md:hidden justify-between w-full py-5 bg-white">
+    <div className="flex md:hidden justify-between w-full py-5 ">
       <Sheet>
         <SheetTrigger asChild>
           <button className="lg:hidden" color="white">
@@ -64,7 +64,7 @@ const MobileNav: FC<MobileNavProps> = ({
           <SheetTrigger asChild>
             <SearchIcon className="cursor-pointer" />
           </SheetTrigger>
-          <SheetContent side="top" className="bg-white/60 h-[400px]">
+          <SheetContent side="top" className="bg-white/90 h-[400px]">
             <AnimatePresence>
               <motion.div className=" z-30 ">
                 <div className="flex justify-center w-full">
@@ -91,40 +91,44 @@ const MobileNav: FC<MobileNavProps> = ({
                 </div>
                 <div className="w-[80%] mx-auto">
                   {data && data.sub_category?.length > 0 && (
-                    <p className="text-muted-foreground font-bold">
+                    <p className="text-muted-foreground text-base font-bold">
                       Categories
                     </p>
                   )}
-                  {data &&
-                    data.sub_category?.map((item: any) => (
-                      <Link
-                        href={{
-                          pathname: `/products/${item.parent_category_id.name}/${item.name}`,
-                          query: {
-                            categoryId: item.parent_category_id._id,
-                            subCategoryId: item._id,
-                          },
-                        }}
-                        key={item._id}
-                        passHref
-                        className="block"
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
+                  <div className="max-h-[150px] text-xs overflow-y-scroll">
+                    {data &&
+                      data.sub_category?.map((item: any) => (
+                        <Link
+                          href={{
+                            pathname: `/products/${item.parent_category_id.name}/${item.name}`,
+                            query: {
+                              categoryId: item.parent_category_id._id,
+                              subCategoryId: item._id,
+                            },
+                          }}
+                          key={item._id}
+                          passHref
+                          className="block my-2"
+                        >
+                          {item.name}
+                        </Link>
+                      ))}
+                  </div>
                   {data && data.blogs?.length > 0 && (
                     <p className="text-muted-foreground font-bold">Blogs</p>
                   )}
-                  {data &&
-                    data.blogs?.map((blog: any) => (
-                      <Link
-                        key={blog._id}
-                        href={`/product/${blog._id}`}
-                        className="block"
-                      >
-                        {blog.title}
-                      </Link>
-                    ))}
+                  <div className="max-h-[150px] overflow-y-scroll text-xs">
+                    {data &&
+                      data.blogs?.map((blog: any) => (
+                        <Link
+                          key={blog._id}
+                          href={`/product/${blog._id}`}
+                          className="block my-2"
+                        >
+                          {blog.title}
+                        </Link>
+                      ))}
+                  </div>
                   {data &&
                     data.sub_category?.length == 0 &&
                     data.blogs?.length == 0 && (

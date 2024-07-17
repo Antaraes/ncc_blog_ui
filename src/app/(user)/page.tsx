@@ -13,6 +13,9 @@ import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
 import { register } from 'module';
 import { Textarea } from '@/components/ui/textarea';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SlideCard from '@/components/user/homepage/SlideCard';
+import { Autoplay, Pagination } from 'swiper/modules';
 
 export default function Home() {
   const { data, isLoading } = useFetch('head-blogs', getProductsByRank);
@@ -60,7 +63,7 @@ export default function Home() {
       return (
         <div
           key={index}
-          className={` lg:col-span-4 col-span-12  relative overflow-hidden rounded-lg mt-6 `}
+          className={` lg:col-span-4 col-span-6  relative overflow-hidden  mt-6 `}
         >
           {slicedData[index] && <MediaCard data={slicedData[index]} />}
         </div>
@@ -70,9 +73,29 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen h-full flex-col gap-10 items-center justify-between w-[90%] mx-auto">
+      <Swiper
+        autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+          pauseOnMouseEnter: true,
+        }}
+        loop={true}
+        pagination={{ clickable: true }}
+        modules={[Autoplay, Pagination]}
+      >
+        {slicedData.map((_: any, index: number) => {
+          if (slicedData.length > 2) {
+            return (
+              <SwiperSlide key={index}>
+                {slicedData[index] && <SlideCard data={slicedData[index]} />}
+              </SwiperSlide>
+            );
+          }
+        })}
+      </Swiper>
       {slicedData.length > 0 && (
         <div
-          className={`w-full gap-2 grid grid-cols-12 ${slicedData.length > 3 && 'grid-rows-2'}`}
+          className={`w-[85%] gap-2 grid grid-cols-12 ${slicedData.length > 3 && 'grid-rows-2'}`}
         >
           {mediaCards}
         </div>

@@ -39,7 +39,7 @@ const Header: FC<HeaderProps> = ({
       className={`lg:flex flex-col hidden relative w-full h-auto min-h-20 shrink-0 bg-white border-b-2 drop-shadow-sm  lg:justify-around  `}
     >
       <div
-        className={`flex justify-between lg:justify-around  h-full w-full absolute `}
+        className={`flex justify-between lg:justify-around  h-full w-full absolute z-50 `}
       >
         <div className="flex gap-6 items-center">
           {navMenu.map((item, index) => (

@@ -18,7 +18,7 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
       className=" group relative"
       onClick={() => route.push(`product/${_id}`)}
     >
-      <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200  group-hover:opacity-75 h-40 lg:h-80">
+      <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-md bg-gray-200  group-hover:opacity-75 h-[200px] lg:h-60">
         {isVideo ? (
           <video
             autoPlay
@@ -42,12 +42,8 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
       </div>
       <div className="mt-4 flex flex-col justify-between">
         <div>
-          <p className=" font-medium text-xl">{title}</p>
+          <p className=" font-medium text-base">{title}</p>
         </div>
-        <div
-          dangerouslySetInnerHTML={{ __html: truncatedText }}
-          className="text-muted-foreground font-medium text-large"
-        ></div>
       </div>
     </div>
   );

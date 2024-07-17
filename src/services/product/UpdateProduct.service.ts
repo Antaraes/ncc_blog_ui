@@ -37,6 +37,7 @@ export const UpdateProductService = (productId: any) => {
   const mutation = useMutation({
     mutationFn: (data: any) => {
       const formData = new FormData();
+      formData.append('_method', 'PUT');
       for (const key in data) {
         if (key === 'new_medias') {
           data[key].forEach((file: string | Blob) =>
@@ -46,7 +47,7 @@ export const UpdateProductService = (productId: any) => {
           formData.append(key, data[key]);
         }
       }
-      return API.patch(`/blog/${productId}`, formData, {
+      return API.post(`/blog/${productId}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
     },

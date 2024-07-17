@@ -79,36 +79,40 @@ const SearchBar: FC<SearchBarProps> = ({
               {data && data.sub_category?.length > 0 && (
                 <p className="text-muted-foreground font-bold">Categories</p>
               )}
-              {data &&
-                data.sub_category?.map((item: any) => (
-                  <Link
-                    href={{
-                      pathname: `/products/${item.parent_category_id.name}/${item.name}`,
-                      query: {
-                        categoryId: item.parent_category_id._id,
-                        subCategoryId: item._id,
-                      },
-                    }}
-                    key={item._id}
-                    passHref
-                    className="block"
-                  >
-                    {item.name}
-                  </Link>
-                ))}
+              <div className="max-h-[150px] overflow-y-scroll">
+                {data &&
+                  data.sub_category?.map((item: any) => (
+                    <Link
+                      href={{
+                        pathname: `/products/${item.parent_category_id.name}/${item.name}`,
+                        query: {
+                          categoryId: item.parent_category_id._id,
+                          subCategoryId: item._id,
+                        },
+                      }}
+                      key={item._id}
+                      passHref
+                      className="block"
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+              </div>
               {data && data.blogs?.length > 0 && (
                 <p className="text-muted-foreground font-bold">Blogs</p>
               )}
-              {data &&
-                data.blogs?.map((blog: any) => (
-                  <Link
-                    key={blog._id}
-                    href={`/product/${blog._id}`}
-                    className="block"
-                  >
-                    {blog.title}
-                  </Link>
-                ))}
+              <div className="max-h-[150px] overflow-y-scroll">
+                {data &&
+                  data.blogs?.map((blog: any) => (
+                    <Link
+                      key={blog._id}
+                      href={`/product/${blog._id}`}
+                      className="block"
+                    >
+                      {blog.title}
+                    </Link>
+                  ))}
+              </div>
               {data &&
                 data.sub_category?.length == 0 &&
                 data.blogs?.length == 0 && (
@@ -122,7 +126,7 @@ const SearchBar: FC<SearchBarProps> = ({
       </AnimatePresence>
       {isSearchOpen && (
         <motion.div
-          className="absolute hidden inset-0 h-screen bg-white/70 backdrop-filter backdrop-blur-lg lg:block justify-center items-center"
+          className="absolute hidden inset-0 h-screen bg-white/90 backdrop-filter backdrop-blur-lg lg:block justify-center items-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         ></motion.div>
