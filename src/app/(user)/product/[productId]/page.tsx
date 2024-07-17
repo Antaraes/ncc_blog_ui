@@ -147,32 +147,34 @@ const Page: FC<PageProps> = ({}) => {
 
   return (
     <div className="w-full h-full text-black">
-      {isVideo ? (
-        <video
-          controls
-          // poster={`${import.meta.env.VITE_STORAGE_URL}/${
-          //   selectedMedia.media_thumbnail_filepath
-          // }`}
-          className="w-[80%] h-[80%] object-contain bg-black"
-        >
-          <source
+      <div className="w-full h-[400px]">
+        {isVideo ? (
+          <video
+            controls
+            // poster={`${import.meta.env.VITE_STORAGE_URL}/${
+            //   selectedMedia.media_thumbnail_filepath
+            // }`}
+            className="w-[80%] h-[80%] object-contain bg-black"
+          >
+            <source
+              src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${data.data.blog.main_media}`}
+              // src="https://dev-allaboutme.s3.ap-southeast-1.amazonaws.com/Sequence+01.mp4"
+            />
+            Your Your browser does not support the video tag.
+          </video>
+        ) : (
+          <Image
             src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${data.data.blog.main_media}`}
-            // src="https://dev-allaboutme.s3.ap-southeast-1.amazonaws.com/Sequence+01.mp4"
+            width={800}
+            alt="main media"
+            height={800}
+            className="h-full w-full  object-contain object-center lg:h-full lg:w-full"
           />
-          Your Your browser does not support the video tag.
-        </video>
-      ) : (
-        <Image
-          src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${data.data.blog.main_media}`}
-          width={800}
-          alt="main media"
-          height={300}
-          className="object-cover w-full h-[400px]"
-        />
-      )}
+        )}
+      </div>
       <div
         className="grid md:grid-rows-3 
-      md:grid-flow-col gap-4 px-4 py-4 leading-10 border-b-2 border-black/80 my-10"
+      md:grid-flow-col gap-4 px-4 py-4 leading-10 border-b-2 border-black/80 my-10 "
       >
         <div className="p-4 w-full col-span-12 md:row-span-3  border-black">
           <div className="flex justify-between w-full items-center">
@@ -233,7 +235,7 @@ const Page: FC<PageProps> = ({}) => {
             dangerouslySetInnerHTML={{
               __html: data.data.blog.content,
             }}
-            className="md:text-lg text-base"
+            className="md:text-lg text-base lg:w-[90%] mx-auto"
           ></div>
         </div>
 

@@ -125,11 +125,17 @@ export function DataTable<TData, TValue>({
           onChange={(e) => setSelectedCategory(e.target.value)}
           className="flex h-9 w-full rounded-md border border-input bg-transparent mx-10 px-2 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {subCategories.map((subCategory) => (
-            <option key={subCategory._id} value={subCategory._id}>
-              {subCategory.name}
-            </option>
-          ))}
+          {subCategories.length !== 0 ? (
+            <>
+              {subCategories.map((subCategory) => (
+                <option key={subCategory._id} value={subCategory._id}>
+                  {subCategory.name}
+                </option>
+              ))}
+            </>
+          ) : (
+            <option>no categories</option>
+          )}
         </select>
         <div className="flex gap-3">
           <DropdownMenu>

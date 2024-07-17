@@ -1,5 +1,7 @@
+'use client';
 import { truncateText } from '@/lib/utils';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { FC } from 'react';
 
 interface ProductCardProps {
@@ -10,8 +12,12 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
   const { main_media, title, content, _id, view } = product;
   const isVideo = main_media && main_media.endsWith('.mp4');
   const truncatedText = truncateText(content, 10);
+  const route = useRouter();
   return (
-    <div className=" group relative">
+    <div
+      className=" group relative"
+      onClick={() => route.push(`product/${_id}`)}
+    >
       <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200  group-hover:opacity-75 h-40 lg:h-80">
         {isVideo ? (
           <video

@@ -46,7 +46,10 @@ const Header: FC<HeaderProps> = ({
             <NavLink key={index} href={item.href} name={item.name} />
           ))}
           {isAuthenticated() && <NavLink href="/admin" name="Dashboard" />}
-          <NavigationDropDown />
+
+          <div className="relative">
+            <NavigationDropDown />
+          </div>
         </div>
         <div className="lg:flex hidden items-center gap-4">
           <TooltipProvider>

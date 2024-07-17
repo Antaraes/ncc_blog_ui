@@ -142,15 +142,15 @@ const NavigationDropDown: FC<NavigationDropDownProps> = () => {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="relative text-black before:bg-black/90 after:bg-black/90 hover:text-black/90 inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-base font-medium transition-all ease-in-out before:transition-[width] before:ease-in-out before:duration-500 before:absolute before:origin-center before:h-[2px] before:w-0 hover:before:w-[50%] before:bottom-0 before:left-[50%] after:transition-[width] after:ease-in-out after:duration-700 after:absolute after:origin-center after:h-[2px] after:w-0 hover:after:w-[50%] after:bottom-0 after:right-[50%] ">
+            <NavigationMenuTrigger className=" text-black before:bg-black/90 after:bg-black/90 hover:text-black/90 inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-base font-medium transition-all ease-in-out before:transition-[width] before:ease-in-out before:duration-500 before:absolute before:origin-center before:h-[2px] before:w-0 hover:before:w-[50%] before:bottom-0 before:left-[50%] after:transition-[width] after:ease-in-out after:duration-700 after:absolute after:origin-center after:h-[2px] after:w-0 hover:after:w-[50%] after:bottom-0 after:right-[50%] ">
               Articles
             </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid w-[500px] gap-3 text-black p-4   lg:grid-cols-3  z-50">
+            <NavigationMenuContent className=" ">
+              <ul className="grid  w-[600px] max-h-[400px] overflow-y-scroll  gap-3 text-black p-4   lg:grid-cols-4  z-50">
                 {formattedCategories.map((category: any) => {
                   return (
                     <ListItem key={category.id} title={category.name}>
-                      <div className="grid grid-cols-1 gap-3">
+                      <div className="grid grid-cols-1 gap-3 ">
                         {category.subCategories &&
                           category.subCategories.map((subCategory: any) => (
                             <Link
