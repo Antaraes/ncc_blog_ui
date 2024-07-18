@@ -18,6 +18,14 @@ import { useWishlistContext } from '@/context/wishlistContext';
 import useMediaQueryProvide from '@/hooks/useMediaQueryProvide';
 import useFetch from '@/hooks/useFetch';
 import { getDetailProduct } from '@/api';
+import { motion } from 'framer-motion';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 interface ProductClientComponentProps {
   productId: any;
@@ -151,18 +159,18 @@ const ProductClientComponent: FC<ProductClientComponentProps> = ({
     data.data.blog.main_media && data.data.blog.main_media.endsWith('.mp4');
 
   return (
-    <div className="w-full h-full text-black">
+    <div className="w-full h-full relative text-black">
       <div className="w-full h-[400px]">
         {isVideo ? (
           <video controls className="w-[80%] h-[80%] object-contain bg-black">
             <source
-              src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${data.data.blog.main_media}`}
+              src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${data.data.blog.medias[0].path}`}
             />
             Your Your browser does not support the video tag.
           </video>
         ) : (
           <Image
-            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${data.data.blog.main_media}`}
+            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${data.data.blog.medias[0].path}`}
             width={800}
             alt="main media"
             height={800}
@@ -179,7 +187,7 @@ const ProductClientComponent: FC<ProductClientComponentProps> = ({
             <p className="font-medium text-xl md:text-2xl w-full ">
               {data.data.blog.title}
             </p>
-            <div className="p-4 w-full   flex items-center justify-end md:gap-10 gap-3 ">
+            <div className="p-4 w-full hidden lg:flex items-center justify-end md:gap-10 gap-3 ">
               <Button
                 variant={'link'}
                 onClick={handleWishlistClick}
@@ -244,20 +252,62 @@ const ProductClientComponent: FC<ProductClientComponentProps> = ({
           modules={[Pagination]}
           className="mySwiper"
         >
-          {data.data.blog.medias.map((item: string[], index: number) => (
+          {data.data.blog.medias.map((item: any, index: number) => (
             <SwiperSlide key={index}>
-              <div className="md:h-[400px] md:w-[400px] h-[200px] w-[200px] flex-shrink-0 text-black">
+              <div className="lg:h-[300px] lg:w-[300px] h-[200px] w-[200px] flex-shrink-0 text-black">
                 <Image
                   alt="Relaxing app background"
-                  className="z-0 w-full h-full object-cover rounded-xl"
+                  className="h-full w-full  object-contain object-center lg:h-full lg:w-full"
                   width={500}
                   height={300}
-                  src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${item}`}
+                  src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${item.path}`}
                 />
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
+      </div>
+      <div className="lg:hidden flex items-center gap-4 bg-black px-5 py-2 rounded-3xl  fixed bottom-3 left-1/2 transform -translate-x-1/2 z-40">
+        <HeartIcon
+          onClick={handleWishlistClick}
+          className={`${savepost ? 'fill-red-500' : 'fill-white'}`}
+        />
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <Eye color="black" fill="white" />
+            </TooltipTrigger>
+            <TooltipContent>{data.data.blog.view}</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <Sheet>
+          <SheetTrigger>
+            <Send color="black" fill="white" />
+          </SheetTrigger>
+          <SheetContent side={'bottom'}>
+            <p className="font-bold text-lg">Contact with us</p>
+            <a href={data.data.blog.message_link} target="_black">
+              Message me
+            </a>
+            <p className="font-bold text-lg">To Know About More this article</p>
+            <a href={data.data.blog.external_link} target="_black">
+              Link
+            </a>
+            <p className="font-bold text-lg">Share this article</p>
+            <div className="flex items-center">
+              <p className="text-muted-foreground">{window.location.href}</p>
+              <Button
+                onClick={handleCopy}
+                variant={'link'}
+                className=" text-black font-bold  "
+              >
+                {copied ? <CopyCheck /> : <CopyIcon />}
+              </Button>
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
     </div>
   );

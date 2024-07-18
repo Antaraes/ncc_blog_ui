@@ -7,11 +7,13 @@ import useSearchQuery from '@/hooks/useSearchQuery';
 import { FC, useState, useEffect } from 'react';
 import Headroom from 'react-headroom';
 import debounce from 'lodash/debounce';
+import { useParams, usePathname } from 'next/navigation';
 
 const Navbar: FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const { data, setData } = useSearchContext();
+  const location = usePathname();
   const {
     data: searchedData,
     isLoading,
@@ -38,6 +40,9 @@ const Navbar: FC = () => {
       setData(searchedData.data.data);
     }
   }, [searchedData, setData]);
+  useEffect(() => {
+    setIsSearchOpen(false);
+  }, [location]);
 
   const handleSearchSubmit = (event: any) => {
     // event.preventDefault();

@@ -34,15 +34,15 @@ export const columns: ColumnDef<any>[] = [
   //   },
   // },
   {
-    accessorKey: 'main_media',
+    accessorKey: 'medias',
     header: 'Main Media',
     cell: (info) => {
-      const media = info.getValue() as string;
-      const isVideo = media && media.endsWith('.mp4');
+      const media = info.getValue() as any;
+      const isVideo = media[0] && media[0].path.endsWith('.mp4');
       return isVideo ? (
         <video width="50" height="50" controls>
           <source
-            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${media}`}
+            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${media[0].path}`}
             type="video/mp4"
           />
           Your browser does not support the video tag.
@@ -53,7 +53,7 @@ export const columns: ColumnDef<any>[] = [
           width={100}
           height={100}
           className="object-contain"
-          src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${media}`}
+          src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${media[0].path}`}
         />
       );
     },

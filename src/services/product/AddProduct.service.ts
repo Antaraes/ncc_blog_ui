@@ -38,7 +38,6 @@ const schema = z.object({
     .refine((files) => files.length <= 5, {
       message: 'No more than 5 media files are allowed',
     }),
-  main_media_index: z.number({ required_error: 'require to choose' }),
 });
 
 export const AddProductService = (files: any[]) => {
@@ -96,11 +95,6 @@ export const AddProductService = (files: any[]) => {
       });
     }
 
-    if (data.main_media_index !== undefined && data.main_media_index !== null) {
-      formData.append('main_media_index', data.main_media_index.toString());
-    }
-
-    console.log('FormData contents:', Object.fromEntries(formData.entries()));
     blogMutation.mutate(formData);
   };
 

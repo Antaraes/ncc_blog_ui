@@ -8,10 +8,11 @@ import { useRouter } from 'next/navigation';
 import React, { Suspense } from 'react';
 
 const MediaCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
-  const { main_media, title, content, _id, view } = data;
+  const { medias, title, content, _id, view } = data;
   const isMobile = useMediaQueryProvide();
+  console.log(medias);
 
-  const isVideo = main_media && main_media.endsWith('.mp4');
+  const isVideo = medias[0].path && medias[0].path.endsWith('.mp4');
   const truncatedText = truncateText(content, 10);
   const truncatedTitle = truncateText(title, 2);
   const route = useRouter();
@@ -19,41 +20,42 @@ const MediaCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
   return (
     <section
       onClick={() => route.push(`product/${_id}`)}
-      className="cursor-pointer group relative   image-box "
+      className="cursor-pointer group   image-box "
     >
       <>
         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden lg:aspect-none  lg:h-80 transition-all ease-in-out duration-300 ">
-          <motion.div
-            className="absolute hidden group-hover:flex z-10 flex-col items-center justify-center cursor-pointer text-white bg-black/50 w-full h-full"
-            whileHover={{ opacity: 1, scale: 1.05 }}
-            initial={{ opacity: 0, scale: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <p className="lg:text-tiny text-xs  text-white/60 uppercase font-bold">
-              {truncatedTitle}
-            </p>
-          </motion.div>
-
-          {isVideo ? (
-            <video
-              autoPlay
-              loop
-              muted
-              className="w-full h-full object-cover"
-              src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
-              // src={
-              //   'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
-              // }
-            ></video>
-          ) : (
-            <Image
-              alt="Card background"
-              width={800}
-              height={800}
-              className=" h-full w-full  object-cover object-center lg:h-full lg:w-full"
-              src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
-            />
-          )}
+          <div className="relative">
+            <motion.div
+              className="absolute hidden group-hover:flex z-10 flex-col items-center justify-center rounded-xl cursor-pointer text-white bg-black/50 w-full h-full"
+              whileHover={{ opacity: 1, scale: 1.05 }}
+              initial={{ opacity: 0, scale: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <p className="lg:text-tiny text-xs  text-white/60 uppercase font-bold">
+                {truncatedTitle}
+              </p>
+            </motion.div>
+            {isVideo ? (
+              <video
+                autoPlay
+                loop
+                muted
+                className="w-full h-full object-cover"
+                src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${medias[0].path}`}
+                // src={
+                //   'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+                // }
+              ></video>
+            ) : (
+              <Image
+                alt="Card background"
+                width={800}
+                height={800}
+                className=" h-full w-full  object-contain object-center lg:h-full lg:w-full"
+                src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${medias[0].path}`}
+              />
+            )}
+          </div>
         </div>
       </>
     </section>

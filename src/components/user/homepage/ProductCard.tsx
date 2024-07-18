@@ -9,8 +9,8 @@ interface ProductCardProps {
 }
 
 const ProductCard: FC<ProductCardProps> = ({ product }) => {
-  const { main_media, title, content, _id, view } = product;
-  const isVideo = main_media && main_media.endsWith('.mp4');
+  const { medias, title, content, _id, view } = product;
+  const isVideo = medias[0] && medias[0].path.endsWith('.mp4');
   const truncatedText = truncateText(content, 10);
   const route = useRouter();
   return (
@@ -25,7 +25,7 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
             loop
             muted
             className="w-full h-full object-cover"
-            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
+            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${medias[0].path}`}
             // src={
             //   'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
             // }
@@ -36,7 +36,7 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
             width={320}
             height={320}
             className="h-full w-full object-contain object-center lg:h-full lg:w-full"
-            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
+            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${medias[0].path}`}
           />
         )}
       </div>
