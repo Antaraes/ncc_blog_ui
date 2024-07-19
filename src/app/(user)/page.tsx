@@ -57,13 +57,14 @@ export default function Home() {
       </div>
     );
   }
+  console.log(slicedData);
 
   const mediaCards = slicedData.map((_: any, index: number) => {
     if (slicedData.length > 2) {
       return (
         <div
           key={index}
-          className={` lg:col-span-4 col-span-6  relative overflow-hidden  mt-6 `}
+          className={` lg:col-span-4 col-span-12  relative overflow-hidden  mt-6 `}
         >
           {slicedData[index] && <MediaCard data={slicedData[index]} />}
         </div>

@@ -9,10 +9,10 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 const SlideCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
-  const { main_media, title, content, _id, view, message_link } = data;
+  const { medias, title, content, _id, view, message_link } = data;
   const isMobile = useMediaQueryProvide();
 
-  const isVideo = main_media && main_media.endsWith('.mp4');
+  const isVideo = medias[0] && medias[0].path.endsWith('.mp4');
 
   const route = useRouter();
 
@@ -23,7 +23,7 @@ const SlideCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
     >
       <>
         <motion.div
-          className="  w-full lg:w-[80%] flex  lg:h-80 transition-all ease-in-out duration-300"
+          className="  w-full lg:w-[90%] flex   lg:h-80 transition-all ease-in-out duration-300"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -59,14 +59,14 @@ const SlideCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
               </Button>
             </div>
           </div>
-          <div>
+          <div className="h-[100px] w-[200px] lg:h-full lg:w-full">
             {isVideo ? (
               <video
                 autoPlay
                 loop
                 muted
                 className="w-full h-full object-cover"
-                src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
+                src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${medias[0].path}`}
               ></video>
             ) : (
               <Image
@@ -74,7 +74,7 @@ const SlideCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
                 width={800}
                 height={800}
                 className="h-[300px] w-[300px]  object-cover object-center lg:h-[450px] lg:w-[300px]"
-                src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${main_media}`}
+                src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${medias[0].path}`}
               />
             )}
           </div>

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { SheetTrigger, SheetContent, Sheet } from '@/components/ui/sheet';
 import { SearchIcon, MenuIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useSearchContext } from '@/context/searchData';
+import { usePathname } from 'next/navigation';
 
 interface MobileNavProps {
   handleSearchSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
@@ -19,16 +20,22 @@ interface MobileNavProps {
 const MobileNav: FC<MobileNavProps> = ({
   handleSearchSubmit,
   handleSearchChange,
+
   searchQuery,
 }) => {
   const { data } = useSearchContext();
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const location = usePathname();
   const navMenu = [
     { name: 'Home', href: '/' },
     { name: 'Contact Us', href: '/contactus' },
   ];
+  useEffect(() => {
+    setIsSearchOpen(false);
+  }, [location]);
 
   return (
-    <div className="flex md:hidden justify-between w-full py-5 ">
+    <div className="flex lg:hidden justify-between bg-white w-full py-5 ">
       <Sheet>
         <SheetTrigger asChild>
           <button className="lg:hidden" color="white">
@@ -60,11 +67,11 @@ const MobileNav: FC<MobileNavProps> = ({
         </SheetContent>
       </Sheet>
       <div className="md:hidden items-center flex gap-4">
-        <Sheet>
+        <Sheet onOpenChange={setIsSearchOpen} open={isSearchOpen}>
           <SheetTrigger asChild>
-            <SearchIcon className="cursor-pointer" />
+            {!isSearchOpen && <SearchIcon className="cursor-pointer" />}
           </SheetTrigger>
-          <SheetContent side="top" className="bg-white/90 h-[400px]">
+          <SheetContent side="top" className="bg-white/90 mt-10 h-[400px]">
             <AnimatePresence>
               <motion.div className=" z-30 ">
                 <div className="flex justify-center w-full">
