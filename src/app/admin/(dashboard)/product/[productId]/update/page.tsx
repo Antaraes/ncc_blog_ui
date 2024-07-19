@@ -3,18 +3,8 @@ import { FC, useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-
-import {
-  CircleX,
-  CopyCheck,
-  Cross,
-  Eye,
-  HeartIcon,
-  Send,
-  Trash,
-} from 'lucide-react';
+import { CircleX, CopyCheck, Trash } from 'lucide-react';
 import { useMediaQuery } from '@react-hook/media-query';
-
 import { Switch } from '@/components/ui/switch';
 import 'react-quill/dist/quill.snow.css';
 import Spinner from '@/components/common/Spinner';
@@ -30,11 +20,27 @@ import { UpdateProductService } from '@/services/product/UpdateProduct.service';
 import { useParams } from 'next/navigation';
 import useMediaQueryProvide from '@/hooks/useMediaQueryProvide';
 
+import {
+  DndContext,
+  useDraggable,
+  useDroppable,
+  closestCenter,
+} from '@dnd-kit/core';
+import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable';
+import {
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { DraggableImage } from '@/components/user/product/DraggableImage';
+
 interface PageProps {}
 
 const ProductPage: FC<PageProps> = () => {
   const { productId } = useParams<{ productId: string }>();
   const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const {
     register,
     subCategories,
@@ -51,7 +57,7 @@ const ProductPage: FC<PageProps> = () => {
   const [tableOfContents, setTableOfContents] = useState<
     { id: string; text: string }[]
   >([]);
-
+  const [filesList, setFiles] = useState<any[]>();
   const isMobile = useMediaQueryProvide();
   const [mainMediaIndex, setMainMediaIndex] = useState<number>(0);
   const [uploadedImages, setUploadedImages] = useState<any[]>([]);
@@ -60,12 +66,22 @@ const ProductPage: FC<PageProps> = () => {
     []
   );
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    })
+  );
+
   useEffect(() => {
     if (getValues('content')) {
       const tempDivElement = window.document.createElement('div');
       tempDivElement.innerHTML = getValues('content');
 
-      const headings = tempDivElement.querySelectorAll('h1, h2, h3, h4,strong');
+      const headings = tempDivElement.querySelectorAll(
+        'h1, h2, h3, h4, strong'
+      );
       const tocItems = Array.from(headings).map((heading, index) => ({
         id: `toc-${index}`,
         text: heading.textContent || '',
@@ -74,6 +90,41 @@ const ProductPage: FC<PageProps> = () => {
       setTableOfContents(tocItems);
     }
   }, []);
+
+  useEffect(() => {
+    if (loadProductData?.data?.blog?.medias) {
+      const images = loadProductData.data.blog.medias.map(
+        (media: any, index: number) => ({
+          url: process.env.NEXT_PUBLIC_MEDIA_URL + media.path,
+        })
+      );
+      setUploadedImages(images);
+    }
+  }, [loadProductData]);
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Delete') {
+        handleDeleteSelectedImages();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [selectedItems]);
+  const handleDeleteSelectedImages = () => {
+    const updatedImages = uploadedImages.filter(
+      (_, index) => !selectedItems.includes(index)
+    );
+    const updatedFiles = filesList?.filter(
+      (_, index) => !selectedItems.includes(index)
+    );
+    setUploadedImages(updatedImages);
+    setFiles(updatedFiles);
+    setSelectedItems([]);
+  };
 
   const handleImageUpload = (files: FileList) => {
     const imageUrls = Array.from(files).map((file) => {
@@ -89,11 +140,26 @@ const ProductPage: FC<PageProps> = () => {
     updatedImages.splice(index, 1); // Remove image at index
     setUploadedImages(updatedImages);
   };
-
-  const handleMainMediaIndexChange = (index: number) => {
-    setMainMediaIndex(index);
-    setValue('main_media_index', index);
+  const handleSelectImage = (index: number) => {
+    if (selectedItems.includes(index)) {
+      setSelectedItems(selectedItems.filter((item) => item !== index));
+    } else {
+      setSelectedItems([...selectedItems, index]);
+    }
   };
+
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      setUploadedImages((items) => {
+        const oldIndex = items.findIndex((item) => item.path === active.id);
+        const newIndex = items.findIndex((item) => item.path === over.id);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  };
+
   return (
     <div className="w-full flex flex-col justify-center">
       <p className="text-4xl border-secondary font-bold">Update Blog</p>
@@ -111,13 +177,10 @@ const ProductPage: FC<PageProps> = () => {
             <Input
               id="title"
               type="text"
-              defaultValue={loadProductData?.data.blog.title}
+              value={loadProductData?.data.blog.title}
               {...register('title', { required: 'Title is required' })}
               placeholder="Enter Title.."
             />
-            {/* {errors.title && (
-              <p className="text-red-500">{errors.title.message}</p>
-            )} */}
           </div>
 
           <div>
@@ -140,9 +203,6 @@ const ProductPage: FC<PageProps> = () => {
                 />
               )}
             />
-            {/* {errors.content && (
-              <p className="text-red-500">{errors.content.message}</p>
-            )} */}
           </div>
 
           <div>
@@ -159,9 +219,6 @@ const ProductPage: FC<PageProps> = () => {
               {...register('external_link')}
               placeholder="Enter External Link.."
             />
-            {/* {errors.external_link && (
-              <p className="text-red-500">{errors.external_link.message}</p>
-            )} */}
           </div>
 
           <div>
@@ -178,9 +235,6 @@ const ProductPage: FC<PageProps> = () => {
               {...register('message_link')}
               placeholder="Enter Message Link.."
             />
-            {/* {errors.message_link && (
-              <p className="text-red-500">{errors.message_link.message}</p>
-            )} */}
           </div>
 
           <div>
@@ -197,13 +251,10 @@ const ProductPage: FC<PageProps> = () => {
               {...register('rank')}
               placeholder="Enter Rank.."
             />
-            {/* {errors.rank && (
-              <p className="text-red-500">{errors.rank.message}</p>
-            )} */}
           </div>
 
           <div>
-            <h4 className="text-2xl font-bold">Category </h4>
+            <h4 className="text-2xl font-bold">Category</h4>
             <p className="text-foreground">Enter the category</p>
           </div>
           <div>
@@ -235,63 +286,30 @@ const ProductPage: FC<PageProps> = () => {
             <Label className="font-bold" htmlFor="medias">
               Medias
             </Label>
-
             {uploadedImages.length > 0 && (
-              <div>
-                <div className="grid grid-cols-3 gap-4 ">
-                  {uploadedImages.map((item, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-col relative items-center w-[200px] h-[200px]"
-                    >
-                      {item.urlType.endsWith('.mp4') ? (
-                        <video
-                          autoPlay
-                          controls
-                          className="absolute w-full h-full"
-                        >
-                          <source src={item.url} type="video/mp4" />
-                        </video>
-                      ) : (
-                        <Image
-                          className="absolute w-full h-full"
-                          src={item.url}
-                          alt={`media-${index}`}
-                          width={200}
-                          height={200}
-                        />
-                      )}
-
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            className="absolute w-6 h-6 right-0 p-0"
-                          >
-                            <CopyCheck className="h-4 w-4" />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto">
-                          <div className="flex flex-col items-center space-y-2">
-                            <Label>Main Image</Label>
-                            <Switch
-                              onClick={() => handleMainMediaIndexChange(index)}
-                              checked={mainMediaIndex === index}
-                            />
-                          </div>
-                        </PopoverContent>
-                      </Popover>
-                      <Button
-                        variant="destructive"
-                        className="absolute w-6 h-6 left-0 p-0"
-                        onClick={() => handleDeleteImage(index)}
-                      >
-                        <Trash className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={uploadedImages.map((image) => image.url)}
+                >
+                  <div className="grid grid-cols-3 gap-4">
+                    {uploadedImages.map((item, index) => (
+                      <DraggableImage
+                        key={item.url}
+                        id={item.url}
+                        url={item.url}
+                        onRemove={() => handleDeleteImage(index)}
+                        index={index}
+                        onSelect={() => handleSelectImage(index)}
+                        selectedItems={selectedItems}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
             )}
           </div>
         </div>

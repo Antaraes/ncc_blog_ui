@@ -28,6 +28,25 @@ import 'react-quill/dist/quill.snow.css';
 import Spinner from '@/components/common/Spinner';
 import { Controller } from 'react-hook-form';
 
+import {
+  DndContext,
+  useDraggable,
+  useDroppable,
+  closestCenter,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  arrayMove,
+  sortableKeyboardCoordinates,
+  useSortable,
+} from '@dnd-kit/sortable';
+import {
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -39,12 +58,14 @@ import {
 import useMediaQueryProvide from '@/hooks/useMediaQueryProvide';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { DraggableImage } from '@/components/user/product/DraggableImage';
 
 interface PageProps {}
 
 const CreateProductPage: FC<PageProps> = ({}) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filesList, setFiles] = useState<any[]>();
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const {
     register,
     subCategories,
@@ -81,6 +102,48 @@ const CreateProductPage: FC<PageProps> = ({}) => {
       setTableOfContents(tocItems);
     }
   }, [getValues('content')]);
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Delete') {
+        handleDeleteSelectedImages();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [selectedItems]);
+  const handleSelectImage = (index: number) => {
+    if (selectedItems.includes(index)) {
+      setSelectedItems(selectedItems.filter((item) => item !== index));
+    } else {
+      setSelectedItems([...selectedItems, index]);
+    }
+  };
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDeleteSelectedImages = () => {
+    const updatedImages = uploadedImages.filter(
+      (_, index) => !selectedItems.includes(index)
+    );
+    const updatedFiles = filesList?.filter(
+      (_, index) => !selectedItems.includes(index)
+    );
+    setUploadedImages(updatedImages);
+    setFiles(updatedFiles);
+    setSelectedItems([]);
+  };
 
   const handleImageUpload = (newFiles: FileList) => {
     if (newFiles.length > 5) {
@@ -108,7 +171,17 @@ const CreateProductPage: FC<PageProps> = ({}) => {
     filesList?.splice(index, 1);
     setUploadedImages(updatedImages);
   };
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event;
 
+    if (active.id !== over.id) {
+      setUploadedImages((items) => {
+        const oldIndex = items.findIndex((item) => item.url === active.id);
+        const newIndex = items.findIndex((item) => item.url === over.id);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  };
   return (
     <div className="w-full flex flex-col justify-center">
       <p className="text-4xl border-secondary font-bold">Add New Blog</p>
@@ -254,9 +327,27 @@ const CreateProductPage: FC<PageProps> = ({}) => {
             )}
           </div>
 
-          <div className="hidden lg:block ">
-            <h4 className="text-2xl font-bold">Medias</h4>
-            <p className="text-foreground">Upload blog images</p>
+          <div className="hidden lg:block  justify-center items-center ">
+            {uploadedImages.length > 0 ? (
+              <>
+                <h4 className="text-2xl font-bold">Main Media</h4>
+
+                <div className={`relative h-[200px] w-[200px]  `}>
+                  <Image
+                    src={uploadedImages[0].url!}
+                    alt={`Uploaded main`}
+                    width={100}
+                    height={100}
+                    className=" h-full w-full  object-contain object-center lg:h-full lg:w-full"
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <h4 className="text-2xl font-bold">Medias</h4>
+                <p className="text-foreground">Upload blog images</p>
+              </>
+            )}
           </div>
           <div>
             <Label className="font-bold" htmlFor="medias">
@@ -264,78 +355,49 @@ const CreateProductPage: FC<PageProps> = ({}) => {
             </Label>
 
             {uploadedImages.length > 0 ? (
-              <div>
-                <div className="grid grid-cols-3 gap-4 mt-5 ">
-                  {uploadedImages.map((item, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-col relative items-center  h-[100px] xl:w-[200px] xl:h-[200px] w-[100px] overflow-hidden "
-                    >
-                      {item.urlType.endsWith('.mp4') ? (
-                        <video
-                          autoPlay
-                          muted
-                          loop
-                          preload="none"
-                          width={200}
-                          height={200}
-                        >
-                          <source src={`${item.url}`} type="video/mp4" />
-                        </video>
-                      ) : (
-                        <Image
-                          alt="Card background"
-                          width={200}
-                          height={200}
-                          className="object-contain"
-                          src={`${item.url}`}
-                        />
-                      )}
-                      {mainMediaIndex === index && (
-                        <div className="image-overlay"></div>
-                      )}
-                      {/* <label className="flex items-center">
-                        <input
-                          type="radio"
-                          className="absolute top-0 left-0  flex items-center justify-center border border-gray-300 rounded-full checked:bg-blue-500 checked:border-transparent focus:outline-none"
-                          name="main_media"
-                          value={index}
-                          checked={mainMediaIndex === index}
-                          onChange={() => handleMainMediaIndexChange(index)}
-                        />
-                      </label> */}
-                      <Button
-                        type="button"
-                        variant={'link'}
-                        onClick={() => handleDeleteImage(index)}
-                        className="absolute top-0 right-0  flex items-center justify-center "
-                      >
-                        <CircleX size={20} className="fill-red-600" />
-                      </Button>
-                    </div>
-                  ))}
-                  {uploadedImages.length < 5 && (
-                    <label
-                      htmlFor="dropzone-file"
-                      className="flex flex-col items-center justify-center w-full h-[100px] xl:h-[200px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100   "
-                    >
-                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                        <PlusIcon />
-                      </div>
-                      <input
-                        type="file"
-                        maxLength={5}
-                        {...register('medias')}
-                        multiple
-                        max={5}
-                        className="hidden"
-                        id="dropzone-file"
-                        onChange={(e) => handleImageUpload(e.target.files!)}
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={uploadedImages.map((image) => image.url)}
+                >
+                  <div className="grid grid-cols-3 gap-4 mt-5 h-[200px] w-[300px] ">
+                    {uploadedImages.map((image, index) => (
+                      <DraggableImage
+                        key={image.url}
+                        id={image.url}
+                        url={image.url}
+                        index={index}
+                        selectedItems={selectedItems}
+                        onSelect={() => handleSelectImage(index)}
+                        onRemove={() => handleDeleteImage(index)}
                       />
-                    </label>
-                  )}
-                </div>
-              </div>
+                    ))}
+                    {uploadedImages.length < 5 && (
+                      <label
+                        htmlFor="dropzone-file"
+                        className="flex flex-col items-center justify-center w-full h-[100px] xl:h-[200px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100   "
+                      >
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <PlusIcon />
+                        </div>
+                        <input
+                          type="file"
+                          maxLength={5}
+                          {...register('medias')}
+                          multiple
+                          max={5}
+                          className="hidden"
+                          id="dropzone-file"
+                          onChange={(e) => handleImageUpload(e.target.files!)}
+                        />
+                      </label>
+                    )}
+                  </div>
+                </SortableContext>
+              </DndContext>
             ) : (
               <div className="flex items-center justify-center w-full">
                 <label
