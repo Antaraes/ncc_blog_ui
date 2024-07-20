@@ -66,6 +66,7 @@ const CreateProductPage: FC<PageProps> = ({}) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filesList, setFiles] = useState<any[]>();
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<any[]>([]);
   const {
     register,
     subCategories,
@@ -83,7 +84,6 @@ const CreateProductPage: FC<PageProps> = ({}) => {
   >([]);
   const isMobile = useMediaQueryProvide();
   const [mainMediaIndex, setMainMediaIndex] = useState<number>(0);
-  const [uploadedImages, setUploadedImages] = useState<any[]>([]);
   const ReactQuill = useMemo(
     () => dynamic(() => import('react-quill'), { ssr: false }),
     []
@@ -176,12 +176,22 @@ const CreateProductPage: FC<PageProps> = ({}) => {
 
     if (active.id !== over.id) {
       setUploadedImages((items) => {
-        const oldIndex = items.findIndex((item) => item.url === active.id);
-        const newIndex = items.findIndex((item) => item.url === over.id);
+        const oldIndex = items.findIndex((item) => item.urlType === active.id);
+        const newIndex = items.findIndex((item) => item.urlType === over.id);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+    if (active.id !== over.id) {
+      setFiles((items: any) => {
+        const oldIndex = items.findIndex(
+          (item: any) => item.name === active.id
+        );
+        const newIndex = items.findIndex((item: any) => item.name === over.id);
         return arrayMove(items, oldIndex, newIndex);
       });
     }
   };
+
   return (
     <div className="w-full flex flex-col justify-center">
       <p className="text-4xl border-secondary font-bold">Add New Blog</p>
@@ -361,13 +371,13 @@ const CreateProductPage: FC<PageProps> = ({}) => {
                 onDragEnd={handleDragEnd}
               >
                 <SortableContext
-                  items={uploadedImages.map((image) => image.url)}
+                  items={uploadedImages.map((image) => image.urlType)}
                 >
                   <div className="grid grid-cols-3 gap-4 mt-5 h-[200px] w-[300px] ">
                     {uploadedImages.map((image, index) => (
                       <DraggableImage
-                        key={image.url}
-                        id={image.url}
+                        key={image.urlType}
+                        id={image.urlType}
                         url={image.url}
                         index={index}
                         selectedItems={selectedItems}
@@ -414,9 +424,8 @@ const CreateProductPage: FC<PageProps> = ({}) => {
                     >
                       <path
                         stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeLinecap="round"
+                        strokeWidth="2"
                         d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                       />
                     </svg>

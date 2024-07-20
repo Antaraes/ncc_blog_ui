@@ -47,7 +47,6 @@ const Layout: FC<layoutProps> = ({ children }) => {
           <Suspense fallback={<Loading />}>{children}</Suspense>
         </div>
       </div>
-      <Toaster position="top-right" reverseOrder={false} />
     </div>
   );
 };

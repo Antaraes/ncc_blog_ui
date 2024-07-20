@@ -110,6 +110,7 @@ export function DataTable<TData, TValue>({
       </div>
     );
   }
+  console.log(blogs?.data.blogs);
 
   return (
     <div className="h-[400px]">
