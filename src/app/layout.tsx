@@ -27,7 +27,7 @@ export default function RootLayout({
         <Provider>
           <Suspense fallback={<Loading />}>{children}</Suspense>
         </Provider>
-        <Toaster position="top-right" reverseOrder={false} />
+        <Toaster position="bottom-right" reverseOrder={false} />
       </body>
     </html>
   );

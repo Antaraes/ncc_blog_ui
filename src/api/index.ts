@@ -49,7 +49,7 @@ export const getDetailProduct = (id: any) => API.get(`/blog/${id}`);
 export const addNewProduct = (data: any) => API.post('/blog/add', data);
 export const removeProduct = (id: any) => API.delete(`/blog/${id}`);
 export const updateProduct = (id: any, data: any) =>
-  API.put(`/products/${id}`, data);
+  API.post(`/blog/${id}`, data);
 export const deleteImageProduct = (id: any) =>
   API.delete(`/product_images/${id}`);
 

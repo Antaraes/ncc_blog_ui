@@ -42,7 +42,7 @@ export const columns: ColumnDef<any>[] = [
       return isVideo ? (
         <video width="50" height="50" controls>
           <source
-            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${media[0].path}`}
+            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${media[0]?.path}`}
             type="video/mp4"
           />
           Your browser does not support the video tag.
@@ -53,7 +53,7 @@ export const columns: ColumnDef<any>[] = [
           width={100}
           height={100}
           className="object-contain"
-          src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${media[0].path}`}
+          src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${media[0]?.path}`}
         />
       );
     },
