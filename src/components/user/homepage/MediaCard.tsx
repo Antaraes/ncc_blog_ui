@@ -23,7 +23,7 @@ const MediaCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
       className="cursor-pointer group    image-box "
     >
       <>
-        <div className="aspect-h-1 aspect-w-1 w-[300px] h-[300px] overflow-hidden lg:aspect-none  lg:h-80 transition-all ease-in-out duration-300 ">
+        <div className="aspect-h-1 aspect-w-1 w-72 lg:aspect-none   lg:h-80 transition-all ease-in-out duration-300 ">
           <div className="relative">
             <motion.div
               className="absolute hidden group-hover:flex z-10 flex-col items-center justify-center bg-black  cursor-pointer text-white  w-full h-full"
@@ -51,7 +51,7 @@ const MediaCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
                 alt="Card background"
                 width={800}
                 height={800}
-                className=" h-full w-full  object-cover object-center lg:h-[300px] lg:w-full"
+                className=" h-80 w-72 object-cover object-center lg:h-[300px] lg:w-full "
                 src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${medias[0].path}`}
               />
             )}

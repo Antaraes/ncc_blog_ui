@@ -64,7 +64,7 @@ export default function Home() {
       return (
         <div
           key={index}
-          className={` lg:col-span-4 col-span-12  relative overflow-hidden  mt-6 `}
+          className={` lg:col-span-4 md:col-span-6 col-span-12  relative overflow-hidden  mt-6 `}
         >
           {slicedData[index] && <MediaCard data={slicedData[index]} />}
         </div>
@@ -75,6 +75,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen h-full flex-col gap-10 items-center justify-between w-[90%] mx-auto">
       <Swiper
+        className="mt-6 py-10"
         autoplay={{
           delay: 2500,
           disableOnInteraction: false,
@@ -155,10 +156,9 @@ export default function Home() {
             />
             <br />
             <Button type="submit" className="btn btn-primary mt-5">
-              Submit
+              {isLoading && <Spinner sm />}Submit
             </Button>
           </form>
-          {loading && <Spinner />}
         </div>
       </div>
     </main>

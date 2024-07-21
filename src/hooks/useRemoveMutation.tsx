@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 
 interface useRmoveMutationProps {
   apiFunction: (id: string) => Promise<any>;
@@ -14,7 +15,8 @@ export const useRmoveMutation = ({
   const mutation = useMutation({
     mutationFn: (id: string) => apiFunction(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [queryKey] });
+      queryClient.refetchQueries({ queryKey: [queryKey] });
+      toast.success('Successfully Deleted');
     },
   });
 

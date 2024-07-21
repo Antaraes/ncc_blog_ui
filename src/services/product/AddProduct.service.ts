@@ -59,7 +59,7 @@ export const AddProductService = (files: any[]) => {
     },
     onSuccess: () => {
       toast.success('Blog added successfully');
-      navigate.push('/admin/product');
+      navigate.push(`/admin/product?category=${getValues('category_id')}`);
     },
     onError: (error: any) => {
       console.error('Blog creation failed!', error);

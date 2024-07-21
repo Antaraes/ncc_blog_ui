@@ -1,5 +1,5 @@
 'use client';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, Key, useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -95,31 +95,6 @@ const ProductPage: FC<PageProps> = () => {
       setTableOfContents(tocItems);
     }
   }, []);
-
-  useEffect(() => {
-    if (loadProductData?.data?.blog?.medias) {
-      const images = loadProductData.data.blog.medias.map((media: any) => {
-        const pathWithoutPrefix = media.path.split('blog/')[1];
-        const fileName = pathWithoutPrefix
-          ? pathWithoutPrefix.split('/').pop()
-          : media.path;
-
-        return {
-          url: process.env.NEXT_PUBLIC_MEDIA_URL + media.path,
-          urlType: fileName,
-        };
-      });
-
-      const filesWithKeys = loadProductData.data.blog.medias.map(
-        (media: any) => {
-          return convertToFile(media.path, media._id);
-        }
-      );
-
-      setFiles(filesWithKeys);
-      setUploadedImages(images);
-    }
-  }, [loadProductData]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -350,24 +325,42 @@ const ProductPage: FC<PageProps> = () => {
           </div>
 
           <div className="hidden lg:block  justify-center items-center ">
-            {uploadedImages.length > 0 ? (
+            {loadProductData?.data?.blog.medias.length > 0 && (
               <>
-                <h4 className="text-2xl font-bold">Main Media</h4>
-
-                <div className={`relative h-[200px] w-[200px]  `}>
-                  <Image
-                    src={uploadedImages[0].url!}
-                    alt={`Uploaded main`}
-                    width={100}
-                    height={100}
-                    className=" h-full w-full  object-contain object-center lg:h-full lg:w-full"
-                  />
+                <Label className="font-bold" htmlFor="medias">
+                  Previous Medias
+                </Label>
+                <div className="grid grid-cols-3 gap-4 mt-5 h-[200px] w-[300px] ">
+                  {loadProductData.data.blog.medias.map(
+                    (item: any, index: number) => (
+                      <>
+                        <div
+                          className={`relative ${
+                            selectedItems.includes(item._id)
+                              ? 'border-2 border-red-500'
+                              : ''
+                          } w-[100px] h-[100px]`}
+                          onClick={() => handleSelectImage(item._id)}
+                        >
+                          <Image
+                            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${item.path}`}
+                            alt="uploaded image"
+                            width={100}
+                            height={100}
+                            className="object-contain w-full h-full"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteImage(item._id)}
+                            className="absolute top-0 right-0 p-1 text-white bg-red-500 rounded-full"
+                          >
+                            <Trash size={16} />
+                          </button>
+                        </div>
+                      </>
+                    )
+                  )}
                 </div>
-              </>
-            ) : (
-              <>
-                <h4 className="text-2xl font-bold">Medias</h4>
-                <p className="text-foreground">Upload blog images</p>
               </>
             )}
           </div>
@@ -378,52 +371,40 @@ const ProductPage: FC<PageProps> = () => {
             <Label className="font-bold" htmlFor="medias">
               Medias
             </Label>
-
             {uploadedImages.length > 0 ? (
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-              >
-                <SortableContext
-                  items={uploadedImages.map((image) => image.urlType)}
-                >
-                  <div className="grid grid-cols-3 gap-4 mt-5 h-[200px] w-[300px] ">
-                    {uploadedImages.map((image, index) => (
-                      <DraggableImage
-                        key={image.urlType}
-                        id={image.urlType}
-                        url={image.url}
-                        index={index}
-                        selectedItems={selectedItems}
-                        onSelect={() => handleSelectImage(index)}
-                        onRemove={() => handleDeleteImage(index)}
-                      />
-                    ))}
-                    {uploadedImages.length < 5 && (
-                      <label
-                        htmlFor="dropzone-file"
-                        className="flex flex-col items-center justify-center w-full h-[100px] xl:h-[200px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100   "
-                      >
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                          <PlusIcon />
-                        </div>
-                        <input
-                          type="file"
-                          maxLength={5}
-                          {...register('medias')}
-                          multiple
-                          max={5}
-                          name="medias"
-                          className="hidden"
-                          id="dropzone-file"
-                          onChange={(e) => handleImageUpload(e.target.files!)}
-                        />
-                      </label>
-                    )}
-                  </div>
-                </SortableContext>
-              </DndContext>
+              <div className="grid grid-cols-3 gap-4 mt-5 h-[200px] w-[300px] ">
+                {uploadedImages.map((image, index) => (
+                  <DraggableImage
+                    key={image.urlType}
+                    id={image.urlType}
+                    url={image.url}
+                    index={index}
+                    selectedItems={selectedItems}
+                    onSelect={() => handleSelectImage(index)}
+                    onRemove={() => handleDeleteImage(index)}
+                  />
+                ))}
+                {uploadedImages.length < 5 && (
+                  <label
+                    htmlFor="dropzone-file"
+                    className="flex flex-col items-center justify-center w-full h-[100px] xl:h-[200px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100   "
+                  >
+                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                      <PlusIcon />
+                    </div>
+                    <input
+                      type="file"
+                      maxLength={5}
+                      {...register('medias')}
+                      multiple
+                      max={5}
+                      className="hidden"
+                      id="dropzone-file"
+                      onChange={(e) => handleImageUpload(e.target.files!)}
+                    />
+                  </label>
+                )}
+              </div>
             ) : (
               <div className="flex items-center justify-center w-full">
                 <label

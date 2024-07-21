@@ -29,10 +29,7 @@ const Header: FC<HeaderProps> = ({
   handleSearchChange,
   searchQuery,
 }) => {
-  const navMenu = [
-    { name: 'Home', href: '/' },
-    { name: 'Contact Us', href: '/contactus' },
-  ];
+  const navMenu = [{ name: 'Home', href: '/' }];
 
   return (
     <header

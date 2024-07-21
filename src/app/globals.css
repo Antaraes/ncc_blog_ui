@@ -66,6 +66,16 @@
   }
 }
 
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(107, 107, 107, 0.5);
+  -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
 @layer base {
   * {
     @apply border-border;
@@ -118,10 +128,7 @@
   columns: 3;
   column-gap: 1.5rem;
 }
-.image-box {
-  margin-bottom: 1rem;
-  break-inside: avoid;
-}
+
 .image-box img {
   border-radius: 1rem;
   margin-bottom: 1rem;

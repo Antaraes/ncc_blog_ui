@@ -26,10 +26,7 @@ const MobileNav: FC<MobileNavProps> = ({
   const { data } = useSearchContext();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const location = usePathname();
-  const navMenu = [
-    { name: 'Home', href: '/' },
-    { name: 'Contact Us', href: '/contactus' },
-  ];
+  const navMenu = [{ name: 'Home', href: '/' }];
   useEffect(() => {
     setIsSearchOpen(false);
   }, [location]);

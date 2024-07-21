@@ -146,11 +146,11 @@ const NavigationDropDown: FC<NavigationDropDownProps> = () => {
               Articles
             </NavigationMenuTrigger>
             <NavigationMenuContent className="-left-1/2 bg-white ">
-              <ul className="grid  w-[800px] max-h-[400px] overflow-y-scroll   gap-3 text-black p-4   lg:grid-cols-4  z-50">
+              <ul className="grid  w-[800px] overflow-y-scroll max-h-[200px]   gap-3 text-black p-4   lg:grid-cols-5  z-50">
                 {formattedCategories.map((category: any) => {
                   return (
                     <ListItem key={category.id} title={category.name}>
-                      <div className="grid grid-cols-1 gap-3 ">
+                      <div className="grid  grid-cols-1 gap-3 ">
                         {category.subCategories &&
                           category.subCategories.map((subCategory: any) => (
                             <Link
