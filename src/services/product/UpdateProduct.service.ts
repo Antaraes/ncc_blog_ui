@@ -88,7 +88,10 @@ export const UpdateProductService = (productId: any, filesList: any[]) => {
 
   const onSubmit = (data: any) => {
     const formData = new FormData();
-    if (loadProductData?.data?.blog.medias.length + filesList.length > 5) {
+    if (
+      filesList &&
+      loadProductData?.data?.blog?.medias.length + filesList.length > 5
+    ) {
       toast.error('Total media files cannot exceed 5');
       return;
     }
@@ -107,7 +110,7 @@ export const UpdateProductService = (productId: any, filesList: any[]) => {
     }
     formData.append('category_id', data.category_id);
 
-    if (data.medias) {
+    if (filesList) {
       filesList.map((media, index) => {
         formData.append(`medias`, media);
       });

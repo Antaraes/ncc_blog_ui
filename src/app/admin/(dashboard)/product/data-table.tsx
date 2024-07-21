@@ -123,7 +123,7 @@ export function DataTable<TData, TValue>({
   }
 
   return (
-    <div className="h-[400px]">
+    <div className="">
       <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Search all columns..."
@@ -179,7 +179,7 @@ export function DataTable<TData, TValue>({
         </div>
       </div>
       <div className="rounded-md border ">
-        <Table className=" max-h-[400px] overflow-scroll">
+        <Table className=" ">
           <TableHeader className="max-w-screen-sm md:max-w-full">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -198,7 +198,7 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="">
             {productLoading ? (
               <>
                 {Array.from({ length: 5 }).map((_, index) => (
