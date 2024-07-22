@@ -1,6 +1,14 @@
+import { Metadata } from 'next';
 import { FC } from 'react';
 
 interface pageProps {}
+
+export const metadata: Metadata = {
+  title: 'Dashboard',
+  icons: {
+    icon: '/favicon.png',
+  },
+};
 
 const page: FC<pageProps> = ({}) => {
   return (

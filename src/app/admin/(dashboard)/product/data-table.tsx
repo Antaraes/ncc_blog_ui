@@ -34,6 +34,7 @@ import useFetch from '@/hooks/useFetch';
 import { getBlogsbyCategory, getSubCategories } from '@/api';
 import Spinner from '@/components/common/Spinner';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface SubCategory {
   _id: string;
@@ -56,7 +57,7 @@ export function DataTable<TData, TValue>({
   const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [tableData, setTableData] = useState<TData[]>([]);
-
+  const router = useRouter();
   const { data, isLoading } = useFetch('subCategories', getSubCategories);
   const {
     data: blogs,
@@ -65,11 +66,15 @@ export function DataTable<TData, TValue>({
   } = useFetch('all-products', () =>
     getBlogsbyCategory(selectedCategory || subCategories[0]?._id)
   );
+  const query = useSearchParams();
 
   useEffect(() => {
     if (data && data.data.length > 0) {
       setSubCategories(data.data);
-      setSelectedCategory(data.data[0]._id);
+      setSelectedCategory(
+        query.get('category') ? query.get('category') : data.data[0]._id
+      );
+      router.push(`?category=${data.data[0]._id}`);
     }
   }, [data]);
 
@@ -103,17 +108,22 @@ export function DataTable<TData, TValue>({
     table.setGlobalFilter(value);
   };
 
-  if (isLoading) {
+  const handleCategoryChange = (e: any) => {
+    const category = e.target.value;
+
+    setSelectedCategory(category);
+    router.push(`?category=${category}`);
+  };
+  if (isLoading || productLoading) {
     return (
       <div className="flex w-full justify-center items-center h-screen">
         <Spinner lg />
       </div>
     );
   }
-  console.log(blogs?.data.blogs);
 
   return (
-    <div className="h-[400px]">
+    <div className="">
       <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Search all columns..."
@@ -123,7 +133,8 @@ export function DataTable<TData, TValue>({
         />
         <select
           value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
+          defaultValue={query.get('category')!}
+          onChange={handleCategoryChange}
           className="flex h-9 w-full rounded-md border border-input bg-transparent mx-10 px-2 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
         >
           {subCategories.length !== 0 ? (
@@ -168,7 +179,7 @@ export function DataTable<TData, TValue>({
         </div>
       </div>
       <div className="rounded-md border ">
-        <Table className=" max-h-[400px] overflow-scroll">
+        <Table className=" ">
           <TableHeader className="max-w-screen-sm md:max-w-full">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -187,7 +198,7 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="">
             {productLoading ? (
               <>
                 {Array.from({ length: 5 }).map((_, index) => (

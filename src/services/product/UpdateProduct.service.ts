@@ -18,17 +18,15 @@ const schema = z.object({
   message_link: z.string().min(1, { message: 'Link is required' }),
   rank: z.number().optional(),
   category_id: z.string().min(1, { message: 'Category ID is required' }),
-  medias: z.unknown().transform((value) => {
-    return value as FileList;
-  }),
+  medias: z
+    .unknown()
+    .transform((value) => {
+      return value as FileList;
+    })
 
-  // .refine((files) => files.length <= 5, {
-  //   message: 'No more than 5 media files are allowed',
-  // }),
-
-  // .refine((files) => files.length <= 5, {
-  //   message: 'No more than 5 media files are allowed',
-  // }),
+    .refine((files) => files.length <= 5, {
+      message: 'No more than 5 media files are allowed',
+    }),
 });
 export const UpdateProductService = (productId: any, filesList: any[]) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -80,7 +78,7 @@ export const UpdateProductService = (productId: any, filesList: any[]) => {
     mutationFn: (data: any) => updateProduct(productId, data),
     onSuccess: () => {
       toast.success('Blog added successfully');
-      navigate.push('/admin/product');
+      navigate.push(`/admin/product?category=${getValues('category_id')}`);
     },
     onError: (error: any) => {
       console.error('Blog creation failed!', error);
@@ -90,20 +88,13 @@ export const UpdateProductService = (productId: any, filesList: any[]) => {
 
   const onSubmit = (data: any) => {
     const formData = new FormData();
-    const existingMediaIds = Array.from(getValues('medias')!).map(
-      (media: any) => {
-        const pathWithoutPrefix = media.path.split('blog/')[1];
-        const fileName = pathWithoutPrefix
-          ? pathWithoutPrefix.split('/').pop()
-          : media.name;
-        return fileName;
-      }
-    );
-
-    const filteredFiles = Array.from(filesList).filter((file: File) => {
-      return !existingMediaIds.includes(file.name);
-    });
-
+    if (
+      filesList &&
+      loadProductData?.data?.blog?.medias.length + filesList.length > 5
+    ) {
+      toast.error('Total media files cannot exceed 5');
+      return;
+    }
     formData.append('_method', 'PUT');
 
     formData.append('title', data.title);
@@ -119,8 +110,8 @@ export const UpdateProductService = (productId: any, filesList: any[]) => {
     }
     formData.append('category_id', data.category_id);
 
-    if (data.medias) {
-      filteredFiles.map((media, index) => {
+    if (filesList) {
+      filesList.map((media, index) => {
         formData.append(`medias`, media);
       });
     }

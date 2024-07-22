@@ -19,7 +19,7 @@ const SlideCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
   return (
     <motion.section
       onClick={() => route.push(`product/${_id}`)}
-      className="cursor-pointer group relative image-box"
+      className="cursor-pointer group  relative image-box"
     >
       <>
         <motion.div
@@ -59,7 +59,7 @@ const SlideCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
               </Button>
             </div>
           </div>
-          <div className="h-[100px] w-[200px] lg:h-full lg:w-full">
+          <div className="h-[200px] w-[200px] lg:h-full lg:w-full">
             {isVideo ? (
               <video
                 autoPlay
