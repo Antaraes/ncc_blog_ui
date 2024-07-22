@@ -16,6 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SlideCard from '@/components/user/homepage/SlideCard';
 import { Autoplay, Pagination } from 'swiper/modules';
+import DataNotAvabile from '@/components/common/DataNotAvabile';
 
 export default function Home() {
   const { data, isLoading } = useFetch('head-blogs', getProductsByRank);
@@ -57,110 +58,118 @@ export default function Home() {
       </div>
     );
   }
-  console.log(slicedData);
 
   const mediaCards = slicedData.map((_: any, index: number) => {
     if (slicedData.length > 2) {
       return (
         <div
           key={index}
-          className={` lg:col-span-4 md:col-span-6 col-span-12  relative overflow-hidden  mt-6 `}
+          className={` lg:col-span-4 col-span-6   relative overflow-hidden  mt-6 `}
         >
           {slicedData[index] && <MediaCard data={slicedData[index]} />}
         </div>
       );
     }
   });
+  console.log(data.data);
 
   return (
     <main className="flex min-h-screen h-full flex-col gap-10 items-center justify-between w-[90%] mx-auto">
-      <Swiper
-        className="mt-6 py-10"
-        autoplay={{
-          delay: 2500,
-          disableOnInteraction: false,
-          pauseOnMouseEnter: true,
-        }}
-        loop={true}
-        pagination={{ clickable: true }}
-        modules={[Autoplay, Pagination]}
-      >
-        {slicedData.map((_: any, index: number) => {
-          if (slicedData.length > 2) {
-            return (
-              <SwiperSlide key={index}>
-                {slicedData[index] && <SlideCard data={slicedData[index]} />}
-              </SwiperSlide>
-            );
-          }
-        })}
-      </Swiper>
-      {slicedData.length > 0 && (
-        <div
-          className={`w-[85%] gap-2 grid grid-cols-12 ${slicedData.length > 3 && 'grid-rows-2'}`}
-        >
-          {mediaCards}
-        </div>
-      )}
-      <div className="w-full">
-        <ProductCardCarousel />
-      </div>
-      <div className="flex  justify-between w-full  border-t-2">
-        <div className="w-1/2 hidden md:block  my-3 mr-10">
-          <p className="font-bold text-3xl">Lets Talk</p>
-          <p className="text-muted-foreground">
-            Have some big idea or brand to develop and need help? Then reach out
-            wed love to hear about your project and provide help.
-          </p>
-          <br />
-          <p className="font-bold text-3xl">Email</p>
-          <a href="mailto:blog@email.com" className="text-base block">
-            blog@email.com
-          </a>
-          <br />
-          <p className="font-bold text-3xl">Social</p>
-          <a href="https://instagram.com" className="text-base block">
-            Instagram
-          </a>
-          <a href="https://twitter.com" className="text-base block">
-            Twitter
-          </a>
-          <a href="https://facebook.com" className="text-base block">
-            Facebook
-          </a>
-        </div>
-        <div className="md:w-1/2 w-full my-3 ">
-          <form onSubmit={handleSubmit}>
-            <Label className="font-bold" htmlFor="email">
-              Email
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter Email.."
-              required
-            />
+      {data?.data.length == 0 ? (
+        <DataNotAvabile />
+      ) : (
+        <>
+          <Swiper
+            className="mt-6 py-10"
+            autoplay={{
+              delay: 2500,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            }}
+            loop={true}
+            pagination={{ clickable: true }}
+            modules={[Autoplay, Pagination]}
+          >
+            {slicedData.map((_: any, index: number) => {
+              if (slicedData.length > 2) {
+                return (
+                  <SwiperSlide key={index}>
+                    {slicedData[index] && (
+                      <SlideCard data={slicedData[index]} />
+                    )}
+                  </SwiperSlide>
+                );
+              }
+            })}
+          </Swiper>
+          {slicedData.length > 0 && (
+            <div
+              className={`w-[85%] gap-2 grid grid-cols-12 ${slicedData.length > 3 && 'grid-rows-2'}`}
+            >
+              {mediaCards}
+            </div>
+          )}
+          <div className="w-full">
+            <ProductCardCarousel />
+          </div>
+          <div className="flex  justify-between w-full  border-t-2">
+            <div className="w-1/2 hidden md:block  my-3 mr-10">
+              <p className="font-bold text-3xl">Lets Talk</p>
+              <p className="text-muted-foreground">
+                Have some big idea or brand to develop and need help? Then reach
+                out wed love to hear about your project and provide help.
+              </p>
+              <br />
+              <p className="font-bold text-3xl">Email</p>
+              <a href="mailto:blog@email.com" className="text-base block">
+                blog@email.com
+              </a>
+              <br />
+              <p className="font-bold text-3xl">Social</p>
+              <a href="https://instagram.com" className="text-base block">
+                Instagram
+              </a>
+              <a href="https://twitter.com" className="text-base block">
+                Twitter
+              </a>
+              <a href="https://facebook.com" className="text-base block">
+                Facebook
+              </a>
+            </div>
+            <div className="md:w-1/2 w-full my-3 ">
+              <form onSubmit={handleSubmit}>
+                <Label className="font-bold" htmlFor="email">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter Email.."
+                  required
+                />
 
-            <br />
-            <Label className="font-bold" htmlFor="content">
-              Content
-            </Label>
-            <Textarea
-              id="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              className="h-[100px]"
-              placeholder="Enter Content.."
-            />
-            <br />
-            <Button type="submit" className="btn btn-primary mt-5">
-              {isLoading && <Spinner sm />}Submit
-            </Button>
-          </form>
-        </div>
-      </div>
+                <br />
+                <Label className="font-bold" htmlFor="content">
+                  Content
+                </Label>
+                <Textarea
+                  id="content"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  className="h-[100px]"
+                  placeholder="Enter Content.."
+                />
+                <br />
+                <Button type="submit" className="btn btn-primary mt-5">
+                  {isLoading && <Spinner sm />}Submit
+                </Button>
+              </form>
+            </div>
+          </div>
+        </>
+      )}
     </main>
   );
 }

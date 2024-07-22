@@ -15,7 +15,6 @@ export const useWishlistContext = () => useContext(WishlistContext);
 
 export const WishlistProvider = ({ children }: { children: any }) => {
   const [wishlistCount, setWishlistCount] = useState(0);
-  console.log(wishlistCount);
 
   return (
     <WishlistContext.Provider value={{ wishlistCount, setWishlistCount }}>

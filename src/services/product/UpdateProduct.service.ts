@@ -16,8 +16,9 @@ const schema = z.object({
   content: z.string().min(1, { message: 'Content is required' }),
   external_link: z.string().min(1, { message: 'Link is required' }),
   message_link: z.string().min(1, { message: 'Link is required' }),
-  rank: z.number().optional(),
+  rank: z.any().optional(),
   category_id: z.string().min(1, { message: 'Category ID is required' }),
+  medias_to_remove: z.array(z.string()).optional(),
   medias: z
     .unknown()
     .transform((value) => {
@@ -28,7 +29,11 @@ const schema = z.object({
       message: 'No more than 5 media files are allowed',
     }),
 });
-export const UpdateProductService = (productId: any, filesList: any[]) => {
+export const UpdateProductService = (
+  productId: any,
+  filesList: any[],
+  deletedArrayImage: string[]
+) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [isSuccess, setIsSuccess] = useState(false);
@@ -108,6 +113,9 @@ export const UpdateProductService = (productId: any, filesList: any[]) => {
     if (data.rank) {
       formData.append('rank', data.rank);
     }
+    if (deletedArrayImage) {
+      formData.append('medias_to_remove', JSON.stringify(deletedArrayImage));
+    }
     formData.append('category_id', data.category_id);
 
     if (filesList) {
@@ -115,6 +123,7 @@ export const UpdateProductService = (productId: any, filesList: any[]) => {
         formData.append(`medias`, media);
       });
     }
+
     mutation.mutate(formData);
   };
 

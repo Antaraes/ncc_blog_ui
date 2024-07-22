@@ -74,7 +74,6 @@ export const AddProductService = (files: any[]) => {
 
   const onSubmit = (data: AddBlogFormValues) => {
     const formData = new FormData();
-    console.log(data, typeof data.medias);
 
     formData.append('title', data.title);
     formData.append('content', data.content);

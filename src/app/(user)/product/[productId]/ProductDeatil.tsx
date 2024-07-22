@@ -273,14 +273,10 @@ const ProductClientComponent: FC<ProductClientComponentProps> = ({
           className={`${savepost ? 'fill-red-500' : 'fill-white'}`}
         />
 
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>
-              <Eye color="black" fill="white" />
-            </TooltipTrigger>
-            <TooltipContent>{data.data.blog.view}</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <div className="flex">
+          <Eye color="black" fill="white" />
+          <span className="text-white inline">{data.data.blog.view}</span>
+        </div>
 
         <Sheet>
           <SheetTrigger>

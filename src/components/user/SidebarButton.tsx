@@ -20,7 +20,7 @@ const SidebarButton: FC<SidebarButtonProps> = ({
   className,
 }) => {
   const location = usePathname();
-  console.log(location);
+
   const navigate = useRouter();
   return (
     <Button

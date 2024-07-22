@@ -46,7 +46,7 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [searchValue, setSearchValue] = useState<string>('');
-  console.log(data);
+
   const table = useReactTable({
     data,
     columns,
