@@ -10,7 +10,7 @@ import Head from 'next/head';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Blog',
+  title: `${process.env.NEXT_PUBLIC_COMPANY_NAME}`,
   icons: {
     icon: '/favicon.png',
   },

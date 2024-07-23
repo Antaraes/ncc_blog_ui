@@ -170,12 +170,12 @@ const ProductCardCarousel: FC<pageProps> = () => {
   }
   return (
     <div className="relative h-full my-10   overflow-hidden">
-      <p className="font-extrabold text-2xl my-3">
+      <p className="font-extrabold text-2xl my-5">
         The Lastest, <p className="text-muted-foreground inline">The New</p>{' '}
       </p>
 
       <Swiper
-        slidesPerView={isMobile ? 1.5 : 3.5}
+        slidesPerView={isMobile ? 1.5 : 4.5}
         spaceBetween={isMobile ? 5 : 30}
         // centeredSlides={true}
         scrollbar={{

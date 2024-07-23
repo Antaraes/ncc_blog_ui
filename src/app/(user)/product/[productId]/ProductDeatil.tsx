@@ -5,8 +5,9 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { CopyCheck, CopyIcon, Eye, HeartIcon, Send } from 'lucide-react';
 import 'swiper/css';
-import { Pagination, Autoplay } from 'swiper/modules';
+import { Pagination, Autoplay, Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css/navigation';
 import {
   Popover,
   PopoverContent,
@@ -26,6 +27,9 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import ShareModal from '@/components/common/ShareModal';
+import ProductCardCarousel from '@/components/user/homepage/ProductCardCarousel';
+import FeedbackSection from '@/components/user/FeedbackSection';
 
 interface ProductClientComponentProps {
   productId: any;
@@ -44,16 +48,8 @@ const ProductClientComponent: FC<ProductClientComponentProps> = ({
   const [tableOfContents, setTableOfContents] = useState<
     { id: string; text: string }[]
   >([]);
-  const [copied, setCopied] = useState(false);
-  const [savepost, setSavePost] = useState(false);
 
-  const handleCopy = () => {
-    const currentURL = window.location.href;
-    navigator.clipboard.writeText(currentURL).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  };
+  const [savepost, setSavePost] = useState(false);
 
   useEffect(() => {
     if (data) {
@@ -161,26 +157,35 @@ const ProductClientComponent: FC<ProductClientComponentProps> = ({
   return (
     <div className="w-full h-full relative text-black">
       <div className="w-full h-[400px]">
-        {isVideo ? (
-          <video controls className="w-[80%] h-[80%] object-contain bg-black">
-            <source
-              src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${data.data.blog.medias[0].path}`}
-            />
-            Your Your browser does not support the video tag.
-          </video>
-        ) : (
-          <Image
-            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${data.data.blog.medias[0].path}`}
-            width={800}
-            alt="main media"
-            height={800}
-            className="h-full w-full  object-contain object-center lg:h-full lg:w-full"
-          />
-        )}
+        <Swiper navigation={true} modules={[Navigation]} className="mySwiper">
+          {data.data.blog.medias.map((item: any, index: number) => (
+            <SwiperSlide key={index}>
+              {isVideo ? (
+                <video
+                  controls
+                  className="w-[80%] h-[80%] object-contain bg-black"
+                >
+                  <source
+                    src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${item.path}`}
+                  />
+                  Your Your browser does not support the video tag.
+                </video>
+              ) : (
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${item.path}`}
+                  width={800}
+                  alt="main media"
+                  height={800}
+                  className="h-full w-full  object-contain object-center lg:h-full lg:w-full"
+                />
+              )}
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
       <div
         className="grid md:grid-rows-3 
-      md:grid-flow-col gap-4 px-4 py-4 leading-10 border-b-2 border-black/80 my-10 "
+      md:grid-flow-col gap-4 px-4 py-4 leading-10 my-10 "
       >
         <div className="p-4 w-full col-span-12 md:row-span-3  border-black">
           <div className="flex justify-between w-full items-center">
@@ -207,29 +212,10 @@ const ProductClientComponent: FC<ProductClientComponentProps> = ({
                     <Send color="black" />
                   </PopoverTrigger>
                   <PopoverContent className="w-full">
-                    <p className="font-bold text-lg">Contact with us</p>
-                    <a href={data.data.blog.message_link} target="_black">
-                      Message me
-                    </a>
-                    <p className="font-bold text-lg">
-                      To Know About More this article
-                    </p>
-                    <a href={data.data.blog.external_link} target="_black">
-                      Link
-                    </a>
-                    <p className="font-bold text-lg">Share this article</p>
-                    <div className="flex items-center">
-                      <p className="text-muted-foreground">
-                        {window.location.href}
-                      </p>
-                      <Button
-                        onClick={handleCopy}
-                        variant={'link'}
-                        className=" text-black font-bold  "
-                      >
-                        {copied ? <CopyCheck /> : <CopyIcon />}
-                      </Button>
-                    </div>
+                    <ShareModal
+                      external_link={data.data.blog.external_link}
+                      message_link={data.data.blog.message_link}
+                    />
                   </PopoverContent>
                 </Popover>
               </Button>
@@ -243,29 +229,14 @@ const ProductClientComponent: FC<ProductClientComponentProps> = ({
             }}
             className="md:text-lg text-base lg:w-[90%] mx-auto"
           ></div>
+          <hr className="h-px my-8 bg-black border-0" />
         </div>
       </div>
       <div className="flex items-center justify-center w-[90%] mx-auto">
-        <Swiper
-          slidesPerView={isMobile ? 1.5 : 2.5}
-          spaceBetween={isMobile ? 5 : 30}
-          modules={[Pagination]}
-          className="mySwiper"
-        >
-          {data.data.blog.medias.map((item: any, index: number) => (
-            <SwiperSlide key={index}>
-              <div className="lg:h-[300px] lg:w-[300px] h-[200px] w-[200px] flex-shrink-0 text-black">
-                <Image
-                  alt="Relaxing app background"
-                  className="h-full w-full  object-contain object-center lg:h-full lg:w-full"
-                  width={500}
-                  height={300}
-                  src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${item.path}`}
-                />
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <ProductCardCarousel />
+      </div>
+      <div className="w-[80%] mx-auto">
+        <FeedbackSection />
       </div>
       <div className="lg:hidden flex items-center gap-4 bg-black px-5 py-2 rounded-3xl  fixed bottom-3 left-1/2 transform -translate-x-1/2 z-40">
         <HeartIcon
@@ -283,25 +254,10 @@ const ProductClientComponent: FC<ProductClientComponentProps> = ({
             <Send color="black" fill="white" />
           </SheetTrigger>
           <SheetContent side={'bottom'}>
-            <p className="font-bold text-lg">Contact with us</p>
-            <a href={data.data.blog.message_link} target="_black">
-              Message me
-            </a>
-            <p className="font-bold text-lg">To Know About More this article</p>
-            <a href={data.data.blog.external_link} target="_black">
-              Link
-            </a>
-            <p className="font-bold text-lg">Share this article</p>
-            <div className="flex items-center">
-              <p className="text-muted-foreground">{window.location.href}</p>
-              <Button
-                onClick={handleCopy}
-                variant={'link'}
-                className=" text-black font-bold  "
-              >
-                {copied ? <CopyCheck /> : <CopyIcon />}
-              </Button>
-            </div>
+            <ShareModal
+              message_link={data.data.blog.message_link}
+              external_link={data.data.blog.external_link}
+            />
           </SheetContent>
         </Sheet>
       </div>

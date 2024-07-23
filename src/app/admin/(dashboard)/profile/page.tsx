@@ -5,7 +5,7 @@ import { Metadata } from 'next';
 interface pageProps {}
 
 export const metadata: Metadata = {
-  title: 'Admin Profile',
+  title: `${process.env.NEXT_PUBLIC_COMPANY_NAME} - Admin Profile`,
 };
 
 const page: FC<pageProps> = ({}) => {

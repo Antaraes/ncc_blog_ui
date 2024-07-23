@@ -68,7 +68,7 @@ const MobileNav: FC<MobileNavProps> = ({
           <SheetTrigger asChild>
             {!isSearchOpen && <SearchIcon className="cursor-pointer" />}
           </SheetTrigger>
-          <SheetContent side="top" className="bg-white/90 mt-10 h-[400px]">
+          <SheetContent side="top" className="bg-white mt-10 h-[400px]">
             <AnimatePresence>
               <motion.div className=" z-30 ">
                 <div className="flex justify-center w-full">

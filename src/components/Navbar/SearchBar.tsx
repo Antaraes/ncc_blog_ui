@@ -75,11 +75,11 @@ const SearchBar: FC<SearchBarProps> = ({
                 </Button>
               </form>
             </div>
-            <div className="lg:w-[55%] xl:w-[50%] mx-auto">
+            <div className="lg:w-[55%] xl:w-[50%]  mx-auto">
               {data && data.sub_category?.length > 0 && (
                 <p className="text-muted-foreground font-bold">Categories</p>
               )}
-              <div className="max-h-[150px] overflow-y-scroll">
+              <div className="max-h-[150px] overflow-y-scroll leading-7">
                 {data &&
                   data.sub_category?.map((item: any) => (
                     <Link
@@ -92,7 +92,7 @@ const SearchBar: FC<SearchBarProps> = ({
                       }}
                       key={item._id}
                       passHref
-                      className="block"
+                      className="block mt-2 hover:font-bold"
                     >
                       {item.name}
                     </Link>
@@ -101,13 +101,13 @@ const SearchBar: FC<SearchBarProps> = ({
               {data && data.blogs?.length > 0 && (
                 <p className="text-muted-foreground font-bold">Blogs</p>
               )}
-              <div className="max-h-[150px] overflow-y-scroll">
+              <div className="max-h-[250px] overflow-y-scroll leading-7 ">
                 {data &&
                   data.blogs?.map((blog: any) => (
                     <Link
                       key={blog._id}
                       href={`/product/${blog._id}`}
-                      className="block"
+                      className="block mt-3 hover:font-bold"
                     >
                       {blog.title}
                     </Link>
@@ -126,7 +126,7 @@ const SearchBar: FC<SearchBarProps> = ({
       </AnimatePresence>
       {isSearchOpen && (
         <motion.div
-          className="absolute hidden inset-0 h-screen bg-white/90 backdrop-filter backdrop-blur-lg lg:block justify-center items-center"
+          className="absolute hidden inset-0 h-screen bg-white backdrop-filter backdrop-blur-lg lg:block justify-center items-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         ></motion.div>

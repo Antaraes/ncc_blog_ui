@@ -1,4 +1,5 @@
 'use client';
+import ShareModal from '@/components/common/ShareModal';
 import { Button } from '@/components/ui/button';
 import { Facebook, Instagram, Twitter } from 'lucide-react';
 import { useEffect, useState } from 'react';

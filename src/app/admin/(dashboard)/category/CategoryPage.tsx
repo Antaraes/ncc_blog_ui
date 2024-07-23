@@ -105,14 +105,7 @@ const CategoryPage: FC<CategoryPageProps> = ({}) => {
             <DataTable
               columns={[
                 ...columns,
-                {
-                  accessorKey: 'sub_categories',
-                  header: 'Sub Categories',
-                  cell: (info) => {
-                    const subcategory = info.getValue() as any;
-                    return <p>{subcategory ? subcategory.length : 0}</p>;
-                  },
-                },
+
                 {
                   id: 'actions',
                   cell: (info) => {
@@ -152,6 +145,14 @@ const CategoryPage: FC<CategoryPageProps> = ({}) => {
             <DataTable
               columns={[
                 ...columns,
+                {
+                  accessorKey: 'parent_category_id',
+                  header: 'Sub Categories',
+                  cell: (info) => {
+                    const parent_category = info.getValue() as any;
+                    return <p>{parent_category && parent_category.name}</p>;
+                  },
+                },
                 {
                   id: 'actions',
                   cell: (info) => {

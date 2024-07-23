@@ -1,32 +1,24 @@
 'use client';
-import { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, Key, useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { AddProductService } from '@/services/product/AddProduct.service';
-import {
-  CircleX,
-  CopyCheck,
-  Cross,
-  Eye,
-  HeartIcon,
-  PlusIcon,
-  Send,
-  Trash,
-} from 'lucide-react';
-import { Sheet } from 'react-modal-sheet';
-
-import { Pagination, Autoplay } from 'swiper/modules';
-import {
-  FormControl,
-  FormDescription,
-  FormItem,
-  FormLabel,
-} from '@/components/ui/form';
+import { CircleX, CopyCheck, PlusIcon, Trash } from 'lucide-react';
+import { useMediaQuery } from '@react-hook/media-query';
 import { Switch } from '@/components/ui/switch';
 import 'react-quill/dist/quill.snow.css';
 import Spinner from '@/components/common/Spinner';
 import { Controller } from 'react-hook-form';
+import Image from 'next/image';
+import dynamic from 'next/dynamic';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { UpdateProductService } from '@/services/product/UpdateProduct.service';
+import { useParams } from 'next/navigation';
+import useMediaQueryProvide from '@/hooks/useMediaQueryProvide';
 
 import {
   DndContext,
@@ -34,39 +26,27 @@ import {
   useDroppable,
   closestCenter,
 } from '@dnd-kit/core';
-import {
-  SortableContext,
-  arrayMove,
-  sortableKeyboardCoordinates,
-  useSortable,
-} from '@dnd-kit/sortable';
+import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable';
 import {
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-
-import Image from 'next/image';
-import dynamic from 'next/dynamic';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import useMediaQueryProvide from '@/hooks/useMediaQueryProvide';
-import toast from 'react-hot-toast';
-import Link from 'next/link';
 import { DraggableImage } from '@/components/user/product/DraggableImage';
+import Link from 'next/link';
+import { convertToFile, convertToFiles } from '@/lib/utils';
+import toast from 'react-hot-toast';
 
 interface PageProps {}
 
-const CreateProductPage: FC<PageProps> = ({}) => {
+const UpdateProductPage: FC<PageProps> = () => {
+  const { productId } = useParams<{ productId: string }>();
   const [isModalOpen, setModalOpen] = useState(false);
   const [filesList, setFiles] = useState<any[]>();
+  const [deletedArrayImage, setDeletedArrayImage] = useState<string[]>([]);
+
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
-  const [uploadedImages, setUploadedImages] = useState<any[]>([]);
   const {
     register,
     subCategories,
@@ -78,22 +58,36 @@ const CreateProductPage: FC<PageProps> = ({}) => {
     getValues,
     isSuccess,
     control,
-  } = AddProductService(filesList!);
+    loadProductData,
+  } = UpdateProductService(productId, filesList!, deletedArrayImage);
   const [tableOfContents, setTableOfContents] = useState<
     { id: string; text: string }[]
   >([]);
   const isMobile = useMediaQueryProvide();
   const [mainMediaIndex, setMainMediaIndex] = useState<number>(0);
+  const [uploadedImages, setUploadedImages] = useState<any[]>([]);
+
   const ReactQuill = useMemo(
     () => dynamic(() => import('react-quill'), { ssr: false }),
     []
   );
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    })
+  );
+
   useEffect(() => {
     if (getValues('content')) {
       const tempDivElement = window.document.createElement('div');
       tempDivElement.innerHTML = getValues('content');
 
-      const headings = tempDivElement.querySelectorAll('h1, h2, h3, h4,strong');
+      const headings = tempDivElement.querySelectorAll(
+        'h1, h2, h3, h4, strong'
+      );
       const tocItems = Array.from(headings).map((heading, index) => ({
         id: `toc-${index}`,
         text: heading.textContent || '',
@@ -101,7 +95,8 @@ const CreateProductPage: FC<PageProps> = ({}) => {
 
       setTableOfContents(tocItems);
     }
-  }, [getValues('content')]);
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Delete') {
@@ -115,24 +110,6 @@ const CreateProductPage: FC<PageProps> = ({}) => {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [selectedItems]);
-  const handleSelectImage = (index: number) => {
-    if (selectedItems.includes(index)) {
-      setSelectedItems(selectedItems.filter((item) => item !== index));
-    } else {
-      setSelectedItems([...selectedItems, index]);
-    }
-  };
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 10,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
   const handleDeleteSelectedImages = () => {
     const updatedImages = uploadedImages.filter(
       (_, index) => !selectedItems.includes(index)
@@ -171,6 +148,22 @@ const CreateProductPage: FC<PageProps> = ({}) => {
     filesList?.splice(index, 1);
     setUploadedImages(updatedImages);
   };
+  const handleDeleteImageId = (id: string) => {
+    if (deletedArrayImage.includes(id)) {
+      setDeletedArrayImage(deletedArrayImage.filter((item) => item !== id));
+    } else {
+      setDeletedArrayImage([...deletedArrayImage, id]);
+    }
+  };
+
+  const handleSelectImage = (index: number) => {
+    if (selectedItems.includes(index)) {
+      setSelectedItems(selectedItems.filter((item) => item !== index));
+    } else {
+      setSelectedItems([...selectedItems, index]);
+    }
+  };
+
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
 
@@ -194,7 +187,7 @@ const CreateProductPage: FC<PageProps> = ({}) => {
 
   return (
     <div className="w-full flex flex-col justify-center">
-      <p className="text-4xl border-secondary font-bold">Add New Blog</p>
+      <p className="text-4xl border-secondary font-bold">Update Blog</p>
       <hr className="h-px my-8 border-0 bg-gray-700" />
       <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
         <div className="grid w-full items-center gap-10  md:grid-cols-2 justify-between">
@@ -320,6 +313,7 @@ const CreateProductPage: FC<PageProps> = ({}) => {
             <select
               id="category_id"
               className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              defaultChecked={loadProductData?.data?.blog.category_id}
               {...register('category_id', {
                 required: 'Category is required',
               })}
@@ -339,76 +333,79 @@ const CreateProductPage: FC<PageProps> = ({}) => {
           </div>
 
           <div className="hidden lg:block  justify-center items-center ">
-            {uploadedImages.length > 0 ? (
+            {loadProductData?.data?.blog.medias.length > 0 && (
               <>
-                <h4 className="text-2xl font-bold">Main Media</h4>
-
-                <div className={`relative h-[200px] w-[200px]  `}>
-                  <Image
-                    src={uploadedImages[0].url!}
-                    alt={`Uploaded main`}
-                    width={100}
-                    height={100}
-                    className=" h-full w-full  object-contain object-center lg:h-full lg:w-full"
-                  />
+                <Label className="font-bold" htmlFor="medias">
+                  Previous Medias
+                </Label>
+                <div className="grid grid-cols-3 gap-4 mt-5 h-[200px] w-[300px] ">
+                  {loadProductData.data.blog.medias.map(
+                    (item: any, index: number) => (
+                      <>
+                        <div
+                          className={`relative ${
+                            deletedArrayImage.includes(item._id)
+                              ? 'border-2 border-red-500'
+                              : ''
+                          } w-[100px] h-[100px]`}
+                          onClick={() => handleDeleteImageId(item._id)}
+                        >
+                          <Image
+                            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${item.path}`}
+                            alt="uploaded image"
+                            width={100}
+                            height={100}
+                            className="object-contain w-full h-full"
+                          />
+                        </div>
+                      </>
+                    )
+                  )}
                 </div>
-              </>
-            ) : (
-              <>
-                <h4 className="text-2xl font-bold">Medias</h4>
-                <p className="text-foreground">Upload blog images</p>
               </>
             )}
           </div>
           <div>
+            {errors.medias && (
+              <p className="text-red-500">{errors.medias.message}</p>
+            )}
             <Label className="font-bold" htmlFor="medias">
               Medias
             </Label>
-
             {uploadedImages.length > 0 ? (
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-              >
-                <SortableContext
-                  items={uploadedImages.map((image) => image.urlType)}
-                >
-                  <div className="grid grid-cols-3 gap-4 mt-5 h-full w-[80%] ">
-                    {uploadedImages.map((image, index) => (
-                      <DraggableImage
-                        key={image.urlType}
-                        id={image.urlType}
-                        url={image.url}
-                        index={index}
-                        selectedItems={selectedItems}
-                        onSelect={() => handleSelectImage(index)}
-                        onRemove={() => handleDeleteImage(index)}
-                      />
-                    ))}
-                    {uploadedImages.length < 5 && (
-                      <label
-                        htmlFor="dropzone-file"
-                        className="flex flex-col items-center justify-center w-full h-[100px] xl:h-[200px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100   "
-                      >
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                          <PlusIcon />
-                        </div>
-                        <input
-                          type="file"
-                          maxLength={5}
-                          {...register('medias')}
-                          multiple
-                          max={5}
-                          className="hidden"
-                          id="dropzone-file"
-                          onChange={(e) => handleImageUpload(e.target.files!)}
-                        />
-                      </label>
-                    )}
-                  </div>
-                </SortableContext>
-              </DndContext>
+              <div className="grid grid-cols-3 gap-4 mt-5 h-[200px] w-[300px] ">
+                {uploadedImages.map((image, index) => (
+                  <DraggableImage
+                    key={image.urlType}
+                    id={image.urlType}
+                    url={image.url}
+                    index={index}
+                    selectedItems={selectedItems}
+                    onSelect={() => handleSelectImage(index)}
+                    onRemove={() => handleDeleteImage(index)}
+                  />
+                ))}
+                {uploadedImages.length < 5 && (
+                  <label
+                    htmlFor="dropzone-file"
+                    className="flex flex-col items-center justify-center w-full h-[100px] xl:h-[200px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100   "
+                  >
+                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                      <PlusIcon />
+                    </div>
+                    <input
+                      type="file"
+                      maxLength={5}
+                      {...register('medias')}
+                      multiple
+                      max={5}
+                      className="hidden"
+                      id="dropzone-file"
+                      onChange={(e) => handleImageUpload(e.target.files!)}
+                    />
+                  </label>
+                )}
+              </div>
             ) : (
               <div className="flex items-center justify-center w-full">
                 <label
@@ -451,9 +448,6 @@ const CreateProductPage: FC<PageProps> = ({}) => {
                 </label>
               </div>
             )}
-            {errors.medias && (
-              <p className="text-red-500">{errors.medias.message}</p>
-            )}
           </div>
         </div>
         <div className="py-10 flex items-center md:justify-end">
@@ -467,4 +461,4 @@ const CreateProductPage: FC<PageProps> = ({}) => {
   );
 };
 
-export default CreateProductPage;
+export default UpdateProductPage;

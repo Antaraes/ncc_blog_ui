@@ -1,4 +1,5 @@
 import Spinner from '@/components/common/Spinner';
+import { Card } from '@/components/ui/card';
 import useMediaQueryProvide from '@/hooks/useMediaQueryProvide';
 import { truncateText } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -22,18 +23,13 @@ const MediaCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
       className="cursor-pointer group    image-box "
     >
       <>
-        <div className="aspect-h-1 aspect-w-1 w-full lg:aspect-none   lg:h-80 transition-all ease-in-out duration-300 ">
-          <div className="relative">
-            <motion.div
-              className="absolute hidden group-hover:flex z-10 flex-col items-center justify-center bg-black  cursor-pointer text-white  w-full h-full"
-              whileHover={{ opacity: 1, scale: 1.05 }}
-              initial={{ opacity: 0, scale: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <p className="lg:text-tiny text-xs  text-white/80 uppercase font-bold">
-                {truncatedTitle}
-              </p>
-            </motion.div>
+        <Card className="aspect-h-1 aspect-w-1 w-full  lg:aspect-none h-full  lg:h-[350px] xl:h-[400px] transition-all ease-in-out duration-300 ">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            initial={{ scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="relative p-4 lg:p-8 hover:scale-105"
+          >
             {isVideo ? (
               <video
                 autoPlay
@@ -50,12 +46,17 @@ const MediaCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
                 alt="Card background"
                 width={800}
                 height={800}
-                className=" h-80 w-72 object-cover object-center lg:h-[300px] lg:w-full "
+                className=" h-80 w-72 object-cover object-center lg:h-full lg:w-full "
                 src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${medias[0].path}`}
               />
             )}
+          </motion.div>
+          <div className="  cursor-pointer p-2 text-black  ">
+            <p className=" text-xs text-center font-medium   text-black/80 uppercase ">
+              {title}
+            </p>
           </div>
-        </div>
+        </Card>
       </>
     </section>
   );

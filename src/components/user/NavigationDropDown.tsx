@@ -145,12 +145,12 @@ const NavigationDropDown: FC<NavigationDropDownProps> = () => {
             <NavigationMenuTrigger className=" text-black before:bg-black/90 after:bg-black/90 hover:text-black/90 inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-base font-medium transition-all ease-in-out before:transition-[width] before:ease-in-out before:duration-500 before:absolute before:origin-center before:h-[2px] before:w-0 hover:before:w-[50%] before:bottom-0 before:left-[50%] after:transition-[width] after:ease-in-out after:duration-700 after:absolute after:origin-center after:h-[2px] after:w-0 hover:after:w-[50%] after:bottom-0 after:right-[50%] ">
               Articles
             </NavigationMenuTrigger>
-            <NavigationMenuContent className="-left-1/2 bg-white ">
-              <ul className="grid  w-[800px] overflow-y-scroll max-h-[200px]   gap-3 text-black p-4   lg:grid-cols-5  z-50">
+            <NavigationMenuContent className=" bg-white ">
+              <ul className="grid  w-[800px] overflow-y-scroll max-h-[200px]  text-black p-4   lg:grid-cols-4  z-50">
                 {formattedCategories.map((category: any) => {
                   return (
                     <ListItem key={category.id} title={category.name}>
-                      <div className="grid  grid-cols-1 gap-3 ">
+                      <div className="grid  grid-cols-1  ">
                         {category.subCategories &&
                           category.subCategories.map((subCategory: any) => (
                             <Link
@@ -193,12 +193,12 @@ const ListItem = React.forwardRef<
         <a
           ref={ref}
           className={cn(
-            'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors focus:bg-accent focus:text-accent-foreground',
+            'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors focus:bg-accent focus:text-accent-foreground ',
             className
           )}
           {...props}
         >
-          <div className="text-sm font-medium leading-none">{title}</div>
+          <div className="text-xs font-medium leading-none">{title}</div>
           <p className="line-clamp-2 text-sm leading-snug text-background/20 mt-3">
             {children}
           </p>
