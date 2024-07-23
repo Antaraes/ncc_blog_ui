@@ -44,6 +44,7 @@ const ProductPage: FC<PageProps> = () => {
   const { productId } = useParams<{ productId: string }>();
   const [isModalOpen, setModalOpen] = useState(false);
   const [filesList, setFiles] = useState<any[]>();
+  const [deletedArrayImage, setDeletedArrayImage] = useState<string[]>([]);
 
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const {
@@ -58,7 +59,7 @@ const ProductPage: FC<PageProps> = () => {
     isSuccess,
     control,
     loadProductData,
-  } = UpdateProductService(productId, filesList!);
+  } = UpdateProductService(productId, filesList!, deletedArrayImage);
   const [tableOfContents, setTableOfContents] = useState<
     { id: string; text: string }[]
   >([]);
@@ -147,6 +148,14 @@ const ProductPage: FC<PageProps> = () => {
     filesList?.splice(index, 1);
     setUploadedImages(updatedImages);
   };
+  const handleDeleteImageId = (id: string) => {
+    if (deletedArrayImage.includes(id)) {
+      setDeletedArrayImage(deletedArrayImage.filter((item) => item !== id));
+    } else {
+      setDeletedArrayImage([...deletedArrayImage, id]);
+    }
+  };
+
   const handleSelectImage = (index: number) => {
     if (selectedItems.includes(index)) {
       setSelectedItems(selectedItems.filter((item) => item !== index));
@@ -154,8 +163,6 @@ const ProductPage: FC<PageProps> = () => {
       setSelectedItems([...selectedItems, index]);
     }
   };
-  console.log(filesList);
-  console.log(uploadedImages);
 
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
@@ -336,11 +343,11 @@ const ProductPage: FC<PageProps> = () => {
                       <>
                         <div
                           className={`relative ${
-                            selectedItems.includes(item._id)
+                            deletedArrayImage.includes(item._id)
                               ? 'border-2 border-red-500'
                               : ''
                           } w-[100px] h-[100px]`}
-                          onClick={() => handleSelectImage(item._id)}
+                          onClick={() => handleDeleteImageId(item._id)}
                         >
                           <Image
                             src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${item.path}`}
@@ -349,13 +356,6 @@ const ProductPage: FC<PageProps> = () => {
                             height={100}
                             className="object-contain w-full h-full"
                           />
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteImage(item._id)}
-                            className="absolute top-0 right-0 p-1 text-white bg-red-500 rounded-full"
-                          >
-                            <Trash size={16} />
-                          </button>
                         </div>
                       </>
                     )

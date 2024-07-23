@@ -18,7 +18,7 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
       className=" group relative"
       onClick={() => route.push(`product/${_id}`)}
     >
-      <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-md bg-gray-200  group-hover:opacity-75 h-[200px] lg:h-60">
+      <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 h-[200px] lg:h-60">
         {isVideo ? (
           <video
             autoPlay

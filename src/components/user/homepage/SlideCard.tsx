@@ -23,12 +23,12 @@ const SlideCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
     >
       <>
         <motion.div
-          className="  w-full lg:w-[90%] flex   lg:h-80 transition-all ease-in-out duration-300"
+          className="  w-full lg:w-[90%] flex h-[200px] gap-10   lg:h-80 transition-all ease-in-out duration-300"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="  flex flex-col justify-center items-center  cursor-pointer text-black  w-full h-full">
+          <div className="  flex flex-col  justify-center items-center  cursor-pointer text-black  w-full h-full">
             <motion.p
               className="lg:text-base text-xs  uppercase font-bold"
               initial={{ y: -20, opacity: 0 }}
@@ -59,7 +59,7 @@ const SlideCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
               </Button>
             </div>
           </div>
-          <div className="h-[200px] w-[200px] lg:h-full lg:w-full">
+          <div className="h-full w-full lg:h-[300px] lg:w-[300px]">
             {isVideo ? (
               <video
                 autoPlay
@@ -73,7 +73,7 @@ const SlideCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
                 alt="Card background"
                 width={800}
                 height={800}
-                className="h-[300px] w-[300px]  object-cover object-center lg:h-[450px] lg:w-[300px]"
+                className="h-[300px] w-[300px]  object-contain object-center lg:h-full lg:w-full"
                 src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${medias[0].path}`}
               />
             )}

@@ -373,7 +373,7 @@ const CreateProductPage: FC<PageProps> = ({}) => {
                 <SortableContext
                   items={uploadedImages.map((image) => image.urlType)}
                 >
-                  <div className="grid grid-cols-3 gap-4 mt-5 h-[200px] w-[300px] ">
+                  <div className="grid grid-cols-3 gap-4 mt-5 h-full w-[80%] ">
                     {uploadedImages.map((image, index) => (
                       <DraggableImage
                         key={image.urlType}

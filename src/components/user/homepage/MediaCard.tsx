@@ -10,7 +10,6 @@ import React, { Suspense } from 'react';
 const MediaCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
   const { medias, title, content, _id, view } = data;
   const isMobile = useMediaQueryProvide();
-  console.log(medias);
 
   const isVideo = medias[0].path && medias[0].path.endsWith('.mp4');
   const truncatedText = truncateText(content, 10);
@@ -23,7 +22,7 @@ const MediaCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
       className="cursor-pointer group    image-box "
     >
       <>
-        <div className="aspect-h-1 aspect-w-1 w-72 lg:aspect-none   lg:h-80 transition-all ease-in-out duration-300 ">
+        <div className="aspect-h-1 aspect-w-1 w-full lg:aspect-none   lg:h-80 transition-all ease-in-out duration-300 ">
           <div className="relative">
             <motion.div
               className="absolute hidden group-hover:flex z-10 flex-col items-center justify-center bg-black  cursor-pointer text-white  w-full h-full"

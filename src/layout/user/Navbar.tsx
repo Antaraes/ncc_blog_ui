@@ -48,7 +48,6 @@ const Navbar: FC = () => {
     // event.preventDefault();
   };
 
-  // console.log(searchedData?.data.data);
   return (
     <Headroom style={{ transition: 'all .5s ease-in-out', zIndex: 999 }}>
       <Header

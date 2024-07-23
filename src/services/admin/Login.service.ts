@@ -27,21 +27,16 @@ export const LoginService = () => {
   const loginMutation = useMutation({
     mutationFn: async (loginData: LoginFormValues) => login(loginData),
     onSuccess: async (data: any) => {
-      console.log('Login successful!', data.data.data.access_token);
-
       setCookie('ecommerce_token', data.data.data.access_token);
       await navigate.push('/admin');
       toast.success('Login successful');
     },
     onError: (error: any) => {
-      console.log(error);
       toast.error(error.response.data.message);
     },
   });
 
   const onSubmit = (data: LoginFormValues) => {
-    console.log(data);
-
     loginMutation.mutate(data);
   };
   return {
@@ -66,7 +61,6 @@ export const ForgotService = () => {
       setModal(false);
     },
     onError: (error: any) => {
-      console.log(error);
       toast.error(error.response.data.message);
     },
   });
