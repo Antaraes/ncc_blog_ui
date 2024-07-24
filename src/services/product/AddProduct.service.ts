@@ -25,7 +25,7 @@ const schema = z.object({
   content: z.string().min(1, { message: 'Content is required' }),
   external_link: z.string().min(1, { message: 'Link is required' }),
   message_link: z.string().min(1, { message: 'Link is required' }),
-  rank: z.string().optional(),
+  rank: z.string().min(0, { message: "Can't lower than zero" }).optional(),
   category_id: z.string().min(1, { message: 'Category ID is required' }),
   medias: z
     .unknown()

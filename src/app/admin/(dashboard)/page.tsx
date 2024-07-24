@@ -4,7 +4,7 @@ import { FC } from 'react';
 interface pageProps {}
 
 export const metadata: Metadata = {
-  title: 'Dashboard',
+  title: `${process.env.NEXT_PUBLIC_COMPANY_NAME} - Dashboard`,
   icons: {
     icon: '/favicon.png',
   },

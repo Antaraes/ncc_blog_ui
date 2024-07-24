@@ -16,7 +16,7 @@ export async function generateMetadata({
   const id = params.productId;
 
   return {
-    title: `Blog ${id}`,
+    title: `${process.env.NEXT_PUBLIC_COMPANY_NAME} ${id}`,
   };
 }
 

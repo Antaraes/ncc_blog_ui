@@ -3,7 +3,7 @@ import CreateProductPage from './CreateProduct';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Create Blog',
+  title: `${process.env.NEXT_PUBLIC_COMPANY_NAME} - Dashboard/Create Product`,
 };
 
 interface pageProps {}

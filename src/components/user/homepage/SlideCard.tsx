@@ -23,7 +23,7 @@ const SlideCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
     >
       <>
         <motion.div
-          className="  w-full lg:w-[90%] flex h-[200px] gap-10   lg:h-80 transition-all ease-in-out duration-300"
+          className="w-full  flex flex-col-reverse lg:flex-row lg:gap-10 lg:h-80 h-full transition-all ease-in-out duration-300"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -59,7 +59,7 @@ const SlideCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
               </Button>
             </div>
           </div>
-          <div className="h-full w-full lg:h-[300px] lg:w-[300px]">
+          <div className="lg:h-full lg:w-full  ">
             {isVideo ? (
               <video
                 autoPlay
@@ -73,7 +73,7 @@ const SlideCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
                 alt="Card background"
                 width={800}
                 height={800}
-                className="h-[300px] w-[300px]  object-contain object-center lg:h-full lg:w-full"
+                className="  object-contain object-center lg:h-full lg:w-full"
                 src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${medias[0].path}`}
               />
             )}

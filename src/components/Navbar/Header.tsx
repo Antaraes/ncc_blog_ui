@@ -2,7 +2,7 @@ import { FC } from 'react';
 import NavLink from './NavLink';
 import SearchBar from './SearchBar';
 
-import { SearchIcon, MenuIcon } from 'lucide-react';
+import { SearchIcon, MenuIcon, LayoutDashboard } from 'lucide-react';
 import Link from 'next/link';
 import NavigationDropDown from '@/components/user/NavigationDropDown';
 import { isAuthenticated } from '@/lib';
@@ -42,13 +42,26 @@ const Header: FC<HeaderProps> = ({
           {navMenu.map((item, index) => (
             <NavLink key={index} href={item.href} name={item.name} />
           ))}
-          {isAuthenticated() && <NavLink href="/admin" name="Dashboard" />}
 
           <div className="relative">
             <NavigationDropDown />
           </div>
         </div>
         <div className="lg:flex hidden items-center gap-4">
+          {isAuthenticated() && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Link href={'/admin'}>
+                    <LayoutDashboard className="hover:scale-105" />
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Dashboard</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
