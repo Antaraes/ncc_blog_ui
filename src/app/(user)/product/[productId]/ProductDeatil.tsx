@@ -30,6 +30,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import ShareModal from '@/components/common/ShareModal';
 import ProductCardCarousel from '@/components/user/homepage/ProductCardCarousel';
 import FeedbackSection from '@/components/user/FeedbackSection';
+import NotFound from '@/app/not-found';
 
 interface ProductClientComponentProps {
   productId: any;
@@ -39,9 +40,11 @@ const ProductClientComponent: FC<ProductClientComponentProps> = ({
   productId,
 }) => {
   const isMobile = useMediaQueryProvide();
-  const { data, isLoading } = useFetch('eachProduct', () =>
-    getDetailProduct(productId)
+  const { data, isLoading, status, error, fetchStatus } = useFetch(
+    'eachProduct',
+    () => getDetailProduct(productId)
   );
+
   const [showFullContent, setShowFullContent] = useState(false);
   const [truncatedContent, setTruncatedContent] = useState<string>('');
   const { setWishlistCount } = useWishlistContext();
@@ -142,6 +145,9 @@ const ProductClientComponent: FC<ProductClientComponentProps> = ({
     }
   }, [data]);
 
+  if (error?.message === 'Request failed with status code 404') {
+    return <NotFound />;
+  }
   if (!data) {
     return (
       <div className="flex w-full justify-center items-center h-screen">

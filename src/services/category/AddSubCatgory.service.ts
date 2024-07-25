@@ -44,7 +44,6 @@ export const AddSubcategoryService = () => {
       navigate.push('/admin/category');
     },
     onError: (error) => {
-      console.error('Subcategory creation failed!', error);
       toast.error('Subcategory creation failed');
     },
   });

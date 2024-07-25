@@ -1,6 +1,7 @@
 'use client';
 import { truncateText } from '@/lib/utils';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FC } from 'react';
 
@@ -14,10 +15,7 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
   const truncatedText = truncateText(content, 10);
   const route = useRouter();
   return (
-    <div
-      className=" group relative"
-      onClick={() => route.push(`product/${_id}`)}
-    >
+    <Link className=" group relative" href={`/product/${_id}`}>
       <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-md group-hover:opacity-75 h-[200px] ">
         {isVideo ? (
           <video
@@ -45,7 +43,7 @@ const ProductCard: FC<ProductCardProps> = ({ product }) => {
           <p className=" font-medium text-sm">{title}</p>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

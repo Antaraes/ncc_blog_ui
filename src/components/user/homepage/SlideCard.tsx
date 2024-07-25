@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 const SlideCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
   const { medias, title, content, _id, view, message_link } = data;
   const isMobile = useMediaQueryProvide();
-
+  console.log(medias[0].path);
   const isVideo = medias[0] && medias[0].path.endsWith('.mp4');
 
   const route = useRouter();
