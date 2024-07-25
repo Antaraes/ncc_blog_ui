@@ -23,6 +23,7 @@ export default function Home() {
   const { data, isLoading } = useFetch('head-blogs', getProductsByRank);
 
   const slicedData = data?.data.slice(0, 6) || [];
+  console.log(process.env.NEXT_PUBLIC_ENV);
 
   if (isLoading) {
     return (
