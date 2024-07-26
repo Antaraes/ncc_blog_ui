@@ -14,8 +14,14 @@ export const useRmoveMutation = ({
 
   const mutation = useMutation({
     mutationFn: (id: string) => apiFunction(id),
-    onSuccess: () => {
-      queryClient.refetchQueries({ queryKey: [queryKey] });
+    onSuccess: (data) => {
+      // queryClient.refetchQueries({ queryKey: [queryKey] });
+      queryClient.setQueryData([queryKey], (oldQuerydata: any) => {
+        return {
+          ...oldQuerydata,
+          data: [...oldQuerydata, data.data],
+        };
+      });
       toast.success('Successfully Deleted');
     },
   });

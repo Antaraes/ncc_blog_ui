@@ -51,8 +51,8 @@ const Profile: FC<ProfileProps> = ({}) => {
       toast.success('Profile updated');
       refetch();
     },
-    onError: (error) => {
-      console.error('Error updating profile:', error);
+    onError: (error: any) => {
+      toast.error('Error updating profile:', error.message);
     },
   });
 

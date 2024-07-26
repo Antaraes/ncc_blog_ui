@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import React from 'react';
 
-export default function notfound() {
+export default function NotFound() {
   return (
     <section className="flex items-center h-full sm:p-16 dark:bg-gray-50 dark:text-gray-800">
       <div className="container flex flex-col items-center justify-center px-5 mx-auto my-8 space-y-8 text-center sm:max-w-md">

@@ -125,3 +125,7 @@
   border-radius: 1rem;
   margin-bottom: 1rem;
 }
+.ql-container {
+  max-height: 400px;
+  overflow-y: scroll;
+}

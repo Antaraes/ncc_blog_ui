@@ -86,7 +86,6 @@ export const UpdateProductService = (
       navigate.push(`/admin/product?category=${getValues('category_id')}`);
     },
     onError: (error: any) => {
-      console.error('Blog creation failed!', error);
       toast.error('Blog creation failed', error.message);
     },
   });

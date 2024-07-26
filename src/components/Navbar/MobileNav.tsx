@@ -10,6 +10,7 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useSearchContext } from '@/context/searchData';
 import { usePathname } from 'next/navigation';
+import useMediaQueryProvide from '@/hooks/useMediaQueryProvide';
 
 interface MobileNavProps {
   handleSearchSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
@@ -25,15 +26,22 @@ const MobileNav: FC<MobileNavProps> = ({
 }) => {
   const { data } = useSearchContext();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = usePathname();
   const navMenu = [{ name: 'Home', href: '/' }];
+  const isMobile = useMediaQueryProvide();
   useEffect(() => {
     setIsSearchOpen(false);
   }, [location]);
 
+  useEffect(() => {
+    setIsSearchOpen(false);
+    setIsMenuOpen(false);
+  }, [isMobile]);
+
   return (
     <div className="flex lg:hidden justify-between bg-white w-full py-5 ">
-      <Sheet>
+      <Sheet onOpenChange={setIsMenuOpen} open={isMenuOpen}>
         <SheetTrigger asChild>
           <button className="lg:hidden" color="white">
             <MenuIcon className="h-10 w-10" />

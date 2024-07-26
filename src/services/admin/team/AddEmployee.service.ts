@@ -42,7 +42,6 @@ export const AddEmployeeService = () => {
       navigate.push('/admin/team');
     },
     onError: (error: any) => {
-      console.error('Adding employee failed!', error);
       toast.error('Adding employee failed');
     },
   });

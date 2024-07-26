@@ -87,7 +87,6 @@ export const UpdateCategoryService = (
       closeModal();
     },
     onError: (error: any) => {
-      console.error('Category creation failed!', error);
       toast.error('Category creation failed', error.message);
     },
   });
