@@ -4,28 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CircleX, CopyCheck, PlusIcon, Trash } from 'lucide-react';
-import { useMediaQuery } from '@react-hook/media-query';
-import { Switch } from '@/components/ui/switch';
 import 'react-quill/dist/quill.snow.css';
 import Spinner from '@/components/common/Spinner';
 import { Controller } from 'react-hook-form';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 import { UpdateProductService } from '@/services/product/UpdateProduct.service';
 import { useParams } from 'next/navigation';
 import useMediaQueryProvide from '@/hooks/useMediaQueryProvide';
-
-import {
-  DndContext,
-  useDraggable,
-  useDroppable,
-  closestCenter,
-} from '@dnd-kit/core';
 import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable';
 import {
   KeyboardSensor,

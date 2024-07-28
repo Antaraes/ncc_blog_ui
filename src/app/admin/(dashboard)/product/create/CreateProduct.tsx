@@ -14,16 +14,6 @@ import {
   Send,
   Trash,
 } from 'lucide-react';
-import { Sheet } from 'react-modal-sheet';
-
-import { Pagination, Autoplay } from 'swiper/modules';
-import {
-  FormControl,
-  FormDescription,
-  FormItem,
-  FormLabel,
-} from '@/components/ui/form';
-import { Switch } from '@/components/ui/switch';
 import 'react-quill/dist/quill.snow.css';
 import Spinner from '@/components/common/Spinner';
 import { Controller } from 'react-hook-form';

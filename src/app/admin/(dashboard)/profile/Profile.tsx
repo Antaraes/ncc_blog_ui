@@ -3,6 +3,8 @@ import { useState, useEffect, FC } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getProfile, updateProfile } from '@/api'; // Assuming you have these API functions
 import Spinner from '@/components/common/Spinner';
@@ -103,7 +105,7 @@ const Profile: FC<ProfileProps> = ({}) => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center w-full ">
+      <div className="flex justify-center w-full h-screen ">
         <Spinner lg />
       </div>
     );
@@ -173,17 +175,17 @@ const Profile: FC<ProfileProps> = ({}) => {
                   )}
                 </div>
                 <div className="space-y-2 mt-2">
-                  <Label htmlFor="country_code">Country Code</Label>
-                  <Input id="country_code" {...register('country_code')} />
-                  {errors.country_code && (
-                    <p className="text-red-500">
-                      {errors.country_code.message}
-                    </p>
-                  )}
-                </div>
-                <div className="space-y-2 mt-2">
                   <Label htmlFor="phone_number">Phone Number</Label>
-                  <Input id="phone_number" {...register('phone_number')} />
+                  <PhoneInput
+                    country={'us'}
+                    value={watch('phone_number')}
+                    onChange={(value, data: any) => {
+                      const dialCode = data.dialCode;
+                      const phoneNumber = value;
+                      setValue('country_code', dialCode);
+                      setValue('phone_number', value);
+                    }}
+                  />
                   {errors.phone_number && (
                     <p className="text-red-500">
                       {errors.phone_number.message}

@@ -161,81 +161,89 @@ const ProductClientComponent: FC<ProductClientComponentProps> = ({
     data.data.blog.main_media && data.data.blog.main_media.endsWith('.mp4');
 
   return (
-    <div className="w-full h-full relative text-black">
-      <div className="w-full h-[400px]">
-        <Swiper navigation={true} modules={[Navigation]} className="mySwiper">
-          {data.data.blog.medias.map((item: any, index: number) => (
-            <SwiperSlide key={index}>
-              {isVideo ? (
-                <video
-                  controls
-                  className="w-[80%] h-[80%] object-contain bg-black"
-                >
-                  <source
-                    src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${item.path}`}
-                  />
-                  Your Your browser does not support the video tag.
-                </video>
-              ) : (
-                <Image
-                  src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${item.path}`}
-                  width={800}
-                  alt="main media"
-                  height={800}
-                  className="h-full w-full  object-contain object-center lg:h-full lg:w-full"
-                />
-              )}
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
-      <div
-        className="grid md:grid-rows-3 
-      md:grid-flow-col gap-4 px-4 py-4 leading-10 my-10 "
-      >
-        <div className="p-4 w-full col-span-12 md:row-span-3  border-black">
-          <div className="flex justify-between w-full items-center">
-            <p className="font-medium text-xl md:text-2xl w-full ">
-              {data.data.blog.title}
-            </p>
-            <div className="p-4 w-full hidden lg:flex items-center justify-end md:gap-10 gap-3 ">
-              <Button
-                variant={'link'}
-                onClick={handleWishlistClick}
-                className="border border-black bg-white"
-              >
-                <HeartIcon
-                  className={`${savepost ? 'fill-red-500' : 'fill-black'}`}
-                />
-              </Button>
-              <Button variant={'link'} className="border border-black bg-white">
-                <Eye color="black" />
-                <p className="text-black">{data.data.blog.view}</p>
-              </Button>
-              <Button variant={'link'} className="border border-black bg-white">
-                <Popover>
-                  <PopoverTrigger>
-                    <Send color="black" />
-                  </PopoverTrigger>
-                  <PopoverContent className="w-full">
-                    <ShareModal
-                      external_link={data.data.blog.external_link}
-                      message_link={data.data.blog.message_link}
+    <div className="w-full  h-full relative text-black">
+      <div className="lg:flex ">
+        <div className="lg:w-1/2 w-full h-[400px]">
+          <Swiper navigation={true} modules={[Navigation]} className="mySwiper">
+            {data.data.blog.medias.map((item: any, index: number) => (
+              <SwiperSlide key={index}>
+                {isVideo ? (
+                  <video
+                    controls
+                    className="w-[80%] h-[80%] object-contain bg-black"
+                  >
+                    <source
+                      src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${item.path}`}
                     />
-                  </PopoverContent>
-                </Popover>
-              </Button>
+                    Your Your browser does not support the video tag.
+                  </video>
+                ) : (
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${item.path}`}
+                    width={800}
+                    alt="main media"
+                    height={800}
+                    className="h-full w-full  object-contain object-center lg:h-full lg:w-full"
+                  />
+                )}
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+        <div
+          className=" lg:w-1/2 w-full grid md:grid-rows-3 
+      md:grid-flow-col gap-4 px-4 py-4 leading-10 my-10 "
+        >
+          <div className="p-4 w-full col-span-12 md:row-span-3  border-black">
+            <div className="flex justify-between w-full items-center">
+              <p className="font-medium text-xl md:text-2xl w-full ">
+                {data.data.blog.title}
+              </p>
+              <div className="p-4 w-full hidden lg:flex items-center justify-end md:gap-10 gap-3 ">
+                <Button
+                  variant={'link'}
+                  onClick={handleWishlistClick}
+                  className="border border-black bg-white"
+                >
+                  <HeartIcon
+                    className={`${savepost ? 'fill-red-500' : 'fill-black'}`}
+                  />
+                </Button>
+                <Button
+                  variant={'link'}
+                  className="border border-black bg-white"
+                >
+                  <Eye color="black" />
+                  <p className="text-black">{data.data.blog.view}</p>
+                </Button>
+                <Button
+                  variant={'link'}
+                  className="border border-black bg-white"
+                >
+                  <Popover>
+                    <PopoverTrigger>
+                      <Send color="black" />
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full">
+                      <ShareModal
+                        external_link={data.data.blog.external_link}
+                        message_link={data.data.blog.message_link}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </Button>
+              </div>
             </div>
+            <hr className="h-px my-8 bg-black border-0" />
+            <div
+              id="blog-content"
+              dangerouslySetInnerHTML={{
+                __html: data.data.blog.content,
+              }}
+              className="md:text-lg text-base lg:w-[90%] mx-auto"
+            ></div>
+            <hr className="h-px my-8 bg-black border-0" />
           </div>
-          <hr className="h-px my-8 bg-black border-0" />
-          <div
-            id="blog-content"
-            dangerouslySetInnerHTML={{
-              __html: data.data.blog.content,
-            }}
-            className="md:text-lg text-base lg:w-[90%] mx-auto"
-          ></div>
-          <hr className="h-px my-8 bg-black border-0" />
         </div>
       </div>
       <div className="flex items-center justify-center w-[90%] mx-auto">
