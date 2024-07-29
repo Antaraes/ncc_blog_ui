@@ -29,7 +29,8 @@ export const addSubcategory = (data: any) =>
 export const getAllCategories = () => API.get('/category');
 export const getSubCategories = () => API.get('/category/sub-category');
 export const getMainCategories = () => API.get('/category/parent');
-export const getBlogsbyCategory = (data: any) => API.get(`/category/${data}`);
+export const getBlogsbyCategory = (data: any, page: number, limit: number) =>
+  API.get(`/category/${data}?page=${page}&limit=${limit}`);
 export const removeCategory = (id: any) => API.delete(`/category/${id}`);
 
 export const filterbyName = (searchQuery: string) =>
@@ -65,5 +66,6 @@ export const addNewCategory = (data: any) => API.post('/categories', data);
 
 //Feedback
 export const addFeedback = (data: any) => API.post('/feedback/add', data);
-export const getFeedback = () => API.get('/feedback');
+export const getFeedback = (page: number, limit: number) =>
+  API.get(`/feedback?page=${page}&limit=${limit}`);
 export const deleteFeedback = (id: any) => API.delete(`/feedback/${id}`);

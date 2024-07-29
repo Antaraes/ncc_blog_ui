@@ -162,8 +162,8 @@ const ProductClientComponent: FC<ProductClientComponentProps> = ({
 
   return (
     <div className="w-full  h-full relative text-black">
-      <div className="lg:flex ">
-        <div className="lg:w-1/2 w-full h-[400px]">
+      <div className=" ">
+        <div className=" w-full h-[400px]">
           <Swiper navigation={true} modules={[Navigation]} className="mySwiper">
             {data.data.blog.medias.map((item: any, index: number) => (
               <SwiperSlide key={index}>
@@ -191,7 +191,7 @@ const ProductClientComponent: FC<ProductClientComponentProps> = ({
           </Swiper>
         </div>
         <div
-          className=" lg:w-1/2 w-full grid md:grid-rows-3 
+          className=" w-full grid md:grid-rows-3 
       md:grid-flow-col gap-4 px-4 py-4 leading-10 my-10 "
         >
           <div className="p-4 w-full col-span-12 md:row-span-3  border-black">

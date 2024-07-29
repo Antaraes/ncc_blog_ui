@@ -1,12 +1,12 @@
 'use client';
-import { FC, Key, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CircleX, CopyCheck, PlusIcon, Trash } from 'lucide-react';
 import 'react-quill/dist/quill.snow.css';
 import Spinner from '@/components/common/Spinner';
-import { Controller } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { UpdateProductService } from '@/services/product/UpdateProduct.service';
@@ -21,7 +21,7 @@ import {
 } from '@dnd-kit/core';
 import { DraggableImage } from '@/components/user/product/DraggableImage';
 import Link from 'next/link';
-import { convertToFile, convertToFiles } from '@/lib/utils';
+import { Cross1Icon } from '@radix-ui/react-icons';
 import toast from 'react-hot-toast';
 
 interface PageProps {}
@@ -31,8 +31,8 @@ const UpdateProductPage: FC<PageProps> = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filesList, setFiles] = useState<any[]>();
   const [deletedArrayImage, setDeletedArrayImage] = useState<string[]>([]);
-
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [isFormDirty, setIsFormDirty] = useState(false);
   const {
     register,
     subCategories,
@@ -41,6 +41,7 @@ const UpdateProductPage: FC<PageProps> = () => {
     handleSubmit,
     onSubmit,
     setValue,
+    watch,
     getValues,
     isSuccess,
     control,
@@ -52,6 +53,7 @@ const UpdateProductPage: FC<PageProps> = () => {
   const isMobile = useMediaQueryProvide();
   const [mainMediaIndex, setMainMediaIndex] = useState<number>(0);
   const [uploadedImages, setUploadedImages] = useState<any[]>([]);
+  const [existImage, setExistImage] = useState<any[]>([]);
 
   const ReactQuill = useMemo(
     () => dynamic(() => import('react-quill'), { ssr: false }),
@@ -65,6 +67,14 @@ const UpdateProductPage: FC<PageProps> = () => {
       },
     })
   );
+
+  useEffect(() => {
+    const subscription = watch(() => {
+      setIsFormDirty(true);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
   useEffect(() => {
     if (getValues('content')) {
@@ -81,7 +91,7 @@ const UpdateProductPage: FC<PageProps> = () => {
 
       setTableOfContents(tocItems);
     }
-  }, []);
+  }, [getValues]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -96,6 +106,7 @@ const UpdateProductPage: FC<PageProps> = () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [selectedItems]);
+
   const handleDeleteSelectedImages = () => {
     const updatedImages = uploadedImages.filter(
       (_, index) => !selectedItems.includes(index)
@@ -134,6 +145,7 @@ const UpdateProductPage: FC<PageProps> = () => {
     filesList?.splice(index, 1);
     setUploadedImages(updatedImages);
   };
+
   const handleDeleteImageId = (id: string) => {
     if (deletedArrayImage.includes(id)) {
       setDeletedArrayImage(deletedArrayImage.filter((item) => item !== id));
@@ -170,14 +182,22 @@ const UpdateProductPage: FC<PageProps> = () => {
       });
     }
   };
+  if (isLoading) {
+    return (
+      <div className="flex w-full justify-center items-center h-screen">
+        <Spinner lg />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full flex flex-col justify-center">
       <p className="text-4xl border-secondary font-bold">Update Blog</p>
       <hr className="h-px my-8 border-0 bg-gray-700" />
       <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
-        <div className="grid w-full items-center gap-10  md:grid-cols-2 justify-between">
-          <div className="hidden lg:block ">
+        <div className="grid w-full items-center gap-10 md:grid-cols-2 justify-between">
+          {/* Title */}
+          <div className="hidden lg:block">
             <h4 className="text-2xl font-bold">Title</h4>
             <p className="text-foreground">Enter the blog title</p>
           </div>
@@ -196,7 +216,8 @@ const UpdateProductPage: FC<PageProps> = () => {
             )}
           </div>
 
-          <div className="hidden lg:block ">
+          {/* Content */}
+          <div className="hidden lg:block">
             <h4 className="text-2xl font-bold">Content</h4>
             <p className="text-foreground">Enter the blog content</p>
           </div>
@@ -204,7 +225,6 @@ const UpdateProductPage: FC<PageProps> = () => {
             <Label className="font-bold" htmlFor="content">
               Content
             </Label>
-
             <Controller
               name="content"
               control={control}
@@ -212,7 +232,7 @@ const UpdateProductPage: FC<PageProps> = () => {
                 <ReactQuill
                   theme="snow"
                   value={field.value}
-                  className="max-h-[500px] overflow-y-scroll "
+                  className="max-h-[500px] overflow-y-scroll"
                   onChange={field.onChange}
                 />
               )}
@@ -222,7 +242,8 @@ const UpdateProductPage: FC<PageProps> = () => {
             )}
           </div>
 
-          <div className="hidden lg:block ">
+          {/* External Link */}
+          <div className="hidden lg:block">
             <h4 className="text-2xl font-bold">External Link</h4>
             <p className="text-foreground">Enter an external link (optional)</p>
           </div>
@@ -241,7 +262,8 @@ const UpdateProductPage: FC<PageProps> = () => {
             )}
           </div>
 
-          <div className="hidden lg:block ">
+          {/* Message Link */}
+          <div className="hidden lg:block">
             <h4 className="text-2xl font-bold">Message Link</h4>
             <p className="text-foreground">Enter a message link (optional)</p>
           </div>
@@ -260,7 +282,8 @@ const UpdateProductPage: FC<PageProps> = () => {
             )}
           </div>
 
-          <div className="hidden lg:block ">
+          {/* Rank */}
+          <div className="hidden lg:block">
             <h4 className="text-2xl font-bold">Rank</h4>
             <p className="text-foreground">Enter the blog rank (optional)</p>
           </div>
@@ -280,8 +303,9 @@ const UpdateProductPage: FC<PageProps> = () => {
             )}
           </div>
 
-          <div className="hidden lg:block ">
-            <h4 className="text-2xl font-bold">Category </h4>
+          {/* Category */}
+          <div className="hidden lg:block">
+            <h4 className="text-2xl font-bold">Category</h4>
             <p className="text-foreground">Enter the category</p>
           </div>
           <div>
@@ -299,7 +323,7 @@ const UpdateProductPage: FC<PageProps> = () => {
             <select
               id="category_id"
               className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-              defaultChecked={loadProductData?.data?.blog.category_id}
+              defaultValue={loadProductData?.data?.blog.category_id}
               {...register('category_id', {
                 required: 'Category is required',
               })}
@@ -318,39 +342,49 @@ const UpdateProductPage: FC<PageProps> = () => {
             )}
           </div>
 
-          <div className="hidden lg:block  justify-center items-center ">
+          {/* Previous Medias */}
+          <div className="hidden lg:block justify-center items-center">
             {loadProductData?.data?.blog.medias.length > 0 && (
               <>
                 <Label className="font-bold" htmlFor="medias">
                   Previous Medias
                 </Label>
-                <div className="grid grid-cols-3 gap-4 mt-5 h-[200px] w-[300px] ">
-                  {loadProductData.data.blog.medias.map(
+                <div className="grid grid-cols-3 gap-4 mt-5 h-[200px] w-[300px]">
+                  {loadProductData?.data?.blog.medias.map(
                     (item: any, index: number) => (
-                      <>
-                        <div
-                          className={`relative ${
-                            deletedArrayImage.includes(item._id)
-                              ? 'border-2 border-red-500'
-                              : ''
-                          } w-[100px] h-[100px]`}
-                          onClick={() => handleDeleteImageId(item._id)}
+                      <div
+                        key={item._id}
+                        className={`relative group w-[100px] h-[100px] ${
+                          deletedArrayImage.includes(item._id) ? 'hidden' : ''
+                        }`}
+                        onClick={() => handleDeleteImageId(item._id)}
+                      >
+                        <Image
+                          src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${item.path}`}
+                          alt="uploaded image"
+                          width={100}
+                          height={100}
+                          className="object-contain w-full h-full"
+                        />
+                        <button
+                          type="button"
+                          className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded transition-opacity"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteImageId(item._id);
+                          }}
                         >
-                          <Image
-                            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${item.path}`}
-                            alt="uploaded image"
-                            width={100}
-                            height={100}
-                            className="object-contain w-full h-full"
-                          />
-                        </div>
-                      </>
+                          <Cross1Icon fontSize={2} />
+                        </button>
+                      </div>
                     )
                   )}
                 </div>
               </>
             )}
           </div>
+
+          {/* Medias */}
           <div>
             {errors.medias && (
               <p className="text-red-500">{errors.medias.message}</p>
@@ -359,7 +393,7 @@ const UpdateProductPage: FC<PageProps> = () => {
               Medias
             </Label>
             {uploadedImages.length > 0 ? (
-              <div className="grid grid-cols-3 gap-4 mt-5 h-[200px] w-[300px] ">
+              <div className="grid grid-cols-3 gap-4 mt-5 h-[200px] w-[300px]">
                 {uploadedImages.map((image, index) => (
                   <DraggableImage
                     key={image.urlType}
@@ -374,7 +408,7 @@ const UpdateProductPage: FC<PageProps> = () => {
                 {uploadedImages.length < 5 && (
                   <label
                     htmlFor="dropzone-file"
-                    className="flex flex-col items-center justify-center w-full h-[100px] xl:h-[200px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100   "
+                    className="flex flex-col items-center justify-center w-full h-[100px] xl:h-[200px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
                   >
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                       <PlusIcon />
@@ -396,7 +430,7 @@ const UpdateProductPage: FC<PageProps> = () => {
               <div className="flex items-center justify-center w-full">
                 <label
                   htmlFor="dropzone-file"
-                  className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100   "
+                  className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
                 >
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
                     <svg
@@ -437,9 +471,13 @@ const UpdateProductPage: FC<PageProps> = () => {
           </div>
         </div>
         <div className="py-10 flex items-center md:justify-end">
-          <Button disabled={isLoading} type="submit" className="px-10">
+          <Button
+            disabled={isLoading || !isFormDirty}
+            type="submit"
+            className="px-10"
+          >
             {isLoading && <Spinner />}
-            Submit
+            Save
           </Button>
         </div>
       </form>

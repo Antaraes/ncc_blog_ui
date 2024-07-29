@@ -34,17 +34,18 @@ export const UpdateProductService = (
   filesList: any[],
   deletedArrayImage: string[]
 ) => {
-  const [isLoading, setIsLoading] = useState(false);
-
   const [isSuccess, setIsSuccess] = useState(false);
-  const { data: loadProductData, refetch } = useFetch('each_product', () =>
-    getDetailProduct(productId)
-  );
+  const {
+    data: loadProductData,
+    refetch,
+    isFetching: isLoading,
+  } = useFetch('each_product', () => getDetailProduct(productId));
   const {
     register,
     handleSubmit,
     setValue,
     getValues,
+    watch,
     formState: { errors },
     control,
     reset,
@@ -82,7 +83,7 @@ export const UpdateProductService = (
   const mutation = useMutation({
     mutationFn: (data: any) => updateProduct(productId, data),
     onSuccess: () => {
-      toast.success('Blog added successfully');
+      toast.success('Blog Updated successfully');
       navigate.push(`/admin/product?category=${getValues('category_id')}`);
     },
     onError: (error: any) => {
@@ -129,6 +130,7 @@ export const UpdateProductService = (
   return {
     register,
     subCategories,
+    watch,
     errors,
     isLoading: mutation.isPending || isLoading,
     handleSubmit,

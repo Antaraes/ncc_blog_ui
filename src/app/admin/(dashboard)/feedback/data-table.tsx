@@ -29,21 +29,19 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import useFetch from '@/hooks/useFetch'; // Custom hook for fetching data
+import { getFeedback } from '@/api';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  pagination?: any;
   isLoading?: boolean;
   isDeleting: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
-  data,
-  pagination,
   isLoading,
   isDeleting,
 }: DataTableProps<TData, TValue>) {
@@ -51,11 +49,28 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [searchValue, setSearchValue] = useState<string>('');
+  const [tableData, setTableData] = useState<TData[]>([]);
+  const [pageIndex, setPageIndex] = useState(0); // Current page index
+  const [pageSize, setPageSize] = useState(10); // Number of items per page
+  const [totalPages, setTotalPages] = useState(0); // Total number of pages
+
+  const {
+    data,
+    isFetching: fetchLoading,
+    refetch,
+  } = useFetch('feedback', () => getFeedback(pageIndex + 1, pageSize));
+
+  useEffect(() => {
+    if (data) {
+      setTableData(data.data.feedbacks || []);
+      setTotalPages(Math.ceil(data.data.total_count / pageSize)); // Update total pages
+    }
+  }, [data, pageIndex, pageSize]);
 
   const table = useReactTable({
-    data,
+    data: tableData,
     columns,
-    pageCount: pagination ? pagination.total : null,
+    pageCount: totalPages,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
@@ -69,9 +84,15 @@ export function DataTable<TData, TValue>({
       columnVisibility,
     },
   });
+
   const handleSearch = (value: string) => {
     setSearchValue(value);
     table.setGlobalFilter(value);
+  };
+
+  const handlePageChange = (newPageIndex: number) => {
+    setPageIndex(newPageIndex);
+    refetch(); // Refetch data when page changes
   };
 
   return (
@@ -85,8 +106,8 @@ export function DataTable<TData, TValue>({
           className="max-w-sm"
         />
       </div>
-      <div className="rounded-md border max-h-[400px] overflow-y-scroll">
-        <Table className="">
+      <section className="rounded-md border max-h-[400px] overflow-y-scroll">
+        <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -106,14 +127,18 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {isLoading || isDeleting ? (
-              <div className="space-y-4">
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="h-8 w-full" />
-              </div>
+            {isLoading || isDeleting || fetchLoading ? (
+              <>
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <TableRow key={index}>
+                    {columns.map((column, colIndex) => (
+                      <TableCell key={colIndex}>
+                        <Skeleton className="h-6 w-full bg-black/40" />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </>
             ) : (
               <>
                 {table.getRowModel().rows?.length ? (
@@ -146,21 +171,24 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
+      </section>
+      <div className="flex items-center justify-between py-4">
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
+          onClick={() => handlePageChange(pageIndex - 1)}
+          disabled={pageIndex === 0}
         >
           Previous
         </Button>
+        <span>
+          Page {pageIndex + 1} of {totalPages}
+        </span>
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
+          onClick={() => handlePageChange(pageIndex + 1)}
+          disabled={pageIndex >= totalPages - 1}
         >
           Next
         </Button>

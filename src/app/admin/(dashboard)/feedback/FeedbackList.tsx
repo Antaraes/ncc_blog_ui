@@ -21,33 +21,18 @@ interface FeedbackListProps {}
 
 const FeedbackList: FC<FeedbackListProps> = ({}) => {
   const [feedbacks, setFeedback] = useState([]);
-  const { data, isLoading, refetch } = useFetch('feedbacks', getFeedback);
   const { handleMutation, isLoading: isDeleting } = useRmoveMutation({
     apiFunction: deleteFeedback,
     queryKey: ['feedbacks'],
   });
 
-  useEffect(() => {
-    setFeedback(data?.data?.feedbacks);
-  }, [data]);
-  if (isLoading) {
-    return (
-      <div className="flex w-full justify-center items-center h-screen">
-        <Spinner lg />
-      </div>
-    );
-  }
   const handleDelete = (productId: string) => {
     handleMutation(productId);
-    refetch();
   };
-  if (isLoading && isDeleting) {
-  }
   return (
     <div>
       <DataTable
         isDeleting={isDeleting}
-        isLoading={isLoading}
         columns={[
           ...columns,
           {
@@ -72,7 +57,6 @@ const FeedbackList: FC<FeedbackListProps> = ({}) => {
             },
           },
         ]}
-        data={feedbacks || []}
       />
     </div>
   );
