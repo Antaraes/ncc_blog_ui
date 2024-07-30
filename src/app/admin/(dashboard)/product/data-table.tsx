@@ -1,17 +1,6 @@
-'use client';
-
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-  ColumnFiltersState,
-  SortingState,
-  getFilteredRowModel,
-  VisibilityState,
-  getSortedRowModel,
-  getPaginationRowModel,
-} from '@tanstack/react-table';
+import { useState, useEffect } from 'react';
+import useFetch from '@/hooks/useFetch';
+import { getBlogsbyCategory, getSubCategories } from '@/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -20,7 +9,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-
 import {
   Table,
   TableBody,
@@ -29,12 +17,21 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useState, useEffect } from 'react';
-import useFetch from '@/hooks/useFetch';
-import { getBlogsbyCategory, getSubCategories } from '@/api';
 import Spinner from '@/components/common/Spinner';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useRouter, useSearchParams } from 'next/navigation';
+import {
+  ColumnDef,
+  flexRender,
+  useReactTable,
+  ColumnFiltersState,
+  SortingState,
+  getFilteredRowModel,
+  VisibilityState,
+  getSortedRowModel,
+  getPaginationRowModel,
+  getCoreRowModel,
+} from '@tanstack/react-table';
 
 interface SubCategory {
   _id: string;
@@ -57,14 +54,24 @@ export function DataTable<TData, TValue>({
   const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [tableData, setTableData] = useState<TData[]>([]);
+  const [pageIndex, setPageIndex] = useState(0); // Current page index
+  const [pageSize, setPageSize] = useState(10); // Number of items per page
+
   const router = useRouter();
   const { data, isLoading } = useFetch('subCategories', getSubCategories);
   const {
     data: blogs,
-    isLoading: productLoading,
+    // isLoading: productLoading,
+    isFetching: productLoading,
     refetch,
-  } = useFetch('all-products', () =>
-    getBlogsbyCategory(selectedCategory || subCategories[0]?._id)
+  } = useFetch(
+    'all-products',
+    () =>
+      getBlogsbyCategory(
+        selectedCategory || subCategories[0]?._id,
+        pageIndex + 1,
+        pageSize
+      ) // Fetch with page and limit
   );
   const query = useSearchParams();
 
@@ -83,12 +90,12 @@ export function DataTable<TData, TValue>({
       refetch();
       setTableData(blogs?.data.blogs || []);
     }
-  }, [blogs?.data.blogs, selectedCategory]);
+  }, [blogs?.data.blogs, selectedCategory, pageIndex, pageSize]);
 
   const table = useReactTable({
     data: tableData,
     columns,
-    pageCount: pagination ? pagination.total : null,
+    pageCount: Math.ceil((blogs?.data.total_count || 0) / pageSize),
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
@@ -110,11 +117,15 @@ export function DataTable<TData, TValue>({
 
   const handleCategoryChange = (e: any) => {
     const category = e.target.value;
-
     setSelectedCategory(category);
     router.push(`?category=${category}`);
   };
-  if (isLoading || productLoading) {
+
+  const handlePageChange = (newPageIndex: number) => {
+    setPageIndex(newPageIndex);
+  };
+
+  if (isLoading) {
     return (
       <div className="flex w-full justify-center items-center h-screen">
         <Spinner lg />
@@ -201,11 +212,11 @@ export function DataTable<TData, TValue>({
           <TableBody className="">
             {productLoading ? (
               <>
-                {Array.from({ length: 5 }).map((_, index) => (
+                {Array.from({ length: 3 }).map((_, index) => (
                   <TableRow key={index}>
                     {columns.map((column, colIndex) => (
                       <TableCell key={colIndex}>
-                        <Skeleton className="h-6 w-full bg-black/70" />
+                        <Skeleton className="h-6 w-full bg-black/40" />
                       </TableCell>
                     ))}
                   </TableRow>
@@ -244,20 +255,27 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex items-center justify-between py-4">
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
+          onClick={() => handlePageChange(pageIndex - 1)}
+          disabled={pageIndex === 0}
         >
           Previous
         </Button>
+        <span>
+          Page {pageIndex + 1} of{' '}
+          {Math.ceil((blogs?.data.total_count || 0) / pageSize)}
+        </span>
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
+          onClick={() => handlePageChange(pageIndex + 1)}
+          disabled={
+            pageIndex >=
+            Math.ceil((blogs?.data.total_count || 0) / pageSize) - 1
+          }
         >
           Next
         </Button>

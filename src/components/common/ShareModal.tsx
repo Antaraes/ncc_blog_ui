@@ -1,13 +1,14 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { CopyCheck, CopyIcon } from 'lucide-react';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { IoLogoWhatsapp } from 'react-icons/io';
 import { FaFacebook } from 'react-icons/fa';
 import { FaInstagramSquare } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import { TiMessages } from 'react-icons/ti';
 import { MdOutlineLink } from 'react-icons/md';
+import useMediaQueryProvide from '@/hooks/useMediaQueryProvide';
 
 interface ShareModalProps {
   message_link: string;
@@ -83,8 +84,10 @@ const ShareModal: FC<ShareModalProps> = ({ message_link, external_link }) => {
       </a>
 
       <p className="font-bold text-lg">Share this article</p>
-      <div className="flex items-center cursor-pointer" onClick={handleCopy}>
-        <p className="text-muted-foreground">{window.location.href}</p>
+      <div className="flex  items-center cursor-pointer" onClick={handleCopy}>
+        <p className="text-muted-foreground lg:w-full w-screen overflow-hidden">
+          {window.location.href}
+        </p>
         <Button
           onClick={handleCopy}
           variant={'link'}

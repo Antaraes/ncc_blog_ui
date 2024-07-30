@@ -122,9 +122,20 @@ const Sidebar: FC<SidebarProps> = ({ className, toggleSidebar }) => {
             onClick={toggleSidebar}
           />
           <div className="px-4 py-2 flex flex-col h-full">
-            <h2 className="mb-2 px-2 text-lg font-semibold tracking-tight">
-              E commerce
-            </h2>
+            <div className="flex items-center ">
+              <div className="max-h-52 max-w-52">
+                <Image
+                  src={'/favicon.png'}
+                  alt="Avatar"
+                  width="80"
+                  height="80"
+                  className="w-10 h-10 p-1   object-cover"
+                />
+              </div>
+              <h2 className="mb-2 px-2 text-lg font-semibold tracking-tight">
+                {process.env.NEXT_PUBLIC_COMPANY_NAME}
+              </h2>
+            </div>
             <div className="space-y-1 flex-1">
               <ul className="pt-6">
                 {Menus.map((Menu, index) => (
