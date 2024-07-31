@@ -16,6 +16,7 @@ import Link from 'next/link';
 import useFetch from '@/hooks/useFetch';
 import { getAllCategories } from '@/api';
 import useMediaQueryProvide from '@/hooks/useMediaQueryProvide';
+import toast from 'react-hot-toast';
 
 interface NavigationDropDownProps {}
 
@@ -34,6 +35,10 @@ interface SubMenu {
 const NavigationDropDown: FC<NavigationDropDownProps> = () => {
   const [activeMenu, setActiveMenu] = useState<Menu | null>(null);
   const handleMenuClick = (menu: Menu) => {
+    if (menu.subCategories?.length == 0) {
+      toast.error('There is no sub categories');
+      return;
+    }
     setActiveMenu(menu === activeMenu ? null : menu);
   };
   const handleRemoveMenuClick = () => {
@@ -83,7 +88,7 @@ const NavigationDropDown: FC<NavigationDropDownProps> = () => {
               <ChevronLeft />
               <p>{activeMenu.name}</p>
             </div>
-            <ul className="overflow-hidden overflow-y-scroll transition-[max-height] duration-300 ease-in-out max-h-40 flex flex-col">
+            <ul className="overflow-hidden overflow-y-scroll transition-[max-height] duration-300 ease-in-out max-h-50 flex flex-col">
               {activeMenu.subCategories &&
                 activeMenu.subCategories.map((subMenu, idx) => {
                   return (
@@ -117,7 +122,7 @@ const NavigationDropDown: FC<NavigationDropDownProps> = () => {
                 exit={{ opacity: 0, x: '-100%' }}
                 transition={{ duration: 0.3 }}
               >
-                <div
+                <button
                   className="flex rounded-md p-2 cursor-pointer hover:bg-secondary text-black text-sm items-center gap-x-4"
                   onClick={() =>
                     handleMenuClick({
@@ -130,7 +135,7 @@ const NavigationDropDown: FC<NavigationDropDownProps> = () => {
                   <span className="flex-1">{category.name}</span>
                   {category.subCategories &&
                     category.subCategories.length > 0 && <ChevronRight />}
-                </div>
+                </button>
               </motion.div>
             ))}
           </ul>

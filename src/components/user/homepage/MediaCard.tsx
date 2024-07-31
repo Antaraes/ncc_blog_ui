@@ -36,8 +36,8 @@ const MediaCard = ({ data, leastone }: { data: any; leastone?: boolean }) => {
                 loop
                 muted
                 className="w-full h-full object-cover"
-                src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${medias[0].path}`}
-                // src={`http://127.0.0.1:5000/uploads/blog/66a2a18eef5e88ddd167b9b7-388335-trailer.mp4.mp4`}
+                // src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${medias[0].path}`}
+                src={`http://127.0.0.1:5000/uploads/blog/66a2a18eef5e88ddd167b9b7-388335-trailer.mp4.mp4`}
                 // src={
                 //   'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
                 // }

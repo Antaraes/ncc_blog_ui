@@ -32,12 +32,8 @@ const MobileNav: FC<MobileNavProps> = ({
   const isMobile = useMediaQueryProvide();
   useEffect(() => {
     setIsSearchOpen(false);
-  }, [location]);
-
-  useEffect(() => {
-    setIsSearchOpen(false);
     setIsMenuOpen(false);
-  }, [isMobile]);
+  }, [location, isMobile]);
 
   return (
     <div className="flex lg:hidden justify-between bg-white w-full py-5 ">
